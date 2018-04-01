@@ -3,6 +3,13 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
-new Vue({
-  render: h => h(App)
-}).$mount('#app')
+window.addEventListener('DOMContentLoaded', function () {
+  const root = document.createElement('div')
+  document.body.appendChild(root)
+
+  new Vue({
+    el: root,
+    render: h => h(App)
+  })
+
+})
