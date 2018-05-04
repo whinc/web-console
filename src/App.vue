@@ -16,10 +16,10 @@
         <!-- Tab Container -->
         <mt-tab-container v-model="tabId" class="body">
           <mt-tab-container-item id="console">
-            <console/>
+            <console-panel />
           </mt-tab-container-item>
           <mt-tab-container-item id="network">
-            <network/>
+            <network-panel />
           </mt-tab-container-item>
         </mt-tab-container>
       </div>
@@ -29,13 +29,13 @@
 
 <script>
 import {Button, Popup, TabContainer, TabContainerItem, Tabbar, TabItem} from 'mint-ui'
-import Console from './Console'
-import Network from './Network'
+import {ConsolePanel} from './Console'
+import {NetworkPanel} from './Network'
 export default {
   name: 'app',
   components: {
-    Console,
-    Network,
+    ConsolePanel,
+    NetworkPanel,
     [Button.name]: Button,
     [Popup.name]: Popup,
     [Tabbar.name]: Tabbar,
