@@ -14,11 +14,11 @@
           </mt-tab-item>
         </mt-tabbar>
         <!-- Tab Container -->
-        <mt-tab-container v-model="tabId" class="body">
-          <mt-tab-container-item id="console">
+        <mt-tab-container v-model="tabId">
+          <mt-tab-container-item id="console" class="body">
             <console-panel />
           </mt-tab-container-item>
-          <mt-tab-container-item id="network">
+          <mt-tab-container-item id="network" class="body">
             <network-panel />
           </mt-tab-container-item>
         </mt-tab-container>
@@ -78,8 +78,10 @@ export default {
 }
 
 .panel {
+  font-family: monospace, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   width: 100vw;
-  height: 70vh;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -92,6 +94,7 @@ export default {
   font-size: 20px;
 }
 .panel .body {
-  flex-grow: 1;
+  height: 70vh;
+  overflow-y: scroll;
 }
 </style>
