@@ -1,10 +1,10 @@
 {
-  "name": "chrome-console",
+  "name": "web-console",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name chrome-console src/main.js",
+    "build": "vue-cli-service build --target lib --name web-console src/main.js",
     "test": "vue-cli-service test",
     "e2e": "vue-cli-service e2e",
     "lint": "vue-cli-service lint",

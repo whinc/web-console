@@ -1,6 +1,6 @@
 <template>
   <div>
-    <mt-button type="primary" class="entry" @click="showPanel">chrome console</mt-button>
+    <mt-button type="primary" class="entry" @click="showPanel">web-console</mt-button>
 
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
@@ -54,7 +54,7 @@ export default {
 }
 </script>
 
-<style <style scoped>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
