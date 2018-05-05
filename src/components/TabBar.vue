@@ -5,20 +5,30 @@
 </template>
 
 <script>
+/**
+ * TabBar
+ * 
+ * <tab-bar v-model="activeTab" :show-indicator="true" :expand-mode="grow">
+ *  <tab-item id="tab1">
+ *    <!-- slot -->
+ *  </tab-item>
+ * </tab-bar>
+ */
 export default {
   props: {
-    value: String
-  },
-  provide () {
-    return {
-      change: this.change,
-      getId: this.getId
+    value: String,
+    // TabItem 底部是否下划线
+    showIndicator: {
+      type: Boolean,
+      default: true
+    },
+    // TabItem 是否等宽
+    isFixedWidth: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
-    getId () {
-      return this.value
-    },
     change (id) {
       this.$emit('input', id)
     }

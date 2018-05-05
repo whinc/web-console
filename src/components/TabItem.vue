@@ -1,5 +1,9 @@
 <template>
-  <div class="tab-item" @click="change(id)" :class="{selected: getId() === id}">
+  <div
+    class="tab-item"
+    @click="$parent.change(id)"
+    :class="myClass"
+  >
     <slot></slot>
   </div>  
 </template>
@@ -9,16 +13,26 @@ export default {
   props: {
     id: String
   },
-  inject: ['change', 'getId'],
+  computed: {
+    myClass() {
+      const myClass = {
+        selected: this.$parent.value === this.id && this.$parent.showIndicator,
+        'fixed-width': this.$parent.isFixedWidth ? 1 : 0
+      }
+      return myClass
+    }
+  }
 }
 </script>
 
 
 <style scoped>
 .tab-item {
+  flex-grow: 0;
+}
+
+.tab-item.fixed-width {
   flex-grow: 1;
-  text-align: center;
-  line-height: 29px;
 }
 
 .tab-item.selected {

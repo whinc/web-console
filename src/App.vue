@@ -4,17 +4,16 @@
 
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
-        <!-- Tab -->
-        <mt-tabbar v-model="tabId" :fixed="false" class="tab-bar">
-          <mt-tab-item id="console">
-            <span class="title">Console</span>
-          </mt-tab-item>
-          <mt-tab-item id="network">
-            <span class="title">Network</span>
-          </mt-tab-item>
-        </mt-tabbar>
+        <tab-bar class="tab-bar" v-model="activeTab" :show-indicator="false" :is-fixed-width="false">
+          <tab-item id="console">
+            <span class="item">Console</span>
+          </tab-item>
+          <tab-item id="network">
+            <span class="item">Network</span>
+          </tab-item>
+        </tab-bar>
         <!-- Tab Container -->
-        <mt-tab-container v-model="tabId">
+        <mt-tab-container v-model="activeTab">
           <mt-tab-container-item id="console" class="tab-container">
             <console-panel />
           </mt-tab-container-item>
@@ -28,7 +27,8 @@
 </template>
 
 <script>
-import {Button, Popup, TabContainer, TabContainerItem, Tabbar, TabItem} from 'mint-ui'
+import {Button, Popup, TabContainer, TabContainerItem} from 'mint-ui'
+import {TabBar, TabItem} from './components'
 import {ConsolePanel} from './console'
 import {NetworkPanel} from './network'
 export default {
@@ -36,10 +36,10 @@ export default {
   components: {
     ConsolePanel,
     NetworkPanel,
+    TabBar,
+    TabItem,
     [Button.name]: Button,
     [Popup.name]: Popup,
-    [Tabbar.name]: Tabbar,
-    [TabItem.name]: TabItem,
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem
   },
@@ -47,7 +47,7 @@ export default {
     return {
       // 设置为 true 方便调试
       panelVisible: true,
-      tabId: 'console'
+      activeTab: 'console'
     }
   },
   mounted (){
@@ -91,13 +91,31 @@ export default {
   display: flex;
   flex-direction: column;
 }
+
+/* Tab栏 */
 .tab-bar {
-  position: static;
   height: 40px;
+  border-bottom: 1px solid #d9d9d9;
 }
-.tab-bar .title {
-  font-size: 14px;
+.tab-bar .item {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  padding: 0 15px;
+  height: 100%;
 }
+.tab-bar .item:active {
+  background-color: rgba(0,0,0,.15);
+}
+.tab-bar .item::after{
+  content: " ";
+  position: absolute;
+  height: 100%;
+  right: 0;
+  border-right: 1px solid #d9d9d9;
+}
+
 .tab-container {
   height: 75vh;
 }

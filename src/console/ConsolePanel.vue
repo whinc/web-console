@@ -1,11 +1,21 @@
 <template>
   <div class="console-panel">
-    <tab-bar v-model="activeType" class="navbar">
-      <tab-item id="all">All</tab-item>
-      <tab-item id="log">Log</tab-item>
-      <tab-item id="info">Info</tab-item>
-      <tab-item id="warn">Warn</tab-item>
-      <tab-item id="error">Error</tab-item>
+    <tab-bar v-model="activeType" class="head-bar">
+      <tab-item id="all">
+        <span class="item">All</span>
+      </tab-item>
+      <tab-item id="log">
+        <span class="item">Log</span>
+      </tab-item>
+      <tab-item id="info">
+        <span class="item">Info</span>
+      </tab-item>
+      <tab-item id="warn">
+        <span class="item">Warn</span>
+      </tab-item>
+      <tab-item id="error">
+        <span class="item">Error</span>
+      </tab-item>
     </tab-bar>
     <div class="message-list">
       <message
@@ -17,7 +27,7 @@
         :params="msg.params"
       />
     </div>
-    <tab-bar class="toolbar">
+    <tab-bar class="foot-bar">
       <tab-item>
         <button class="item" @click="onClickClear">Clear</button>
       </tab-item>
@@ -78,10 +88,19 @@ export default {
   position: relative;
 }
 
-.navbar {
+.head-bar {
+  height: 30px;
 }
 
-.navbar .item.selected {
+.head-bar .item {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.head-bar .item.selected {
   border-bottom: 1px solid #26a2ff;
 }
 
@@ -94,14 +113,14 @@ export default {
   overflow-y: scroll;
 }
 
-.toolbar {
+.foot-bar {
   position: absolute;
   height: 39px;
   bottom: 0px;
   line-height: 39px;
   border-top: 1px solid #d9d9d9;
 }
-.toolbar .item {
+.foot-bar .item {
     width: 100%;
     height: 100%;
     background-color: white;
@@ -109,10 +128,10 @@ export default {
     border: none;
     position: relative;
 }
-.toolbar .item:active {
+.foot-bar .item:active {
   background-color: rgba(0,0,0,.15);
 }
-.toolbar .item::after{
+.foot-bar .item::after{
     content: " ";
     position: absolute;
     top: .53846154em;
