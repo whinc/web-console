@@ -1,6 +1,6 @@
 <template>
   <div class="console-panel">
-    <tab-bar v-model="activeType">
+    <tab-bar v-model="activeType" class="navbar">
       <tab-item id="all">All</tab-item>
       <tab-item id="log">Log</tab-item>
       <tab-item id="info">Info</tab-item>
@@ -17,6 +17,14 @@
         :params="msg.params"
       />
     </div>
+    <tab-bar class="toolbar">
+      <tab-item>
+        <button class="item" @click="onClickClear">Clear</button>
+      </tab-item>
+      <tab-item>
+        <button class="item" @click="onClickHide">Hide</button>
+      </tab-item>
+    </tab-bar>
   </div>
 </template>
 
@@ -53,44 +61,63 @@ export default {
       }
     })
   },
+  methods: {
+    onClickClear () {
+      this.msgList = []
+    },
+    onClickHide () {
+      this.$root.$emit('hide')
+    }
+  }
 }
 </script>
 
 <style scoped>
 .console-panel {
-  padding: 5px 0;
   height: 100%;
   position: relative;
 }
 
 .navbar {
-  height: 30px;
-  display: flex;
-  flex-direction: row;
-}
-
-.navbar .item {
-  flex-grow: 1;
-  text-align: center;
-  line-height: 29px;
 }
 
 .navbar .item.selected {
   border-bottom: 1px solid #26a2ff;
 }
 
-/* .navbar .tab-item {
-  padding: 0;
-  margin-bottom: 0;
-  border-bottom-width: 1px;
-} */
-
 .message-list {
   position: absolute;
-  top: 38px;
-  bottom: 0px;
+  top: 30px;
+  bottom: 39px;
   width: 100%;
   left: 0px;
   overflow-y: scroll;
+}
+
+.toolbar {
+  position: absolute;
+  height: 39px;
+  bottom: 0px;
+  line-height: 39px;
+  border-top: 1px solid #d9d9d9;
+}
+.toolbar .item {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    outline: none;
+    border: none;
+    position: relative;
+}
+.toolbar .item:active {
+  background-color: rgba(0,0,0,.15);
+}
+.toolbar .item::after{
+    content: " ";
+    position: absolute;
+    top: .53846154em;
+    bottom: .53846154em;
+    right: 0;
+    border-right: 1px solid #d9d9d9;
 }
 </style>

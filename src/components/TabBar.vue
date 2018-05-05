@@ -29,7 +29,7 @@ export default {
 
 <style scoped>
 .tab-bar {
-  height: 30px;
+  width: 100%;
   display: flex;
   flex-direction: row;
 }

@@ -22,13 +22,6 @@
             <network-panel />
           </mt-tab-container-item>
         </mt-tab-container>
-
-        <div class="toolbar">
-          <div>
-            <button>Clear</button>
-            <button>Hide</button>
-          </div>
-        </div>
       </div>
     </mt-popup>
   </div>
@@ -56,6 +49,11 @@ export default {
       panelVisible: true,
       tabId: 'console'
     }
+  },
+  mounted (){
+    this.$root.$on('hide', () => {
+      this.hidePanel()
+    })
   },
   methods: {
     showPanel () {
@@ -102,8 +100,5 @@ export default {
 }
 .tab-container {
   height: 75vh;
-}
-
-.toolbar {
 }
 </style>
