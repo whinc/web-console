@@ -1,27 +1,34 @@
 <template>
-  <div>
+  <div class="app">
     <mt-button type="primary" class="entry" @click="showPanel">web-console</mt-button>
 
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
         <!-- Tab -->
-        <mt-tabbar v-model="tabId" :fixed="false" class="head">
+        <mt-tabbar v-model="tabId" :fixed="false" class="tab-bar">
           <mt-tab-item id="console">
-            <span class="title">console</span>
+            <span class="title">Console</span>
           </mt-tab-item>
           <mt-tab-item id="network">
-            <span class="title">network</span>
+            <span class="title">Network</span>
           </mt-tab-item>
         </mt-tabbar>
         <!-- Tab Container -->
         <mt-tab-container v-model="tabId">
-          <mt-tab-container-item id="console" class="body">
+          <mt-tab-container-item id="console" class="tab-container">
             <console-panel />
           </mt-tab-container-item>
-          <mt-tab-container-item id="network" class="body">
+          <mt-tab-container-item id="network" class="tab-container">
             <network-panel />
           </mt-tab-container-item>
         </mt-tab-container>
+
+        <div class="toolbar">
+          <div>
+            <button>Clear</button>
+            <button>Hide</button>
+          </div>
+        </div>
       </div>
     </mt-popup>
   </div>
@@ -29,8 +36,8 @@
 
 <script>
 import {Button, Popup, TabContainer, TabContainerItem, Tabbar, TabItem} from 'mint-ui'
-import {ConsolePanel} from './Console'
-import {NetworkPanel} from './Network'
+import {ConsolePanel} from './console'
+import {NetworkPanel} from './network'
 export default {
   name: 'app',
   components: {
@@ -62,39 +69,41 @@ export default {
 </script>
 
 <style scoped>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+
+.app {
+  font-size: 14px;
+  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 
-.entry {
+.app >>> * {
+  box-sizing: border-box;
+}
+
+.entry { 
   position: fixed;
   right: 20px;
   bottom: 20px;
 }
 
 .panel {
-  font-family: monospace, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   width: 100vw;
   background-color: white;
   display: flex;
   flex-direction: column;
 }
-.panel .head {
+.tab-bar {
   position: static;
   height: 40px;
 }
-.panel .head .title {
-  font-size: 20px;
+.tab-bar .title {
+  font-size: 14px;
 }
-.panel .body {
-  height: 70vh;
-  overflow-y: scroll;
+.tab-container {
+  height: 75vh;
+}
+
+.toolbar {
 }
 </style>
