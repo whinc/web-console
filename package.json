@@ -5,6 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name web-console src/main.js",
+    "build:web": "vue-cli-service build",
+    "depoly:web": "gh-pages -d dist",
     "test": "vue-cli-service test",
     "e2e": "vue-cli-service e2e",
     "lint": "vue-cli-service lint",
@@ -24,6 +26,7 @@
     "babel-core": "^7.0.0-0",
     "babel-jest": "^22.0.4",
     "babel-plugin-component": "^1.1.0",
+    "gh-pages": "^1.1.0",
     "i": "^0.3.6",
     "node-sass": "^4.7.2",
     "npm": "^6.0.0",
