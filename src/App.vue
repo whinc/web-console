@@ -47,7 +47,7 @@ export default {
     return {
       // 设置为 true 方便调试
       panelVisible: true,
-      activeTab: 'console'
+      activeTab: 'network'
     }
   },
   mounted (){

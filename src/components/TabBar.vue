@@ -8,7 +8,7 @@
 /**
  * TabBar
  * 
- * <tab-bar v-model="activeTab" :show-indicator="true" :expand-mode="grow">
+ * <tab-bar v-model="activeTab" :show-indicator="true" :is-fixed-width="grow">
  *  <tab-item id="tab1">
  *    <!-- slot -->
  *  </tab-item>
