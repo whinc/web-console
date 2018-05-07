@@ -1,16 +1,12 @@
 <template>
   <div class="network-panel">
-    <tab-bar class="head-bar" :show-indicator="false">
-      <tab-item style="flex: 4 1" :style="{'max-width': `${4/6*100}vw`}">
-        <span class="item long">Name</span>
-      </tab-item>
-      <tab-item style="flex: 1 1">
-        <span class="item">Method</span>
-      </tab-item>
-      <tab-item style="flex: 1 1">
-        <span class="item">Status</span>
-      </tab-item>
-    </tab-bar>
+    <div class="table">
+      <div class="row" v-for="i in 10" :key="i">
+        <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">Name</span>
+        <span class="cell">Method</span>
+        <span class="cell">Status</span>
+      </div>
+    </div>
     <div class="message-list">
     </div>
     <tab-bar class="foot-bar">
@@ -49,20 +45,29 @@ export default {
   position: relative;
 }
 
-.head-bar {
-  height: 30px;
+.table {
+
 }
 
-.head-bar .item {
+.table .row {
+  height: 30px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.table .row .cell {
   display: flex;
   width: 100%;
   height: 100%;
   justify-content: left;
   padding: 0px 4px;
   align-items: center;
+  flex: 1 1;
 }
 
-.head-bar .item.long {
+.table .row .cell.long {
+  flex: 4 1;
   display: inline-block;
   text-overflow: ellipsis;
   overflow-x: hidden;
