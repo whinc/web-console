@@ -1,8 +1,8 @@
 module.exports = {
   css: { extract: false },
-  configureWebpack: {
-    output: {
-      publicPath: './'
-    }
-  }
+  // configureWebpack: {
+  //   output: {
+  //     publicPath: './'
+  //   }
+  // }
 }
