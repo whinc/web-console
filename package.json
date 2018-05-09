@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name web-console src/main.js",
+    "build:lib": "vue-cli-service build --target lib --name web-console src/main.js",
     "build:web": "vue-cli-service build",
     "predepoly:web": "npm run build:web",
     "depoly:web": "npx gh-pages -d dist",

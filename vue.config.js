@@ -1,8 +1,11 @@
 module.exports = {
   css: { extract: false },
-  // configureWebpack: {
-  //   output: {
-  //     publicPath: './'
-  //   }
-  // }
+  configureWebpack: config => {
+    if (process.env.NODE_ENV === 'production') {
+      // mutate config for production...
+      config.output.publicPath = './'
+    } else {
+      // mutate for development...
+    }
+  }
 }
