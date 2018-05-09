@@ -126,7 +126,9 @@ export default {
 }
 
 .table {
-
+  height: 100%;
+  overflow-y: scroll;
+  padding-bottom: 39px;
 }
 
 .table .row {
@@ -161,6 +163,7 @@ export default {
   bottom: 0px;
   line-height: 39px;
   border-top: 1px solid #d9d9d9;
+  background-color: white;
 }
 .foot-bar .item {
     width: 100%;
@@ -171,7 +174,7 @@ export default {
     position: relative;
 }
 .foot-bar .item:active {
-  background-color: rgba(0,0,0,.15);
+  background-color: rgba(0, 0, 0, .15);
 }
 .foot-bar .item::after{
     content: " ";
