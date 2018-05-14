@@ -16,8 +16,9 @@ export default {
   computed: {
     myClass() {
       const myClass = {
-        selected: this.$parent.value === this.id && this.$parent.showIndicator,
-        'fixed-width': this.$parent.isFixedWidth ? 1 : 0
+        selected: this.$parent.value === this.id,
+        indicator: this.$parent.showIndicator,
+        'equal-width': this.$parent.isEqualWidth
       }
       return myClass
     }
@@ -28,14 +29,27 @@ export default {
 
 <style scoped>
 .tab-item {
-  flex-grow: 0;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 10px;
+  background-color: white;
 }
 
-.tab-item.fixed-width {
+.tab-item:active {
+  background-color: rgba(0, 0, 0, .15);
+}
+
+.tab-item.equal-width {
   flex-grow: 1;
 }
 
 .tab-item.selected {
+}
+
+.tab-item.selected.indicator {
   border-bottom: 1px solid #26a2ff;
 }
 </style>

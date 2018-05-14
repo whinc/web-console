@@ -8,7 +8,7 @@
 /**
  * TabBar
  * 
- * <tab-bar v-model="activeTab" :show-indicator="true" :is-fixed-width="grow">
+ * <tab-bar v-model="activeTab">
  *  <tab-item id="tab1">
  *    <!-- slot -->
  *  </tab-item>
@@ -23,7 +23,7 @@ export default {
       default: true
     },
     // TabItem 是否等宽
-    isFixedWidth: {
+    isEqualWidth: {
       type: Boolean,
       default: true
     }
@@ -39,6 +39,7 @@ export default {
 
 <style scoped>
 .tab-bar {
+  height: 30px;
   width: 100%;
   display: flex;
   flex-direction: row;

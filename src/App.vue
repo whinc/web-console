@@ -4,7 +4,7 @@
 
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
-        <tab-bar class="tab-bar" v-model="activeTab" :show-indicator="false" :is-fixed-width="false">
+        <tab-bar class="header-bar" v-model="activeTab" :show-indicator="false" :is-equal-width="false">
           <tab-item id="console">
             <span class="item">Console</span>
           </tab-item>
@@ -93,22 +93,12 @@ export default {
 }
 
 /* Tab栏 */
-.tab-bar {
-  height: 40px;
+.header-bar {
+  height: 40px !important;
   border-bottom: 1px solid #d9d9d9;
 }
-.tab-bar .item {
-  display: flex;
-  position: relative;
-  justify-content: center;
-  align-items: center;
-  padding: 0 15px;
-  height: 100%;
-}
-.tab-bar .item:active {
-  background-color: rgba(0,0,0,.15);
-}
-.tab-bar .item::after{
+
+.header-bar .item::after{
   content: " ";
   position: absolute;
   height: 100%;

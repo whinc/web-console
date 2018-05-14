@@ -89,7 +89,6 @@ export default {
 }
 
 .head-bar {
-  height: 30px;
 }
 
 .head-bar .item {

@@ -2,14 +2,33 @@
   <div class="network-panel">
     <div class="table">
       <div class="row">
-        <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">Name</span>
-        <span class="cell">Method</span>
-        <span class="cell">Status</span>
+        <div class="summary">
+          <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">Name</span>
+          <span class="cell">Method</span>
+          <span class="cell">Status</span>
+        </div>
       </div>
       <div class="row" v-for="item in requestList" :key="item.id">
-        <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
-        <span class="cell">{{item.method}}</span>
-        <span class="cell">{{item.status}}</span>
+        <div class="summary" @click="onClickItem(item.id)">
+          <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
+          <span class="cell">{{item.method}}</span>
+          <span class="cell">{{item.status}}</span>
+        </div>
+        <div class="detail" v-show="item.isExpand">
+          <tab-bar :is-equal-width="false" :show-indicator="false" v-model="item.activeTab">
+            <tab-item id="headers">Headers</tab-item>
+            <tab-item id="response">Response</tab-item>
+          </tab-bar>
+          <!-- Tab Container -->
+          <mt-tab-container v-model="item.activeTab">
+            <mt-tab-container-item id="headers" class="tab-container">
+              <h1>headers</h1>
+            </mt-tab-container-item>
+            <mt-tab-container-item id="response" class="tab-container">
+              <h1>response</h1>
+            </mt-tab-container-item>
+          </mt-tab-container>
+        </div>
       </div>
     </div>
     <div class="message-list">
@@ -27,11 +46,14 @@
 </template>
 
 <script>
+import {TabContainer, TabContainerItem} from 'mint-ui'
 import {TabBar, TabItem} from '../components'
 export default {
   components: {
     TabItem,
-    TabBar
+    TabBar,
+    [TabContainer.name]: TabContainer,
+    [TabContainerItem.name]: TabContainerItem
   },
   data () {
     return {
@@ -40,12 +62,12 @@ export default {
   },
   mounted () {
     this.hookXMLHttpRequest()
-
-    var xhr = new window.XMLHttpRequest()
-    xhr.open('GET', 'https://whinc.github.io/web-console/')
-    xhr.send()
   },
   methods: {
+    onClickItem (id) {
+      const item = this.requestList[id]
+      item.isExpand = !item.isExpand
+    },
     onClickClear() {
 
     },
@@ -70,7 +92,7 @@ export default {
         xhr.$method = method
         xhr.$url = url
 
-        const _onreadystatechange = xhr.onreadystatechange || function() {};
+        const _onreadystatechange = xhr.onreadystatechange || function() {}
         xhr.onreadystatechange = function () {
           const item = vm.requestList[id] || {}
 
@@ -91,10 +113,12 @@ export default {
 
       window.XMLHttpRequest.prototype.send = function (...args) {
         const xhr = this
-        const item = vm.requestList[xhr.$id] || {}
-        item.id = xhr.$id
+        const id = xhr.$id
+        const item = vm.requestList[id] || {}
+        item.id = id
         item.method = xhr.$method
         item.url = xhr.$url
+        vm.updateRequest(id, item)
 
         _send.apply(this, arguments)
       }
@@ -109,10 +133,14 @@ export default {
     updateRequest (id, item) {
       const _item = this.requestList[id]
       if(!_item) {
+        // add default properties to item, make them reactive
+        item.isExpand = false
+        item.activeTab = 'headers'
         this.$set(this.requestList, id, item)
         return
       }
 
+      // update item
       Object.keys(item).forEach(key => _item[key] = item[key])
     }
   } 
@@ -135,13 +163,18 @@ export default {
 }
 
 .table .row {
+  display: flex;
+  flex-direction: column;
+}
+
+.table .row .summary {
   height: 30px;
   width: 100%;
   display: flex;
   flex-direction: row;
 }
 
-.table .row .cell {
+.table .row .summary .cell {
   display: flex;
   width: 100%;
   height: 100%;
@@ -151,7 +184,7 @@ export default {
   flex: 1 1;
 }
 
-.table .row .cell.long {
+.table .row .summary .cell.long {
   flex: 4 1;
   display: inline-block;
   text-overflow: ellipsis;
@@ -159,6 +192,11 @@ export default {
   white-space: nowrap;
   line-height: 30px;
 }
+
+.table .row .detail {
+
+}
+
 
 .foot-bar {
   position: absolute;
