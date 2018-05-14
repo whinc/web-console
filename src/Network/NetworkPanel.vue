@@ -22,10 +22,10 @@
           <!-- Tab Container -->
           <mt-tab-container v-model="item.activeTab">
             <mt-tab-container-item id="headers" class="tab-container">
-              <h1>headers</h1>
+              <span>headers</span>
             </mt-tab-container-item>
             <mt-tab-container-item id="response" class="tab-container">
-              <h1>response</h1>
+              <span>{{item.response}}</span>
             </mt-tab-container-item>
           </mt-tab-container>
         </div>
@@ -100,6 +100,23 @@ export default {
           item.status = 0
           if (item.readyState >= 2) {
             item.status = xhr.status
+          }
+
+          item.responseType = xhr.responseType
+          switch (xhr.readyState) {
+            case 0: // UNSENT
+              break
+            case 1: // OPENED
+              break
+            case 2: // HEADERS_RECEIVED
+              break
+            case 3: // LOADING
+              break
+            case 4: // DONE
+              item.response = xhr.response
+              break
+            default:
+              break
           }
 
           vm.updateRequest(id, item)
