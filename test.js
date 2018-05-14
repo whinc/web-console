@@ -4,6 +4,10 @@ window.addEventListener('DOMContentLoaded', function () {
   setTimeout(test)
 })
 
+document.addEventListener('click', function () {
+  console.log('click document')
+})
+
 function test () {
   // 测试不同类型的日志输出接口
   console.log('log')
@@ -21,6 +25,9 @@ function test () {
 
 function triggerAjax () {
   var xhr = new window.XMLHttpRequest()
-  xhr.open('GET', 'https://whinc.github.io/web-console/')
-  xhr.send()
+  xhr.open('POST', 'https://whinc.github.io/web-console/?a=1&b=2#/home')
+  const data = {
+    name: 'whincwu'
+  }
+  xhr.send(JSON.stringify(data))
 }
