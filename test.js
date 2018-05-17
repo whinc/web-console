@@ -31,3 +31,9 @@ function triggerAjax () {
   }
   xhr.send(JSON.stringify(data))
 }
+
+function triggerGet () {
+  var xhr = new window.XMLHttpRequest()
+  xhr.open('GET', ' https://api.github.com/users/whinc')
+  xhr.send()
+}
