@@ -20,12 +20,17 @@
             <tab-item id="response">Response</tab-item>
           </tab-bar>
           <!-- Tab Container -->
-          <mt-tab-container v-model="item.activeTab" class="content">
-            <mt-tab-container-item id="headers" class="tab-container">
-              <div v-for="(value, header) in item.headerMap" :key="header">{{header}}: {{value}}</div>
+          <mt-tab-container v-model="item.activeTab">
+            <mt-tab-container-item id="headers" class="content">
+              <http-header
+                v-for="(value, header) in item.headerMap"
+                :key="header"
+                :name="header"
+                :value="value"
+              />
             </mt-tab-container-item>
             <mt-tab-container-item id="response" class="tab-container">
-              <span>{{item.response}}</span>
+              <http-response :value="item.response" />
             </mt-tab-container-item>
           </mt-tab-container>
         </div>
@@ -48,10 +53,15 @@
 <script>
 import {TabContainer, TabContainerItem} from 'mint-ui'
 import {TabBar, TabItem} from '../components'
+import HttpHeader from './HttpHeader'
+import HttpResponse from './HttpResponse'
+
 export default {
   components: {
     TabItem,
     TabBar,
+    HttpHeader,
+    HttpResponse,
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem
   },
@@ -76,8 +86,6 @@ export default {
     },
     /**
      * 拦截 XMLHttpRequest 请求并记录状态
-     * 
-     * 参考：<http://javascript.ruanyifeng.com/bom/ajax.html>
      */
     hookXMLHttpRequest () {
       const vm = this
@@ -234,6 +242,7 @@ export default {
 .table .row .detail .content {
   max-height: 40vh;
   overflow-y: scroll;
+  padding: 2px 5px;
 }
 
 .foot-bar {
