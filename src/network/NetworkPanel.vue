@@ -12,7 +12,7 @@
         <div class="summary" @click="onClickItem(item.id)">
           <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
           <span class="cell">{{item.method}}</span>
-          <span class="cell">{{item.status}}</span>
+          <span class="cell">{{item.statusText}}</span>
         </div>
         <div class="detail" v-show="item.isExpand">
           <tab-bar :is-equal-width="false" :show-indicator="false" v-model="item.activeTab">
@@ -20,9 +20,9 @@
             <tab-item id="response">Response</tab-item>
           </tab-bar>
           <!-- Tab Container -->
-          <mt-tab-container v-model="item.activeTab">
+          <mt-tab-container v-model="item.activeTab" class="content">
             <mt-tab-container-item id="headers" class="tab-container">
-              <span>headers</span>
+              <div v-for="(value, header) in item.headerMap" :key="header">{{header}}: {{value}}</div>
             </mt-tab-container-item>
             <mt-tab-container-item id="response" class="tab-container">
               <span>{{item.response}}</span>
@@ -88,31 +88,47 @@ export default {
         const xhr = this
         const id = vm.getUniqueID()
 
+        // 保存数据在 xhr 实例中，方便后续获取
         xhr.$id = id
         xhr.$method = method
         xhr.$url = url
 
+        // 监听请求状态变化，并更新视图状态
         const _onreadystatechange = xhr.onreadystatechange || function() {}
         xhr.onreadystatechange = function () {
           const item = vm.requestList[id] || {}
 
           item.readyState = xhr.readyState
           item.status = 0
-          if (item.readyState >= 2) {
-            item.status = xhr.status
-          }
-
+          item.statusText = '-'
           item.responseType = xhr.responseType
           switch (xhr.readyState) {
             case 0: // UNSENT
+              item.statusText = '(pending)'
               break
             case 1: // OPENED
+              item.statusText = '(pending)'
               break
             case 2: // HEADERS_RECEIVED
+              item.status = xhr.status
+              item.statusText = '(loading)'
+              const headers = xhr.getAllResponseHeaders()
+              const headerArr = headers.split(/[\r\n]+/)
+              headerArr.forEach(line => {
+                if (!line) return
+                const parts = line.split(': ')
+                const header = parts.shift()
+                const value = parts.join(': ')
+                item.headerMap[header] = value
+              })
               break
             case 3: // LOADING
+              item.status = xhr.status
+              item.statusText = '(loading)'
               break
             case 4: // DONE
+              item.status = xhr.status
+              item.statusText = xhr.status
               item.response = xhr.response
               break
             default:
@@ -150,14 +166,14 @@ export default {
     updateRequest (id, item) {
       const _item = this.requestList[id]
       if(!_item) {
-        // add default properties to item, make them reactive
+        /* 添加新元素时声明所有需要用到的字段，使这些字段变为 reactive，后续就可以直接更新字段值 */
         item.isExpand = false
         item.activeTab = 'headers'
+        item.headerMap = {}
         this.$set(this.requestList, id, item)
         return
       }
 
-      // update item
       Object.keys(item).forEach(key => _item[key] = item[key])
     }
   } 
@@ -214,6 +230,11 @@ export default {
 
 }
 
+
+.table .row .detail .content {
+  max-height: 40vh;
+  overflow-y: scroll;
+}
 
 .foot-bar {
   position: absolute;
