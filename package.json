@@ -14,6 +14,7 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
+    "lodash.clonedeep": "^4.5.0",
     "mint-ui": "^2.2.13",
     "vue": "^2.5.13"
   },

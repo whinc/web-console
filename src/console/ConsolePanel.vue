@@ -41,6 +41,7 @@
 <script>
 import Message from './Message'
 import {TabBar, TabItem} from '../components'
+import {cloneDeep} from '../utils'
 export default {
   components: {
     Message,
@@ -62,10 +63,11 @@ export default {
       originConsole[name] = window.console[name]
 
       window.console[name] = function (...args) {
+        const _args = cloneDeep(args)
         vm.msgList.push({
           type: name,
-          value: args[0],
-          params: args.slice(1)
+          value: _args[0],
+          params: _args.slice(1)
         })
         originConsole[name].apply(this, args)
       }

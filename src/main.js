@@ -4,14 +4,19 @@ import App from './App.vue'
 Vue.config.productionTip = false
 
 let isInit = false
-const load = () => {
+const load = (options) => {
   if (document.readyState === 'interactive' || document.readyState === 'complete') {
     const root = document.createElement('div')
     document.body.appendChild(root)
 
-    new Vue({
+    let vm = new Vue({
       el: root,
-      render: h => h(App)
+      render: h => h(App, {
+        props: {
+          initPanelVisible: options.panelVisible || false,
+          initActiveTab: options.activeTab || 'console'
+        }
+      })
     })
   } else {
     document.addEventListener('readystatechange', load)
@@ -19,13 +24,13 @@ const load = () => {
 }
 
 class WebConsole {
-  static init () {
+  static init (options = {}) {
     if (isInit) {
       console.warn('WebConsole can only be initialize once')
       return
     }
 
-    load()
+    load(options)
     isInit = true
   }
 }

@@ -43,14 +43,21 @@ export default {
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem
   },
+  props: {
+    initPanelVisible: Boolean,
+    initActiveTab: String
+  },
   data () {
     return {
-      // 设置为 true 方便调试
-      panelVisible: true,
-      activeTab: 'network'
+      panelVisible: false,
+      activeTab: 'console'
     }
   },
   mounted (){
+    // 设置初始值
+    this.panelVisible = this.initPanelVisible
+    this.activeTab = this.initActiveTab
+
     this.$root.$on('hide', () => {
       this.hidePanel()
     })

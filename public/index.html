@@ -6,16 +6,112 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
     <title>web-console</title>
-    <script src="./test.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <style>
+      #app {
+        height: 100%;
+        overflow-y: scroll;
+      }
+
+      #app .mint-button {
+        width: 100%;
+        margin-bottom: 15px;
+      }
+    </style>
   </head>
   <body>
-    <noscript>
-      <strong>We're sorry but web-console doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <button onclick="triggerAjax()">发起 Ajax</button>
-    <button onclick="triggerGet()">触发 Get 请求</button>
-    <div id="app"></div>
+    <div id="app">
+      <h1>WebConsole</h1>
+      <mt-button type="primary" @click="onClickPrint('log')">普通日志(log)</mt-button>
+      <mt-button type="primary" @click="onClickPrint('info')">信息日志(info)</mt-button>
+      <mt-button type="primary" @click="onClickPrint('debug')">调试日志(debug)</mt-button>
+      <mt-button type="primary" @click="onClickPrint('warn')">警告日志(warn)</mt-button>
+      <mt-button type="primary" @click="onClickPrint('error')">报错日志(error)</mt-button>
+
+      <mt-button type="default" @click="onClickPrint('log_multi_params')">打印多参数</mt-button>
+      <mt-button type="default" @click="onClickPrint('log_object')">打印对象</mt-button>
+
+      <mt-button type="default" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
+      <mt-button type="default" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
+    </div>
+
     <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <!-- import Vue before Mint UI -->
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <!-- import JavaScript -->
+    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script>
+      new Vue({
+        el: '#app',
+        mounted: function () {
+          this.launchWebConsole()
+        },
+        methods: {
+          launchWebConsole: function () {
+            var self = this
+            if (window.WebConsole) {
+              WebConsole.init({
+                activeTab: 'console',
+                panelVisible: true
+              })
+            } else {
+              setTimeout(function () {
+                self.launchWebConsole()
+              }, 200)
+            }
+          },
+          onClickPrint: function (type) {
+            switch (type) {
+              case 'log':
+                console.log('log')
+                break
+              case 'info':
+                console.log('info')
+                break
+              case 'debug':
+                console.log('debug')
+                break
+              case 'warn':
+                console.log('warn')
+                break
+              case 'error':
+                console.log('error')
+                break
+              case 'log_multi_params':
+                console.log('a', 'b', 'c')
+                break
+              case 'log_object':
+                let obj = {
+                  string: "string",
+                  number: 100,
+                  boolean: true,
+                  undefined: undefined,
+                  null: null,
+                }
+                console.log('this is a object: ', obj)
+                break
+            }
+          },
+          onClickAjax (type) {
+            switch (type) {
+              case 'xhr_get':
+                var xhr = new window.XMLHttpRequest()
+                xhr.open('GET', ' https://api.github.com/users/whinc')
+                xhr.send()
+                break
+              case 'xhr_post':
+                var xhr = new window.XMLHttpRequest()
+                xhr.open('POST', 'https://whinc.github.io/web-console/?a=1&b=2#/home')
+                const data = {
+                  name: 'whincwu'
+                }
+                xhr.send(JSON.stringify(data))
+                break
+            }
+          }
+        }
+      })
+    </script>
     <script>
       // init vConsole
       var vConsole = new VConsole();
