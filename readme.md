@@ -9,15 +9,15 @@
 npm run build:lib
 ```
 
-发布到 npm
+部署在线demo
+```bash
+npm run depoly:web
 ```
+
+发布到 npm
+```bash
 npm run build:lib
 npm login
 npm version <new_version>
 npm publish --access=public
-```
-
-部署在线demo
-```bash
-npm run depoly:web
 ```
