@@ -1,6 +1,8 @@
 # web-console
 
-<https://whinc.github.io/web-console/>
+在线演示：<https://whinc.github.io/web-console/>
+
+CDN 地址：<https://unpkg.com/@whinc/web-console>
 
 # depoly
 
