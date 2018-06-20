@@ -1,6 +1,17 @@
 {
   "name": "@whinc/web-console",
   "version": "0.1.4",
+  "author": "whincwu@163.com",
+  "license": "MIT",
+  "keywords": [
+    "console",
+    "vConsole",
+    "web-console",
+    "webConsole",
+    "log"
+  ],
+  "repository": "https://github.com/whinc/web-console",
+  "main": "dist/web-console.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:lib": "vue-cli-service build --target lib --name web-console src/main.js --dest dist",
