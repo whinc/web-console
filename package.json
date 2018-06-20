@@ -1,6 +1,6 @@
 {
   "name": "@whinc/web-console",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:lib": "vue-cli-service build --target lib --name web-console src/main.js --dest dist",
