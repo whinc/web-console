@@ -28,23 +28,21 @@
       />
     </div>
     <tab-bar class="foot-bar">
-      <tab-item>
-        <button class="item" @click="onClickClear">Clear</button>
-      </tab-item>
-      <tab-item>
-        <button class="item" @click="onClickHide">Hide</button>
-      </tab-item>
+      <my-button>Clear</my-button>
+      <div class="col-line"></div>
+      <my-button>Hide</my-button>
     </tab-bar>
   </div>
 </template>
 
 <script>
 import Message from './Message'
-import {TabBar, TabItem} from '../components'
+import {TabBar, TabItem, MyButton} from '../components'
 import {cloneDeep} from '../utils'
 export default {
   components: {
     Message,
+    MyButton,
     TabItem,
     TabBar
   },
@@ -121,23 +119,11 @@ export default {
   line-height: 39px;
   border-top: 1px solid #d9d9d9;
 }
-.foot-bar .item {
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    outline: none;
-    border: none;
-    position: relative;
-}
-.foot-bar .item:active {
-  background-color: rgba(0,0,0,.15);
-}
-.foot-bar .item::after{
-    content: " ";
-    position: absolute;
-    top: .53846154em;
-    bottom: .53846154em;
-    right: 0;
-    border-right: 1px solid #d9d9d9;
+.col-line {
+  width: 1px;
+  height: 80%;
+  margin-top: auto;
+  margin-bottom: auto;
+  border-left: 1px solid #d9d9d9;
 }
 </style>
