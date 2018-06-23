@@ -20,30 +20,46 @@
     </style>
   </head>
   <body>
-    <div id="app">
-      <h1>WebConsole</h1>
-      <mt-button type="primary" @click="onClickPrint('log')">普通日志(log)</mt-button>
-      <mt-button type="primary" @click="onClickPrint('info')">信息日志(info)</mt-button>
-      <mt-button type="primary" @click="onClickPrint('debug')">调试日志(debug)</mt-button>
-      <mt-button type="primary" @click="onClickPrint('warn')">警告日志(warn)</mt-button>
-      <mt-button type="primary" @click="onClickPrint('error')">报错日志(error)</mt-button>
-
-      <mt-button type="default" @click="onClickPrint('log_multi_params')">打印多参数</mt-button>
-      <mt-button type="default" @click="onClickPrint('log_object')">打印对象</mt-button>
-
-      <mt-button type="default" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
-      <mt-button type="default" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
-    </div>
-
     <!-- import Vue before Mint UI -->
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <div id="app">
+      <h1>WebConsole</h1>
+      <div v-if="isDev">
+        <h2>Console Test</h2>
+        <mt-button type="primary" @click="onClickPrint('log_level')">打印不同级别日志</mt-button>
+        <mt-button type="primary" @click="onClickPrint('log_params')">打印多参数</mt-button>
+        <mt-button type="primary" @click="onClickPrint('log_format')">打印格式化</mt-button>
+        <mt-button type="primary" @click="onClickPrint('log_object')">打印对象</mt-button>
+
+        <h2>Network Test</h2>
+        <mt-button type="default" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
+        <mt-button type="default" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
+      </div>
+      <div v-else>
+        <mt-button type="primary" @click="onClickPrint('log')">普通日志(log)</mt-button>
+        <mt-button type="primary" @click="onClickPrint('info')">信息日志(info)</mt-button>
+        <mt-button type="primary" @click="onClickPrint('debug')">调试日志(debug)</mt-button>
+        <mt-button type="primary" @click="onClickPrint('warn')">警告日志(warn)</mt-button>
+        <mt-button type="primary" @click="onClickPrint('error')">报错日志(error)</mt-button>
+
+        <mt-button type="default" @click="onClickPrint('log_params')">打印多参数</mt-button>
+        <mt-button type="default" @click="onClickPrint('log_object')">打印对象</mt-button>
+
+        <mt-button type="default" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
+        <mt-button type="default" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
+      </div>
+      <mt-switch v-model='isDev'>切换</mt-switch>
+    </div>
     <!-- import JavaScript -->
     <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
-    <!-- <script src="https://unpkg.com/@whinc/web-console"></script> -->
-    <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
     <script>
       new Vue({
         el: '#app',
+        data: function () {
+          return {
+            isDev: false
+          }
+        },
         mounted: function () {
           this.launchWebConsole()
         },
@@ -62,6 +78,14 @@
             }
           },
           onClickPrint: function (type) {
+            var numInt = 1
+            var numFloat = 1.23
+            var str = 'hello'
+            var obj = {
+              a: 1,
+              b: 2
+            }
+            var arr = [1, 2]
             switch (type) {
               case 'log':
                 console.log('log')
@@ -78,17 +102,27 @@
               case 'error':
                 console.error('error')
                 break
-              case 'log_multi_params':
+              case 'log_level':
+                console.log('log')
+                console.info('info')
+                console.debug('debug')
+                console.warn('warn')
+                console.error('error')
+                break
+              case 'log_params':
                 console.log('a', 'b', 'c')
                 break
+              case 'log_format':
+                testLogFormat(numInt, '%i')
+                testLogFormat(numFloat, '%i')
+                testLogFormat(numInt, '%d')
+                testLogFormat(numFloat, '%d')
+                testLogFormat(numInt, '%f')
+                testLogFormat(numFloat, '%f')
+                testLogFormat(obj, '%s')
+                testLogFormat(obj, '%O')
+                break
               case 'log_object':
-                let obj = {
-                  string: "string",
-                  number: 100,
-                  boolean: true,
-                  undefined: undefined,
-                  null: null,
-                }
                 console.log('this is a object: ', obj)
                 break
             }
@@ -112,10 +146,16 @@
           }
         }
       })
+      // 测试log格式化输出
+      function testLogFormat(value, format) {
+        console.log('console.log("%' + format + '", %s) -> ' + format, JSON.stringify(value), value)
+      }
     </script>
+    <!-- <script src="https://unpkg.com/@whinc/web-console"></script> -->
+    <!-- <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script> -->
     <script>
       // init vConsole
-      var vConsole = new VConsole();
+      // var vConsole = new VConsole();
     </script>
     <!-- built files will be auto injected -->
   </body>
