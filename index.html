@@ -6,8 +6,14 @@
       #app .mint-button {
         width: 100%;
         margin-bottom: 15px;
-      }</style><link rel=preload as=script href=./js/vendor.d05ad093.js><link rel=preload as=script href=./js/app.ff09e8c1.js></head><body><div id=app><h1>WebConsole</h1><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_multi_params')">打印多参数</mt-button><mt-button type=default @click="onClickPrint('log_object')">打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><script src=https://unpkg.com/vue/dist/vue.js></script><script src=https://unpkg.com/mint-ui/lib/index.js></script><script>new Vue({
+      }</style><link rel=preload as=script href=./js/vendor.d05ad093.js><link rel=preload as=script href=./js/app.281eae4a.js></head><body><script src=https://unpkg.com/vue/dist/vue.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click="onClickPrint('log_format')">打印格式化</mt-button><mt-button type=primary @click="onClickPrint('log_object')">打印对象</mt-button><h2>Network Test</h2><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click="onClickPrint('log_object')">打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=https://unpkg.com/mint-ui/lib/index.js></script><script>var isDev = '' !== 'production'
+      new Vue({
         el: '#app',
+        data: function () {
+          return {
+            isDev: isDev
+          }
+        },
         mounted: function () {
           this.launchWebConsole()
         },
@@ -26,6 +32,14 @@
             }
           },
           onClickPrint: function (type) {
+            var numInt = 1
+            var numFloat = 1.23
+            var str = 'hello'
+            var obj = {
+              a: 1,
+              b: 2
+            }
+            var arr = [1, 2]
             switch (type) {
               case 'log':
                 console.log('log')
@@ -42,17 +56,27 @@
               case 'error':
                 console.error('error')
                 break
-              case 'log_multi_params':
+              case 'log_level':
+                console.log('log')
+                console.info('info')
+                console.debug('debug')
+                console.warn('warn')
+                console.error('error')
+                break
+              case 'log_params':
                 console.log('a', 'b', 'c')
                 break
+              case 'log_format':
+                testLogFormat(numInt, '%i')
+                testLogFormat(numFloat, '%i')
+                testLogFormat(numInt, '%d')
+                testLogFormat(numFloat, '%d')
+                testLogFormat(numInt, '%f')
+                testLogFormat(numFloat, '%f')
+                testLogFormat(obj, '%s')
+                testLogFormat(obj, '%O')
+                break
               case 'log_object':
-                let obj = {
-                  string: "string",
-                  number: 100,
-                  boolean: true,
-                  undefined: undefined,
-                  null: null,
-                }
                 console.log('this is a object: ', obj)
                 break
             }
@@ -75,6 +99,10 @@
             }
           }
         }
-      })</script><script>// init vConsole
-      var vConsole = new VConsole();</script><script type=text/javascript>(function(r){var n=window["webpackJsonp"];window["webpackJsonp"]=function(e,u,c){for(var i,f,p,l=0,a=[];l<e.length;l++)f=e[l],t[f]&&a.push(t[f][0]),t[f]=0;for(i in u)Object.prototype.hasOwnProperty.call(u,i)&&(r[i]=u[i]);n&&n(e,u,c);while(a.length)a.shift()();if(c)for(l=0;l<c.length;l++)p=o(o.s=c[l]);return p};var e={},t={2:0};function o(n){if(e[n])return e[n].exports;var t=e[n]={i:n,l:!1,exports:{}};return r[n].call(t.exports,t,t.exports,o),t.l=!0,t.exports}o.m=r,o.c=e,o.d=function(r,n,e){o.o(r,n)||Object.defineProperty(r,n,{configurable:!1,enumerable:!0,get:e})},o.n=function(r){var n=r&&r.__esModule?function(){return r["default"]}:function(){return r};return o.d(n,"a",n),n},o.o=function(r,n){return Object.prototype.hasOwnProperty.call(r,n)},o.p="./",o.oe=function(r){throw console.error(r),r}})([]);
-//# sourceMappingURL=js/manifest.27e3dd78.js.map</script><script type=text/javascript src=./js/vendor.d05ad093.js></script><script type=text/javascript src=./js/app.ff09e8c1.js></script></body></html>
+      })
+      // 测试log格式化输出
+      function testLogFormat(value, format) {
+        console.log('console.log("%' + format + '", %s) -> ' + format, JSON.stringify(value), value)
+      }</script><script>// init vConsole
+      // var vConsole = new VConsole();</script><script type=text/javascript>(function(r){var n=window["webpackJsonp"];window["webpackJsonp"]=function(e,u,c){for(var i,f,p,l=0,a=[];l<e.length;l++)f=e[l],t[f]&&a.push(t[f][0]),t[f]=0;for(i in u)Object.prototype.hasOwnProperty.call(u,i)&&(r[i]=u[i]);n&&n(e,u,c);while(a.length)a.shift()();if(c)for(l=0;l<c.length;l++)p=o(o.s=c[l]);return p};var e={},t={2:0};function o(n){if(e[n])return e[n].exports;var t=e[n]={i:n,l:!1,exports:{}};return r[n].call(t.exports,t,t.exports,o),t.l=!0,t.exports}o.m=r,o.c=e,o.d=function(r,n,e){o.o(r,n)||Object.defineProperty(r,n,{configurable:!1,enumerable:!0,get:e})},o.n=function(r){var n=r&&r.__esModule?function(){return r["default"]}:function(){return r};return o.d(n,"a",n),n},o.o=function(r,n){return Object.prototype.hasOwnProperty.call(r,n)},o.p="./",o.oe=function(r){throw console.error(r),r}})([]);
+//# sourceMappingURL=js/manifest.27e3dd78.js.map</script><script type=text/javascript src=./js/vendor.d05ad093.js></script><script type=text/javascript src=./js/app.281eae4a.js></script></body></html>
