@@ -38,21 +38,18 @@
     </div>
     <div class="message-list">
     </div>
-    <tab-bar class="foot-bar">
-      <tab-item>
-        <button class="item" @click="onClickClear">Clear</button>
-      </tab-item>
-      <tab-item>
-        <button class="item" @click="onClickHide">Hide</button>
-      </tab-item>
-    </tab-bar>
+    <my-foot-bar>
+      <my-button @click="onClickClear">Clear</my-button>
+      <my-foot-separator/>
+      <my-button @click="onClickHide">Hide</my-button>
+    </my-foot-bar>
   </div>
 
 </template>
 
 <script>
 import {TabContainer, TabContainerItem} from 'mint-ui'
-import {TabBar, TabItem} from '../components'
+import {TabBar, TabItem, MyFootBar, MyButton, MyFootSeparator} from '@/components'
 import HttpHeader from './HttpHeader'
 import HttpResponse from './HttpResponse'
 
@@ -60,6 +57,9 @@ export default {
   components: {
     TabItem,
     TabBar,
+    MyFootBar,
+    MyFootSeparator,
+    MyButton,
     HttpHeader,
     HttpResponse,
     [TabContainer.name]: TabContainer,
@@ -243,34 +243,5 @@ export default {
   max-height: 40vh;
   overflow-y: scroll;
   padding: 2px 5px;
-}
-
-.foot-bar {
-  position: absolute;
-  height: 39px;
-  bottom: 0px;
-  line-height: 39px;
-  border-top: 1px solid #d9d9d9;
-  background-color: white;
-}
-.foot-bar .item {
-  width: 100%;
-  height: 100%;
-  background-color: white;
-  padding: 0px;
-  outline: none;
-  border: none;
-  position: relative;
-}
-.foot-bar .item:active {
-  background-color: rgba(0, 0, 0, .15);
-}
-.foot-bar .item::after{
-    content: " ";
-    position: absolute;
-    top: .53846154em;
-    bottom: .53846154em;
-    right: 0;
-    border-right: 1px solid #d9d9d9;
 }
 </style>

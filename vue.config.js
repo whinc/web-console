@@ -1,3 +1,5 @@
+const path = require('path') 
+
 module.exports = {
   css: { extract: false },
   configureWebpack: config => {
@@ -6,6 +8,9 @@ module.exports = {
       config.output.publicPath = './'
     } else {
       // mutate for development...
+    }
+    config.resolve.alias = {
+      '@': path.resolve(__dirname, 'src')
     }
   }
 }

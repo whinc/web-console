@@ -27,24 +27,27 @@
         :params="msg.params"
       />
     </div>
-    <tab-bar class="foot-bar">
-      <my-button>Clear</my-button>
-      <div class="col-line"></div>
-      <my-button>Hide</my-button>
-    </tab-bar>
+    <my-foot-bar>
+      <my-button @click="onClickClear">Clear</my-button>
+      <my-foot-separator/>
+      <my-button @click="onClickHide">Hide</my-button>
+    </my-foot-bar>
   </div>
 </template>
 
 <script>
 import Message from './Message'
-import {TabBar, TabItem, MyButton} from '../components'
-import {cloneDeep} from '../utils'
+import {TabBar, TabItem, MyButton, MyFootBar, MyFootSeparator} from '@/components'
+import {cloneDeep} from '@/utils'
+
 export default {
   components: {
     Message,
     MyButton,
+    MyFootSeparator,
     TabItem,
-    TabBar
+    TabBar,
+    MyFootBar
   },
   data () {
     return {
@@ -110,20 +113,5 @@ export default {
   width: 100%;
   left: 0px;
   overflow-y: scroll;
-}
-
-.foot-bar {
-  position: absolute;
-  height: 39px;
-  bottom: 0px;
-  line-height: 39px;
-  border-top: 1px solid #d9d9d9;
-}
-.col-line {
-  width: 1px;
-  height: 80%;
-  margin-top: auto;
-  margin-bottom: auto;
-  border-left: 1px solid #d9d9d9;
 }
 </style>
