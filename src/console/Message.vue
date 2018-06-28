@@ -9,11 +9,7 @@ export default {
       type: String,
       default: 'log'
     },
-    value: {
-      type: String,
-      default: ''
-    },
-    params: {
+    logArgs: {
       type: Array,
       default () {
         return []
@@ -22,7 +18,7 @@ export default {
   },
   computed: {
     content () {
-      return this.value + this.params.join(' ')
+      return this.logArgs.join(' ')
     }
   }
 }

@@ -20,11 +20,10 @@
     <div class="message-list">
       <message
         v-for="(msg, index) in msgList"
-        v-if="msg.type === activeType || activeType === 'all'"
         :key="index"
+        v-if="msg.type === activeType || activeType === 'all'"
         :type="msg.type"
-        :value="msg.value"
-        :params="msg.params"
+        :log-args="msg.logArgs"
       />
     </div>
     <my-foot-bar>
@@ -52,6 +51,14 @@ export default {
   data () {
     return {
       activeType: 'all',
+      /**
+       * [{
+       *  // 日志类型，取值 all/log/info/error/warn/debug
+       *  type: String,
+       *  // log 的参数数组
+       *  logArgs: Array
+       * }]
+       */
       msgList: []
     }
   },
@@ -64,11 +71,9 @@ export default {
       originConsole[name] = window.console[name]
 
       window.console[name] = function (...args) {
-        const _args = cloneDeep(args)
         vm.msgList.push({
           type: name,
-          value: _args[0],
-          params: _args.slice(1)
+          logArgs: cloneDeep(args)
         })
         originConsole[name].apply(this, args)
       }
