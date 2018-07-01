@@ -67,17 +67,22 @@ export default {
     const vm = this
     const originConsole = { }
     const names = ['log', 'info', 'error', 'warn', 'debug']
+    const root = this.$root
     names.forEach(name => {
       originConsole[name] = window.console[name]
 
       window.console[name] = function (...args) {
-        vm.msgList.push({
-          type: name,
-          logArgs: cloneDeep(args)
-        })
+        if (!root.disableHookConsole) {
+          vm.msgList.push({
+            type: name,
+            logArgs: cloneDeep(args)
+          })
+        }
         originConsole[name].apply(this, args)
       }
     })
+
+    this.$root.console = originConsole
   },
   methods: {
     onClickClear () {

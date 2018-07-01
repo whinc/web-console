@@ -57,7 +57,8 @@
         el: '#app',
         data: function () {
           return {
-            isDev: false
+            // isDev: false
+            isDev: true
           }
         },
         mounted: function () {
@@ -69,7 +70,7 @@
             if (window.WebConsole) {
               WebConsole.init({
                 activeTab: 'console',
-                panelVisible: true
+                panelVisible: false
               })
             } else {
               setTimeout(function () {
@@ -110,7 +111,7 @@
                 console.error('error')
                 break
               case 'log_params':
-                console.log('a', 'b', 'c')
+                console.log('aa', 100, true, null, undefined, {a: 'a'}, Symbol())
                 break
               case 'log_format':
                 testLogFormat(numInt, '%i')
