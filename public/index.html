@@ -114,6 +114,7 @@
                 console.log('aa', 100, true, null, undefined, {a: 'a'}, Symbol())
                 break
               case 'log_format':
+                // 测试占位符的支持类型
                 testLogFormat(numInt, '%i')
                 testLogFormat(numFloat, '%i')
                 testLogFormat(numInt, '%d')
@@ -122,6 +123,15 @@
                 testLogFormat(numFloat, '%f')
                 testLogFormat(obj, '%s')
                 testLogFormat(obj, '%O')
+                // 测试占位符缺少对应的参数
+                console.log('console.log("-%s%i%d%f%o%O%c-")')
+                console.log('-%s%i%d%f%o%O%c-')
+                // 测试参数多余占位符
+                console.log('console.log("-%s-", 99, 99)')
+                console.log('-%s-', 99, 99)
+                // 测试占位符和参数的高亮
+                console.log("console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})")
+                console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})
                 break
               case 'log_object':
                 console.log('this is a object: ', obj)
@@ -149,7 +159,8 @@
       })
       // 测试log格式化输出
       function testLogFormat(value, format) {
-        console.log('console.log("%' + format + '", %s) -> ' + format, JSON.stringify(value), value)
+        console.log('console.log(%' + format + ', %s)', JSON.stringify(value))
+        console.log(format, value)
       }
     </script>
     <!-- <script src="https://unpkg.com/@whinc/web-console"></script> -->

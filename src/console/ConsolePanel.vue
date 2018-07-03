@@ -91,6 +91,11 @@ export default {
     onClickHide () {
       this.$root.$emit('hide')
     }
+  },
+  errorCaptured (error) {
+    // 在浏览器控制台输出错误原因
+    this.$root.console.error(error)
+    return false
   }
 }
 </script>
