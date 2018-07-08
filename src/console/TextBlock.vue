@@ -1,16 +1,22 @@
 <template>
   <div class="text-block" @click.stop="isFold = !isFold">
-    <div>
+    <!-- 当前键值对 -->
+    <div class="prop">
+      <!-- indentSize大于0，或者属性数量大于0，展示折叠展开符 -->
+      <div v-if="indentSize > 0 || properties.length > 0" class="indent" :style="indentStyle">
+        <div class="triangle" :class="arrowClass"></div>
+      </div>
       <span v-if="hasName" :class="[nameType]">{{name}}</span>
-      <span v-if="hasName">:</span>
+      <span v-if="hasName" class="space">: </span>
       <span :class="valueClass">{{formattedValue}}</span>  
     </div>
-    <div v-for="item in properties" :key="item.name" v-if="!isFold" class="prop">
-      <div class="indent"></div>
+    <!-- 子键值对 -->
+    <div v-for="item in properties" :key="item.name" v-if="!isFold">
       <text-block
         :name="item.name"
         :nameType="item.nameType"
         :value="item.value"
+        :indentSize="indentSize + 1"
       />
     </div>
   </div>
@@ -44,6 +50,10 @@ export default {
       validator: (value) => {
         return ['public', 'private'].indexOf(value) !== -1
       }
+    },
+    indentSize: {
+      type: Number,
+      default: 1
     }
   },
   data () {
@@ -84,6 +94,16 @@ export default {
       }
       return value
     },
+    indentStyle () {
+      return {
+        width: this.indentSize > 0 ? `${this.indentSize}em` : 'auto' 
+      }
+    },
+    // 折叠/展开箭头样式（使用CSS绘制）
+    arrowClass () {
+      return this.properties.length > 0 ? (this.isFold ? 'fold' : 'unfold') : ''
+    },
+    // 值的高亮样式
     valueClass () {
       const value = this.value
       return {
@@ -131,12 +151,39 @@ export default {
   .private {
     color: #B871BD;
   }
+  .indent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 3px;
+  }
+  .triangle {
+    width: 0;
+    height: 0;
+    $border-width: 5px;
+    /* 等边三角形，tan(30) 约为 0.5773502691896257 */
+    &.fold {
+      border-left: $border-width solid black;
+      border-top: ($border-width * 0.5773502691896257) solid transparent;
+      border-bottom: ($border-width * 0.5773502691896257) solid transparent;
+    }
+    &.unfold {
+      border-top: $border-width solid black;
+      border-left: ($border-width * 0.5773502691896257) solid transparent;
+      border-right: ($border-width * 0.5773502691896257) solid transparent;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+  }
   .prop {
     display: flex;
     flex-direction: row;
   }
-  .indent {
-    width: 1em;
+  .space {
+    white-space: pre;
   }
 }
 </style>

@@ -4,7 +4,11 @@
       Message 组件内部错误
     </div>
     <template v-else v-for="(value, index) in values">
-      <text-block :value="value" :key="index + '1'" />
+      <text-block
+        :value="value"
+        :key="index + '1'"
+        :indentSize="0"
+      />
       <span v-if="index !== values.length - 1" class="space" :key="index + '2'">{{space}}</span>
     </template>
   </div>
