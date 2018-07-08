@@ -4,7 +4,7 @@
       Message 组件内部错误
     </div>
     <template v-else v-for="(value, index) in values">
-      <value-block :value="value" :key="index + '1'" />
+      <text-block :value="value" :key="index + '1'" />
       <span v-if="index !== values.length - 1" class="keep-white" :key="index + '2'">{{space}}</span>
     </template>
   </div>
@@ -12,11 +12,11 @@
 
 <script>
 import {isString, isNumber} from '@/utils'
-import ValueBlock from './ValueBlock'
+import TextBlock from './TextBlock'
 
 export default {
   components: {
-    ValueBlock
+    TextBlock
   },
   props: {
     type: {
