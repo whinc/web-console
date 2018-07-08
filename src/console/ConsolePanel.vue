@@ -72,12 +72,10 @@ export default {
       originConsole[name] = window.console[name]
 
       window.console[name] = function (...args) {
-        if (!root.disableHookConsole) {
-          vm.msgList.push({
-            type: name,
-            logArgs: cloneDeep(args)
-          })
-        }
+        vm.msgList.push({
+          type: name,
+          logArgs: Object.freeze(args)
+        })
         originConsole[name].apply(this, args)
       }
     })

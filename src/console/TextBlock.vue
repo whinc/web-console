@@ -73,14 +73,14 @@ export default {
       // TODO: JSON.stringify 不能用于将循环引用的结构 JSON 化，需要进行特殊处理
       // 参考 https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json#
       const properties = Object.getOwnPropertyNames(obj)
-      .filter(name => name !== '__ob__')
-      .map(name => {
-        return {
-          name,
-          nameType: 'public',
-          value: obj[name]
-        }
-      })
+        .filter(name => name !== '__ob__')
+        .map(name => {
+          return {
+            name,
+            nameType: 'public',
+            value: obj[name]
+          }
+        })
       return properties
     },
     formattedValue () {
