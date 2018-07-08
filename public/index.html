@@ -134,7 +134,45 @@
                 console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})
                 break
               case 'log_object':
-                console.log('this is a object: ', obj)
+                console.log('this is a object: ', obj, 'wa haha')
+                let obj2 = {
+                  a: 1,
+                  b: "b",
+                  c: true,
+                  d: undefined,
+                  e: null,
+                  f: Symbol(),
+                  g: {
+                    a: 1,
+                    b: "b"
+                  }
+                }
+                Object.defineProperties(obj2, {
+                  'h': {
+                    enumerable: true,
+                    configurable: true,
+                    value: 10
+                  },
+                  'i': {
+                    enumerable: false,
+                    configurable: false,
+                    value: 10
+                  },
+                  'j': {
+                    get: () => {
+                      return Math.random()
+                    },
+                    set: v => {}
+                  },
+                  'k': {
+                    get: function() {
+                      return Math.random()
+                    },
+                    set: function () {}
+                  }
+                })
+                console.log('obj2:', obj2)
+                console.log()
                 break
             }
           },

@@ -5,7 +5,7 @@
     </div>
     <template v-else v-for="(value, index) in values">
       <text-block :value="value" :key="index + '1'" />
-      <span v-if="index !== values.length - 1" class="keep-white" :key="index + '2'">{{space}}</span>
+      <span v-if="index !== values.length - 1" class="space" :key="index + '2'">{{space}}</span>
     </template>
   </div>
 </template>
@@ -129,7 +129,7 @@ window.format = function format (logArgs, startPos = 0) {
 .message {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  flex-wrap: wrap;
   min-height: 30px;
   padding: 0 4px;
   border-bottom: 1px solid;
@@ -151,7 +151,7 @@ window.format = function format (logArgs, startPos = 0) {
   }
 }
 
-.keep-white {
+.space {
   white-space: pre;
 }
 </style>

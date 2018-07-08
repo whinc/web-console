@@ -7,4 +7,4 @@ export const isFunction = v => typeof v === 'function'
 export const isNumber = v => typeof v === 'number'
 export const isSymbol = v => typeof v === 'symbol'
 export const isBoolean = v => typeof v === 'boolean'
-export const isPlainObject = v => typeof v === 'object' && v && v.constructor === Object
+export const isObject = v => typeof v === 'object' && v
