@@ -125,46 +125,31 @@ window.format = function format (logArgs, startPos = 0) {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .message {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   min-height: 30px;
   padding: 0 4px;
   border-bottom: 1px solid;
   overflow-y: scroll;
-  /* display: flex;
-  flex-direction: row; */
-  align-items: center;
+  &.log, &.debug, &.info {
+    color: #000;
+    border-bottom-color: #F0F0F0;
+    background-color: #FFF;
+  }
+  &.error {
+    color: #dc143c;
+    border-color: #f4a0ab;
+    background-color: #ffe4e1;
+  }
+  &.warn {
+    color: orange;
+    border-color: #ffb930;
+    background-color: #fffacd;
+  }
 }
-
-.log, .debug, .info {
-  color: #000;
-  border-color: #FFF;
-  background-color: #FFF;
-}
-
-.error {
-  color: #dc143c;
-  border-color: #f4a0ab;
-  background-color: #ffe4e1;
-}
-
-/* .info {
-  color: #6a5acd;
-  border-color: #FFF;
-  background-color: #FFF;
-} */
-
-.warn {
-  color: orange;
-  border-color: #ffb930;
-  background-color: #fffacd;
-}
-
-/* .debug {
-  color: #daa520;
-  border-color: #FFF;
-  background-color: #FFF;
-} */
 
 .keep-white {
   white-space: pre;
