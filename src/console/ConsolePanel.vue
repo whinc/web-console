@@ -37,7 +37,7 @@
 <script>
 import Message from './Message'
 import {TabBar, TabItem, MyButton, MyFootBar, MyFootSeparator} from '@/components'
-import {cloneDeep} from '@/utils'
+import {cloneDeep, _console} from '@/utils'
 
 export default {
   components: {
@@ -67,7 +67,6 @@ export default {
     const vm = this
     const originConsole = { }
     const names = ['log', 'info', 'error', 'warn', 'debug']
-    const root = this.$root
     names.forEach(name => {
       originConsole[name] = window.console[name]
 
@@ -79,8 +78,6 @@ export default {
         originConsole[name].apply(this, args)
       }
     })
-
-    this.$root.console = originConsole
   },
   methods: {
     onClickClear () {
@@ -92,7 +89,7 @@ export default {
   },
   errorCaptured (error) {
     // 在浏览器控制台输出错误原因
-    this.$root.console.error(error)
+    _console.error(error)
     return false
   }
 }

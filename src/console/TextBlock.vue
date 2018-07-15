@@ -1,21 +1,27 @@
 <template>
   <div class="text-block" @click.stop="isFold = !isFold">
-    <!-- 当前键值对 -->
+    <!-- 键值对 -->
     <div class="prop">
-      <!-- indentSize大于0，或者属性数量大于0，展示折叠展开符 -->
+      <!-- 折叠展开符(指定的缩进量大于0，或者传入值是对象且属性数量大于0) -->
       <div v-if="indentSize > 0 || properties.length > 0" class="indent" :style="indentStyle">
         <div class="triangle" :class="arrowClass"></div>
       </div>
-      <span v-if="hasName" :class="[nameType]">{{name}}</span>
-      <span v-if="hasName" class="space">: </span>
-      <span :class="valueClass">{{formattedValue}}</span>  
+      <!-- 键 -->
+      <template v-if="hasName">
+        <span :class="[descriptor.enumerable ? 'public' : 'private']">{{name}}</span>
+        <span class="space">: </span>
+      </template>
+      <!-- 值 -->
+      <!-- get 访问器点击时才计算结果，而且只计算一次 -->
+      <span v-if="isGetAccessor" @click="onClickGetAccessor">{{computedValue}}</span>
+      <span v-else :class="valueClass">{{formattedValue}}</span>  
     </div>
-    <!-- 子键值对 -->
-    <div v-for="item in properties" :key="item.name" v-if="!isFold">
+    <!-- 子节点 -->
+    <!-- 折叠展开使用 v-show 是为了保留组件内部状态 -->
+    <div v-for="item in properties" :key="item.name" v-show="!isFold">
       <text-block
         :name="item.name"
-        :nameType="item.nameType"
-        :value="item.value"
+        :descriptor="item.descriptor"
         :indentSize="indentSize + 1"
       />
     </div>
@@ -33,24 +39,39 @@ import {
   isNumber,
   isObject,
   isSymbol,
-  isUndefined
+  isUndefined,
+  _console
 } from '@/utils'
 
+/**
+ * 树状展示传入值的结构
+ * 
+ * 使用示例：
+ * // 展示值
+ * <text-block :descriptor="{value: 1}" />
+ * // 展示键和值
+ * <text-block :name="age" :descriptor="{value: 1}" />
+ */
 export default {
   name: 'text-block',
   props: {
-    value: {
-      required: true
-    },
-    name: {
-      type: String
-    },
-    nameType: {
-      type: String,
-      validator: (value) => {
-        return ['public', 'private'].indexOf(value) !== -1
+    // 属性名
+    name: [String, Symbol],
+    // 属性描述符，结构同 Object.defineProperty() 的第三个参数
+    descriptor: {
+      type: Object,
+      required: true,
+      validator: descriptor => {
+        try {
+          Object.defineProperty({}, 'key', descriptor)
+        } catch (error) {
+          _console.error(error.message, 'descriptor:', descriptor)
+        }
+        // ConsolePanel 内部组件不能再次抛出错误，否则会造成循环错误
+        return true
       }
     },
+    // 缩进数量
     indentSize: {
       type: Number,
       default: 1
@@ -58,33 +79,39 @@ export default {
   },
   data () {
     return {
-      isFold: true
+      // 是否折叠属性树
+      isFold: true,
+      // 当前 get 访问器是否已计算（仅当当前 descriptor 含 get 访问器时有效）
+      hasComputed: false,
+      // 当前 get 访问器计算结果（仅当当前 descriptor 含 get 访问器时有效）
+      computedValue: '(...)'
     }
   },
   computed: {
     hasName () {
       return !!this.name
     },
+    isGetAccessor () {
+      return typeof this.descriptor.get === 'function'
+    },
+    // 当前对象的所有属性信息
     properties () {
-      if (!isObject(this.value)) {
+      if (!isObject(this.descriptor.value)) {
         return []
       }
-      const obj = this.value
+      const obj = this.descriptor.value
       // TODO: JSON.stringify 不能用于将循环引用的结构 JSON 化，需要进行特殊处理
       // 参考 https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json#
-      const properties = Object.getOwnPropertyNames(obj)
+      const properties = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)]
         .filter(name => name !== '__ob__')
         .map(name => {
-          return {
-            name,
-            nameType: 'public',
-            value: obj[name]
-          }
+          const descriptor = Object.getOwnPropertyDescriptor(obj, name)
+          return { name, descriptor }
         })
       return properties
     },
     formattedValue () {
-      const value = this.value
+      const value = this.descriptor.value
       if (isNull(value) || isUndefined(value)) {
         return String(value)
       }
@@ -105,15 +132,23 @@ export default {
     },
     // 值的高亮样式
     valueClass () {
-      const value = this.value
+      const value = this.descriptor.value
       return {
         null: isNull(value),
         undefined: isUndefined(value),
         boolean: isBoolean(value),
         number: isNumber(value),
-        // 字符串直接输出到控制台是默认的黑色，如果放到对象或数组中（即有key）时，需要高亮并带双引号
+        // 字符串仅当放到对象或数组中（即有key）时，需要高亮并带双引号显式
         string: isString(value) && this.hasName,
         symbol: isSymbol(value)
+      }
+    }
+  },
+  methods: {
+    onClickGetAccessor () {
+      if (!this.hasComputed) {  // 最多计算一次
+        this.computedValue = this.descriptor.get()
+        this.hasComputed = true
       }
     }
   }

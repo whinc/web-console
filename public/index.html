@@ -173,6 +173,31 @@
                     set: function () {}
                   }
                 })
+                Object.defineProperties(obj2.g, {
+                  'h': {
+                    enumerable: true,
+                    configurable: true,
+                    value: 10
+                  },
+                  'i': {
+                    enumerable: false,
+                    configurable: false,
+                    value: 10
+                  },
+                  'j': {
+                    get: () => {
+                      return Math.random()
+                    },
+                    set: v => {}
+                  },
+                  'k': {
+                    get: function() {
+                      return Math.random()
+                    },
+                    set: function () {}
+                  }
+                })
+                window.obj2 = obj2
                 console.log('obj2:', obj2)
                 break
             }

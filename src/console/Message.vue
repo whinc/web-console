@@ -5,7 +5,7 @@
     </div>
     <template v-else v-for="(value, index) in values">
       <text-block
-        :value="value"
+        :descriptor="{value}"
         :key="index + '1'"
         :indentSize="0"
       />
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {isString, isNumber} from '@/utils'
+import {isString, isNumber, _console} from '@/utils'
 import TextBlock from './TextBlock'
 
 export default {
@@ -51,7 +51,7 @@ export default {
   // 捕获 console API 引发的错误，避免陷入循环渲染
   errorCaptured (error) {
     // 在浏览器控制台输出错误原因
-    this.$root.console.error(error)
+    _console.error(error)
     // UI 上展示出错提示
     this.isErrorCaptured = true
     return false
@@ -70,7 +70,7 @@ export default {
  * @param {Array} logArgs 参数列表，第一个参数可以包含占位符
  * @param {Number} startPos 第一个参数中查找占位符的起始位置
  */
-window.format = function format (logArgs, startPos = 0) {
+function format (logArgs, startPos = 0) {
   if (!Array.isArray(logArgs)) {
     return logArgs
   }
