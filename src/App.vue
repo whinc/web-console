@@ -73,6 +73,16 @@ export default {
 }
 </script>
 
+<style lang="scss">
+// 全局样式
+body {
+  .source-code {
+    font-family: Consolas, Lucida Console, dejavu sans mono, monospace;
+  }
+}
+</style>
+
+
 <style scoped>
 
 .app {

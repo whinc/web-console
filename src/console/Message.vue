@@ -1,5 +1,5 @@
 <template>
-  <div class="message" :class="[type]">
+  <div class="message source-code" :class="[type]">
     <div v-if="isErrorCaptured" class="error">
       Message 组件内部错误
     </div>
