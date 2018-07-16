@@ -134,7 +134,15 @@
                 console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})
                 break
               case 'log_object':
-                console.log('this is a object: ', obj, 'wa haha')
+                // console.log('obj:', {a: 1})
+                // break
+                // console.log('this is a object: ', obj, 'wa haha')
+                // console.log({
+                //   c: 3,
+                //   b: 2,
+                //   a: 1
+                // })
+                // break
                 let obj2 = {
                   a: 1,
                   b: "b",
@@ -147,30 +155,64 @@
                     b: "b"
                   },
                   [Symbol()]: 10,
-                  [Symbol('age')]: 28
+                  [Symbol('age')]: 28,
+                  Z: 'Z',
+                  M: 'm',
+                  z: 'z'
                 }
                 Object.defineProperties(obj2, {
+                  // value
                   'h': {
                     enumerable: true,
                     configurable: true,
-                    value: 10
+                    value: 10,
+                    writable: false
                   },
+                  // value
                   'i': {
                     enumerable: false,
                     configurable: false,
-                    value: 10
+                    value: 10,
+                    writable: true
                   },
+                  // getter and setter
                   'j': {
                     get: () => {
                       return Math.random()
                     },
                     set: v => {}
                   },
-                  'k': {
-                    get: function() {
+                  'J': {
+                    get: () => {
                       return Math.random()
                     },
-                    set: function () {}
+                    set: v => {}
+                  },
+                  // only getter
+                  'k': {
+                    get: function() {
+                      return {
+                        a: 1,
+                        b: "b"
+                      }
+                    },
+                  },
+                  'K': {
+                    get: function() {
+                      return {
+                        a: 1,
+                        b: "b"
+                      }
+                    },
+                  },
+                  // only setter
+                  'l': {
+                    set: function(v) {
+                    }
+                  },
+                  [Symbol('a')]: {
+                    value: '1',
+                    enumerable: false
                   }
                 })
                 Object.defineProperties(obj2.g, {

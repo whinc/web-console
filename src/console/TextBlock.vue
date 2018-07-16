@@ -1,7 +1,7 @@
 <template>
-  <div class="text-block" @click.stop="isFold = !isFold">
+  <div class="text-block">
     <!-- 键值对 -->
-    <div class="prop">
+    <div class="prop" @click.stop="isFold = !isFold">
       <!-- 折叠展开符(指定的缩进量大于0，或者传入值是对象且属性数量大于0) -->
       <div v-if="indentSize > 0 || properties.length > 0" class="indent" :style="indentStyle">
         <div class="triangle" :class="arrowClass"></div>
@@ -18,7 +18,7 @@
     </div>
     <!-- 子节点 -->
     <!-- 折叠展开使用 v-show 是为了保留组件内部状态 -->
-    <div v-for="item in properties" :key="item.name" v-show="!isFold">
+    <div v-for="(item, index) in properties" :key="String(item.name) + index" v-show="!isFold">
       <text-block
         :name="item.name"
         :descriptor="item.descriptor"
@@ -40,7 +40,9 @@ import {
   isObject,
   isSymbol,
   isUndefined,
-  _console
+  flatMap,
+  _console,
+isFunction
 } from '@/utils'
 
 /**
@@ -94,21 +96,107 @@ export default {
     isGetAccessor () {
       return typeof this.descriptor.get === 'function'
     },
-    // 当前对象的所有属性信息
+    // 当前对象的所有属性相关信息
     properties () {
       if (!isObject(this.descriptor.value)) {
         return []
       }
       const obj = this.descriptor.value
-      // TODO: JSON.stringify 不能用于将循环引用的结构 JSON 化，需要进行特殊处理
-      // 参考 https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json#
-      const properties = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)]
-        .filter(name => name !== '__ob__')
-        .map(name => {
-          const descriptor = Object.getOwnPropertyDescriptor(obj, name)
-          return { name, descriptor }
+
+      // 获取属性名及其描述符
+      const ownKeys = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)]
+      const properties = flatMap(ownKeys, (name) => {
+        const descriptor = Object.getOwnPropertyDescriptor(obj, name)
+        if (!descriptor) {
+          return []
+        }
+
+        // value and writable 与 get/set 访问器不会同时存在
+        if (isFunction(descriptor.get) && isFunction(descriptor.set)) { // 同时存在 getter 和 setter
+          return [
+            {name, descriptor},
+            {
+              name: `get ${name}`,
+              descriptor: {
+                value: descriptor.get,
+                enumerable: false
+              }
+            },
+            {
+              name: `set ${name}`,
+              descriptor: {
+                value: descriptor.set,
+                enumerable: false
+              }
+            }
+          ]
+        } else if (isFunction(descriptor.get) && !isFunction(descriptor.set)) { // 只存在 getter 
+          return [
+            {name, descriptor},
+            {
+              name: `get ${name}`,
+              descriptor: {
+                value: descriptor.get,
+                enumerable: false
+              }
+            }
+          ]
+        } else if (!isFunction(descriptor.get) && isFunction(descriptor.set)) { // 只存在 setter
+          return [
+            {
+              name: `set ${name}`,
+              descriptor: {
+                value: descriptor.set,
+                enumerable: false
+              }
+            }
+          ]
+        } else { // 不存在 getter 或 setter，即 value 
+          return [{name, descriptor }]
+        }
+
+        // _console.log(name, ':', descriptor)
+      })
+        // TODO: JSON.stringify 不能用于将循环引用的结构 JSON 化，需要进行特殊处理，暂且过滤掉存在循环引用的属性
+        // 参考 https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json#
+        // .filter(name => name !== '__ob__')
+      
+      // 增加展示'__proto__'属性
+      if (properties.findIndex(v => v.name === '__proto__') === -1) {
+        properties.push({
+          name: '__proto__',
+          descriptor: {
+            value: obj.__proto__,
+            enumerable: false,
+            configurable: true
+          }
         })
-      return properties
+      }
+
+      // Object.prototype 不展示'__proto__'属性，而是展示其 get/set 访问器，避免递归
+      if (obj === Object.prototype) {
+        let index = properties.findIndex(v => v.name === '__proto__')
+        if (index !== -1) {
+          properties.splice(index, 1)
+          const descriptor = Object.getOwnPropertyDescriptor(obj, '__proto__')
+          properties.push({
+            name: 'get __proto__',
+            descriptor: {
+              value: descriptor.get,
+              enumerable: false
+            }
+          }, {
+            name: 'set __proto__',
+            descriptor: {
+              value: descriptor.set,
+              enumerable: false
+            }
+          })
+        }
+      }
+
+      // 属性排序
+      return properties.sort(propCompareFn)
     },
     formattedValue () {
       const value = this.descriptor.value
@@ -151,6 +239,69 @@ export default {
         this.hasComputed = true
       }
     }
+  }
+}
+
+/**
+ * 获取属性的展示优先级
+ * 先按类别划分优先级高低，相同优先级内部再根据字母顺序排序
+ * A public         // 0
+ * B public         // 
+ * a public         // 
+ * b public         // 
+ * Symbol() public  // 10
+ * Symbol(a) public // 
+ * A private        // 20
+ * B private        // 
+ * a private        // 
+ * b private        // 
+ * Symbol() private // 30
+ * get A            // 40
+ * set A            // 
+ * get B
+ * get a            // 
+ * set a            // 
+ * get b
+ * __proto__        // 100
+ */
+function getPropDisplayPriority (prop) {
+  let priority = 0
+  if (isString(prop.name)) {
+    if (prop.descriptor.enumerable) {
+      priority = 0
+    } else {
+      if (prop.name.indexOf('get ') === 0 || prop.name.indexOf('set ') === 0) {
+        priority = 40
+      } else {
+        priority = 20
+      }
+    }
+  } else {  // symbol
+    if (prop.descriptor.enumerable) {
+      priority = 10
+    } else {
+      priority = 30
+    }
+  }
+  if (prop.name === '__proto__') {
+    priority = 100
+  }
+  return priority
+}
+
+/**
+ * 属性排序比较函数
+ */
+function propCompareFn (propA, propB) {
+  let priorityA = getPropDisplayPriority(propA)
+  let priorityB = getPropDisplayPriority(propB)
+  // _console.log(propA.name, propB.name, priorityA, priorityB)
+  if (priorityA === priorityB) { // 优先级相同时按字母的 ASCII 码排序，码值越小越靠上
+    const a = String(propA.name)
+    const b = String(propB.name)
+    return a < b ? -1 : (a > b ? 1 : 0)
+  } else { // 否则，优先级越低越靠上
+    return priorityA - priorityB
   }
 }
 </script>
