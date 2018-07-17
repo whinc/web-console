@@ -98,10 +98,11 @@ export default {
     },
     // 当前对象的所有属性相关信息
     properties () {
-      if (!isObject(this.descriptor.value)) {
+      const value = this.isGetAccessor ? this.descriptor.get() : this.descriptor.value
+      if (!isObject(value)) {
         return []
       }
-      const obj = this.descriptor.value
+      const obj = value
 
       // 获取属性名及其描述符
       const ownKeys = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)]
