@@ -135,7 +135,7 @@ function format (logArgs, startPos = 0) {
   flex-direction: row;
   flex-wrap: wrap;
   min-height: 30px;
-  padding: 0 4px;
+  padding: 8px 4px;
   border-bottom: 1px solid;
   overflow-y: scroll;
   &.log, &.debug, &.info {

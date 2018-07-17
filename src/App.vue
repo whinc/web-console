@@ -86,7 +86,7 @@ body {
 <style scoped>
 
 .app {
-  font-size: 14px;
+  font-size: 16px;
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
