@@ -22,6 +22,7 @@
       <text-block
         :name="item.name"
         :descriptor="item.descriptor"
+        :needComputeProps="!isFold"
         :indentSize="indentSize + 1"
       />
     </div>
@@ -73,6 +74,11 @@ export default {
         return true
       }
     },
+    // 是否需要立即计算对象属性信息
+    needComputeProps: {
+      type: Boolean,
+      default: true
+    },
     // 缩进数量
     indentSize: {
       type: Number,
@@ -98,11 +104,32 @@ export default {
     },
     // 当前对象的所有属性相关信息
     properties () {
-      const value = this.isGetAccessor ? this.descriptor.get() : this.descriptor.value
-      if (!isObject(value)) {
+      // 如不需要计算属性可直接返回以提高性能
+      if (!this.needComputeProps) {
         return []
       }
-      const obj = value
+
+      // 获取对象值
+      // 如果是值属性，取 value 值；如果是 getter 访问器，取计算值
+      let value
+      if (this.isGetAccessor) {
+        if (this.hasComputed) {
+          value = this.computedValue
+        } else {
+          return []
+        }
+      } else {
+        value = this.descriptor.value
+      }
+
+      let obj
+      if (isObject(value)) {
+        obj = value
+      } else if (isFunction(value)) {
+        obj = value
+      } else {
+        return []
+      }
 
       // 获取属性名及其描述符
       const ownKeys = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)]
@@ -236,8 +263,13 @@ export default {
   methods: {
     onClickGetAccessor () {
       if (!this.hasComputed) {  // 最多计算一次
-        this.computedValue = this.descriptor.get()
         this.hasComputed = true
+        try {
+          this.computedValue = this.descriptor.get()
+        } catch (error) {
+          _console.error(error)
+          this.computedValue = '(error: ' + error.message + ')'
+        }
       }
     }
   }
