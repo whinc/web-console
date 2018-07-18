@@ -23,9 +23,13 @@ export default {
     TextBlock
   },
   props: {
+    msgId: {
+      type: String,
+      required: true
+    },
     type: {
       type: String,
-      default: 'log'
+      required: true
     },
     logArgs: {
       type: Array,

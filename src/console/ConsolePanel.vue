@@ -19,11 +19,12 @@
     </tab-bar>
     <div class="message-list">
       <message
-        v-for="(msg, index) in msgList"
-        :key="index"
+        v-for="msg in msgList"
+        :key="msg.id"
         v-if="msg.type === activeType || activeType === 'all'"
+        :msgId="msg.id"
         :type="msg.type"
-        :log-args="msg.logArgs"
+        :logArgs="msg.logArgs"
       />
     </div>
     <my-foot-bar>
@@ -37,7 +38,7 @@
 <script>
 import Message from './Message'
 import {TabBar, TabItem, MyButton, MyFootBar, MyFootSeparator} from '@/components'
-import {cloneDeep, _console} from '@/utils'
+import {cloneDeep, _console, uuid} from '@/utils'
 
 export default {
   components: {
@@ -71,10 +72,13 @@ export default {
       originConsole[name] = window.console[name]
 
       window.console[name] = function (...args) {
-        vm.msgList.push({
+        const msg = {
+          id: uuid(),
           type: name,
-          logArgs: Object.freeze(args)
-        })
+          logArgs: args
+        }
+        // 冻结计算结果，避免 Vue 添加额外属性
+        vm.msgList.push(Object.freeze(msg))
         originConsole[name].apply(this, args)
       }
     })

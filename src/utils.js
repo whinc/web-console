@@ -11,6 +11,19 @@ export const isObject = v => typeof v === 'object' && v
 
 export const noop = function () {}
 
+/**
+ * generate an uuid
+ * @returns string
+ */
+export const uuid = () => {
+  let id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+    let r = Math.random() * 16 | 0
+    let v = c === 'x' ? r : ((r & 0x3) | 0x8)
+    return v.toString(16)
+  })
+  return id
+}
+
 export const flatMap = (arr, callback) => {
   let r = []
   arr.forEach((v, i) => {

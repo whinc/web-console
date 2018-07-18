@@ -265,7 +265,8 @@ export default {
       if (!this.hasComputed) {  // 最多计算一次
         this.hasComputed = true
         try {
-          this.computedValue = this.descriptor.get()
+          // 冻结计算结果，避免 Vue 添加额外属性
+          this.computedValue = Object.freeze(this.descriptor.get())
         } catch (error) {
           _console.error(error)
           this.computedValue = '(error: ' + error.message + ')'
