@@ -8,7 +8,7 @@
       </div>
       <!-- 键 -->
       <template v-if="hasName">
-        <span :class="[descriptor.enumerable ? 'public' : 'private']">{{name}}</span>
+        <span class="key" :class="[descriptor.enumerable ? 'public' : 'private']">{{name}}</span>
         <span class="space">: </span>
       </template>
       <!-- 值 -->
@@ -401,6 +401,9 @@ function propCompareFn (propA, propB) {
   .prop {
     display: flex;
     flex-direction: row;
+    .key {
+      flex-shrink: 0;
+    }
   }
   .space {
     white-space: pre;
