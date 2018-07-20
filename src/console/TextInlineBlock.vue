@@ -1,5 +1,16 @@
 <template>
-  <span v-if="isObject">
+  <span v-if="isFunction">
+    <template v-if="deepth === 0">
+      <span v-if="isArrowFunction">{{value}}</span>
+      <span v-else style="font-style: italic">
+        <span class="function">ƒ</span><span>()</span>
+      </span>
+    </template>
+    <template v-else>
+      <span class="function">ƒ</span>
+    </template>
+  </span>
+  <span v-else-if="isObject">
     <span>{</span>
     <template v-if="deepth === 0">
       <span v-for="(name, index) in displayPropertyNames" :key="index">
@@ -86,6 +97,12 @@ export default {
     }
   },
   computed: {
+    isFunction () {
+      return isFunction(this.value)
+    },
+    isArrowFunction () {
+      return isFunction(this.value) && String(this.value).indexOf('() =>') === 0
+    },
     isObject () {
       return isObject(this.value)
     },
@@ -134,7 +151,7 @@ export default {
 .null, .undefined {
   color: #808080;
 }
-.boolean {
+.boolean, .function {
   color: #0D22AA;
 }
 .number {
