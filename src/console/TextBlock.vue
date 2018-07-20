@@ -14,7 +14,11 @@
       <!-- 值 -->
       <!-- get 访问器点击时才计算结果，而且只计算一次 -->
       <span v-if="isGetAccessor" @click="onClickGetAccessor">{{computedValue}}</span>
-      <span v-else :class="valueClass">{{formattedValue}}</span>  
+      <!-- <span v-else :class="valueClass">{{formattedValue}}</span>   -->
+      <text-inline-block
+        v-else
+        :value="descriptor.value"
+      />
     </div>
     <!-- 子节点 -->
     <!-- 折叠展开使用 v-show 是为了保留组件内部状态 -->
@@ -31,7 +35,27 @@
 
 <script>
 /**
- * 展示 JS 值，根据值类型自动着色，支持自定义 CSS 样式
+ * 高亮显示传入值，如果值是对象，以树状结构展示，可以折叠展开
+ * 
+ * 例如，传入值为 obj
+ * obj = {
+ *  a: 1,
+ *  b: 2
+ * }
+ * UI 展示成：
+ * {
+ *  a: 1,
+ *  b: 2
+ * }
+ * 
+ * 观察 chrome devtools 的输出，有几个特点：
+ * 1）...
+ * 
+ * 使用示例：
+ * // 展示值
+ * <text-block :descriptor="{value: 1}" />
+ * // 展示键和值
+ * <text-block :name="age" :descriptor="{value: 1}" />
  */
 import {
   isNull,
@@ -45,18 +69,13 @@ import {
   _console,
 isFunction
 } from '@/utils'
+import TextInlineBlock from './TextInlineBlock'
 
-/**
- * 树状展示传入值的结构
- * 
- * 使用示例：
- * // 展示值
- * <text-block :descriptor="{value: 1}" />
- * // 展示键和值
- * <text-block :name="age" :descriptor="{value: 1}" />
- */
 export default {
   name: 'text-block',
+  components: {
+    TextInlineBlock
+  },
   props: {
     // 属性名
     name: [String, Symbol],
@@ -226,17 +245,6 @@ export default {
       // 属性排序
       return properties.sort(propCompareFn)
     },
-    formattedValue () {
-      const value = this.descriptor.value
-      if (isNull(value) || isUndefined(value)) {
-        return String(value)
-      }
-      // 字符串展示在对象中时，需要引号包裹
-      if (isString(value) && this.hasName) {
-        return JSON.stringify(value)
-      }
-      return value
-    },
     indentStyle () {
       return {
         width: this.indentSize > 0 ? `${this.indentSize}em` : 'auto' 
@@ -246,19 +254,6 @@ export default {
     arrowClass () {
       return this.properties.length > 0 ? (this.isFold ? 'fold' : 'unfold') : ''
     },
-    // 值的高亮样式
-    valueClass () {
-      const value = this.descriptor.value
-      return {
-        null: isNull(value),
-        undefined: isUndefined(value),
-        boolean: isBoolean(value),
-        number: isNumber(value),
-        // 字符串仅当放到对象或数组中（即有key）时，需要高亮并带双引号显式
-        string: isString(value) && this.hasName,
-        symbol: isSymbol(value)
-      }
-    }
   },
   methods: {
     onClickGetAccessor () {
@@ -341,36 +336,17 @@ function propCompareFn (propA, propB) {
 </script>
 
 <style scoped lang="scss">
+.public {
+  color: #881391;
+}
+.private {
+  color: #B871BD;
+}
 
 .text-block {
   display: flex;
   flex-direction: column;
-  /* 不同类型值的展示色彩 */
-  .normal {
-    color: black;
-  }
-  .null, .undefined {
-    color: #808080;
-  }
-  .boolean {
-    color: #0D22AA;
-  }
-  .number {
-    color: #1C00CF;
-  }
-  .string {
-    color: #C41A16;
-  }
-  .symbol {
-    color: #C41A16
-  }
 
-  .public {
-    color: #881391;
-  }
-  .private {
-    color: #B871BD;
-  }
   .indent {
     display: flex;
     flex-direction: row;

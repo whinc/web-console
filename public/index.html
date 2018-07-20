@@ -152,7 +152,15 @@
                   f: Symbol(),
                   g: {
                     a: 1,
-                    b: "b"
+                    b: "b",
+                    c: {
+                      a: 1,
+                      b: "b",
+                    },
+                    d: undefined,
+                    e: null,
+                    f1: () => {},
+                    f2: function () {}
                   },
                   [Symbol()]: 10,
                   [Symbol('age')]: 28,
@@ -236,6 +244,19 @@
                     set: v => {}
                   },
                   'k': {
+                    get: function() {
+                      return Math.random()
+                    },
+                    set: function () {}
+                  }
+                })
+                Object.defineProperties(obj2.g.c, {
+                  'c': {
+                    enumerable: false,
+                    configurable: false,
+                    value: 10
+                  },
+                  'd': {
                     get: function() {
                       return Math.random()
                     },

@@ -1,7 +1,9 @@
 <template>
-  <div class="app">
+  <div class="web-console">
+    <!-- 悬浮按钮 -->
     <mt-button type="primary" class="entry" @click="showPanel">web-console</mt-button>
 
+    <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
         <tab-bar class="header-bar" v-model="activeTab" :show-indicator="false" :is-equal-width="false">
@@ -75,26 +77,26 @@ export default {
 
 <style lang="scss">
 // 全局样式
-body {
-  .source-code {
-    font-family: Consolas, Lucida Console, dejavu sans mono, monospace;
-  }
-}
-</style>
-
-
-<style scoped>
-
-.app {
+.web-console {
   font-size: 16px;
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  .source-code {
+    font-family: Consolas, Lucida Console, dejavu sans mono, monospace;
+  }
+
+  // 使用IE盒模型
+  & >>> * {
+    box-sizing: border-box;
+  }
 }
 
-.app >>> * {
-  box-sizing: border-box;
-}
+</style>
+
+
+<style scoped lang="scss">
 
 .entry { 
   position: fixed;
@@ -113,14 +115,13 @@ body {
 .header-bar {
   height: 40px !important;
   border-bottom: 1px solid #d9d9d9;
-}
-
-.header-bar .item::after{
-  content: " ";
-  position: absolute;
-  height: 100%;
-  right: 0;
-  border-right: 1px solid #d9d9d9;
+  .item::after{
+    content: " ";
+    position: absolute;
+    height: 100%;
+    right: 0;
+    border-right: 1px solid #d9d9d9;
+  }
 }
 
 .tab-container {
