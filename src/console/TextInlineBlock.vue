@@ -13,11 +13,12 @@
   <span v-else-if="isObject">
     <span>{</span>
     <template v-if="deepth === 0">
-      <span v-for="(name, index) in displayPropertyNames" :key="index">
+      <span v-for="(name, index) in displayPropertyNames" :key="index" v-if="index < maxDisplayPropertyCount">
         <span>{{name}}: </span>
         <text-inline-block :value="value[name]" :deepth="deepth + 1" />
-        <span>, </span>
+        <span v-if="index !== Math.min(maxDisplayPropertyCount - 1, displayPropertyNames.length - 1)">, </span>
       </span>
+      <span v-if="displayPropertyNames.length >= 5">, ...</span>
     </template>
     <!-- 深度超过 1 层时，对象内容用省略号替代展示 -->
     <template v-else>
@@ -106,6 +107,9 @@ export default {
     isObject () {
       return isObject(this.value)
     },
+    maxDisplayPropertyCount () {
+      return 5
+    },
     displayPropertyNames () {
       const obj = this.value
       return Object.getOwnPropertyNames(obj)
@@ -114,8 +118,6 @@ export default {
           const descriptor = Object.getOwnPropertyDescriptor(obj, name)
           return 'value' in descriptor
         })
-        // 过滤出前 5 个
-        .filter((v, i) => i < 5)
     },
     formattedValue () {
       const value = this.value
