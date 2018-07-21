@@ -1,9 +1,9 @@
 <template>
-  <span v-if="isFunction">
+  <span v-if="isFunction" class="italic">
     <template v-if="deepth === 0">
       <span v-if="isArrowFunction">{{value}}</span>
-      <span v-else style="font-style: italic">
-        <span class="function">ƒ</span><span>()</span>
+      <span v-else>
+        <span class="function">ƒ</span><span> {{value.name}}()</span>
       </span>
     </template>
     <template v-else>
@@ -51,7 +51,9 @@
  *  e: 5,
  *  f: 6
  * }
+ * UI 展示：
  * {a: 1, b: 2, c: 3, d: 4, e: 5, ...}
+ * 
  * 2）展示数据属性（包含可枚举和不可枚举），但不展示访问器属性
  * obj = {
  *  // 可枚举
@@ -61,13 +63,23 @@
  *  // get 访问器
  *  c: (...)
  * }
+ * UI 展示：
  * {a: 1, b: 1}
- * 3）函数展示成 f（包含ES5函数和箭头函数）
+ * 
+ * 3）函数深度为 0 时展示成 ƒ，深度大于 0 时展示函数的字符串
  * obj = {
  *  a: () => {},
- *  b: function () {}
+ *  b: function () {},
+ *  c: function say () {}
  * }
- * {a: f, b: f}
+ * 深度为 0 时展示：
+ * {a: ƒ, b: ƒ, c: ƒ}
+ * 深度大于 0 时展示：
+ * {
+ *  a: () => {}
+ *  b: ƒ (),
+ *  c: ƒ say()
+ * }
  */
 import {
   isNull,
@@ -164,5 +176,9 @@ export default {
 }
 .symbol {
   color: #C41A16
+}
+
+.italic {
+  font-style: italic;
 }
 </style>

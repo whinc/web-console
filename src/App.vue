@@ -78,13 +78,13 @@ export default {
 <style lang="scss">
 // 全局样式
 .web-console {
-  font-size: 16px;
+  font-size: 15px;
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   .source-code {
-    font-family: Consolas, Lucida Console, dejavu sans mono, monospace;
+    font-family: Consolas, monospace;
   }
 
   // 使用IE盒模型
