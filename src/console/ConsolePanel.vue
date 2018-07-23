@@ -106,6 +106,7 @@ export default {
 }
 
 .head-bar {
+  color: #333;
 }
 
 .head-bar .item {
@@ -117,7 +118,7 @@ export default {
 }
 
 .head-bar .item.selected {
-  border-bottom: 1px solid #26a2ff;
+  border-bottom: 1px solid #2196f3;
 }
 
 .message-list {

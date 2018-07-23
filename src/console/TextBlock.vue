@@ -336,11 +336,11 @@ function propCompareFn (propA, propB) {
 </script>
 
 <style scoped lang="scss">
-.public {
-  color: #881391;
+.public, .private {
+  color: rgb(136, 19, 145);
 }
 .private {
-  color: #B871BD;
+  opacity: 0.6;
 }
 
 .text-block {
@@ -360,14 +360,14 @@ function propCompareFn (propA, propB) {
     $border-width: 5px;
     /* 等边三角形，tan(30) 约为 0.5773502691896257 */
     &.fold {
-      border-left: $border-width solid black;
-      border-top: ($border-width * 0.5773502691896257) solid transparent;
-      border-bottom: ($border-width * 0.5773502691896257) solid transparent;
+      border-left: $border-width solid #727272;
+      border-top: $border-width * 0.8 solid transparent;
+      border-bottom: $border-width * 0.8 solid transparent;
     }
     &.unfold {
-      border-top: $border-width solid black;
-      border-left: ($border-width * 0.5773502691896257) solid transparent;
-      border-right: ($border-width * 0.5773502691896257) solid transparent;
+      border-top: $border-width solid #727272;
+      border-left: $border-width * 0.8 solid transparent;
+      border-right: $border-width * 0.8 solid transparent;
     }
   }
   .content {

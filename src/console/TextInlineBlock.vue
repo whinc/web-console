@@ -160,24 +160,23 @@ export default {
 
 <style lang="scss" scoped>
 .normal {
-  color: black;
+  color: #565656;
 }
 .null, .undefined {
-  color: #808080;
+  color: rgb(128, 128, 128);
 }
 .boolean, .function {
-  color: #0D22AA;
+  color: rgb(13, 34, 170);
 }
 .number {
   color: #1C00CF;
 }
-.string {
-  color: #C41A16;
+.string, .symbol {
+  color: rgb(196, 26, 22);
 }
-.symbol {
-  color: #C41A16
+.string-quote {
+  color: #222;
 }
-
 .italic {
   font-style: italic;
 }

@@ -138,24 +138,24 @@ function format (logArgs, startPos = 0) {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  min-height: 30px;
   padding: 8px 4px;
-  border-bottom: 1px solid;
   overflow-y: scroll;
   &.log, &.debug, &.info {
-    color: #000;
-    border-bottom-color: #F0F0F0;
-    background-color: #FFF;
+    border-bottom: 1px solid rgb(240, 240, 240);
   }
   &.error {
-    color: #dc143c;
-    border-color: #f4a0ab;
-    background-color: #ffe4e1;
+    color: red;
+    border-top: 1px solid hsl(0, 100%, 92%);
+    border-bottom: 1px solid hsl(0, 100%, 92%);
+    margin-top: -1px;
+    background-color: hsl(0, 100%, 97%);
   }
   &.warn {
-    color: orange;
-    border-color: #ffb930;
-    background-color: #fffacd;
+    color: hsl(39, 100%, 18%);
+    border-top: 1px solid hsl(50, 100%, 88%);
+    border-bottom: 1px solid hsl(50, 100%, 88%);
+    margin-top: -1px;
+    background-color: hsl(50, 100%, 95%);
   }
 }
 

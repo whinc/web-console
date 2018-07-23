@@ -84,7 +84,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
 
   .source-code {
-    font-family: Consolas, monospace;
+    font-size: 14px !important;
+    font-family: Menlo, Consolas, monospace;
   }
 
   // 使用IE盒模型
@@ -115,6 +116,7 @@ export default {
 .header-bar {
   height: 40px !important;
   border-bottom: 1px solid #d9d9d9;
+  color: #333;
   .item::after{
     content: " ";
     position: absolute;
