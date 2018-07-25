@@ -14,11 +14,11 @@
       <!-- 值 -->
       <!-- get 访问器点击时才计算结果，而且只计算一次 -->
       <span v-if="isGetAccessor" @click="onClickGetAccessor">{{computedValue}}</span>
-      <!-- <span v-else :class="valueClass">{{formattedValue}}</span>   -->
       <text-inline-block
         v-else
         :name="name"
         :value="descriptor.value"
+        :showObjectDetail="name !== '__proto__'"
       />
     </div>
     <!-- 子节点 -->

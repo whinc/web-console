@@ -13,24 +13,28 @@
   </span>
   <!-- 对象 -->
   <span v-else-if="isObject">
-    <span>{</span>
-    <template v-if="deepth === 0">
-      <span v-for="(propName, index) in displayPropertyNames" :key="index" v-if="index < maxDisplayPropertyCount">
-        <span>{{propName}}: </span>
-        <text-inline-block
-          :name="propName"
-          :value="value[propName]"
-          :deepth="deepth + 1"
-        />
-        <span v-if="index !== Math.min(maxDisplayPropertyCount - 1, displayPropertyNames.length - 1)">, </span>
-      </span>
-      <span v-if="displayPropertyNames.length >= 5">, ...</span>
+    <!-- 展示对象详情 -->
+    <template v-if="showObjectDetail">
+      <span>{</span>
+      <!-- 第1层属性要展示且最多展示 5 个，超过 5 个后使用省略号替代 -->
+      <template v-if="deepth === 0">
+        <span v-for="(propName, index) in displayPropertyNames" :key="index" v-if="index < maxDisplayPropertyCount">
+          <span>{{propName}}: </span>
+          <text-inline-block
+            :name="propName"
+            :value="value[propName]"
+            :deepth="deepth + 1"
+          />
+          <span v-if="index !== Math.min(maxDisplayPropertyCount - 1, displayPropertyNames.length - 1)">, </span>
+        </span>
+        <span v-if="displayPropertyNames.length >= 5">, ...</span>
+      </template>
+      <!-- 超过1层的属性用省略号替代展示 -->
+      <span v-else>...</span>
+      <span>}</span>
     </template>
-    <!-- 深度超过 1 层时，对象内容用省略号替代展示 -->
-    <template v-else>
-      <span>...</span>
-    </template>
-    <span>}</span>
+    <!-- 展示对象类型 -->
+    <span v-else>Object</span>
   </span>
   <!-- 字符串类型 -->
   <span v-else-if="isString">
@@ -131,6 +135,13 @@ export default {
     deepth: {
       type: Number,
       default: 0
+    },
+    // 是否显示对象详情
+    // 为 true 时，显式对象的属性字段信息，例如 {a: 1}, [1, 2] 等
+    // 为 false 时，则仅对象的类型，例如 Object, Array 等
+    showObjectDetail: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
