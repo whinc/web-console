@@ -11,7 +11,34 @@
       <span class="function">ƒ</span>
     </template>
   </span>
+  <!-- 数组类型 -->
+  <!-- 两种展示 -->
+  <!-- [1, 2, 3] 数组作为根元素时，即 deepth 为 0 时 -->
+  <!-- Array(3) 数组作为嵌套元素或者由外部控制时，即 deepth 大于 0 或 showObjectDetail 为 false，如 {a: 1, b: Array(3)}, [1, Array(3)] -->
+  <span v-else-if="isArray">
+    <template v-if="showObjectDetail">
+      <template v-if="deepth === 0">
+        <span style="color: gray">({{value.length}})&nbsp;</span>
+        <span>[</span>
+        <span v-for="(v, i) in value" :key="i">
+          <text-inline-block
+            :name="String(i)"
+            :value="v"
+            :deepth="deepth + 1"
+          />
+          <span v-if="i !== value.length - 1">,&nbsp;</span>
+        </span>
+        <span>]</span>
+      </template>
+      <span v-else>Array({{value.length}})</span>
+    </template>
+    <span v-else>Array({{value.length}})</span>
+  </span>
   <!-- 对象 -->
+  <!-- 三种展示-->
+  <!-- '{a: 1, b: 2}' 当对象作为根元素时，即 deepth 为 0 -->
+  <!-- '{...}' 当对象作为嵌套元素时，即 deepth 大于 0，如 {a: 1, b: {...}} -->
+  <!-- 'Object' 有外部开关控制，即 showObjectDetail 为 true，如 {a: 1, __proto__: Object}  -->
   <span v-else-if="isObject">
     <!-- 展示对象详情 -->
     <template v-if="showObjectDetail">
@@ -47,10 +74,8 @@
       <span class="word-break">{{value}}</span>
     </template>
   </span>
-  <!-- 其他类型 -->
-  <span v-else class="word-break" :class="valueClass">
-    {{formattedValue}}
-  </span>
+  <!-- 其他类型（注意：不能换行，否则前后会多出一个空白符） -->
+  <span v-else class="word-break" :class="valueClass">{{formattedValue}}</span>
 </template>
 
 <script>
@@ -115,6 +140,7 @@ import {
   isUndefined,
   flatMap,
   _console,
+  isArray,
   isFunction
 } from '@/utils'
 
@@ -150,6 +176,9 @@ export default {
     },
     isArrowFunction () {
       return isFunction(this.value) && String(this.value).indexOf('() =>') === 0
+    },
+    isArray () {
+      return isArray(this.value)
     },
     isString () {
       return isString(this.value)
