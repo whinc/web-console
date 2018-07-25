@@ -1,4 +1,5 @@
 <template>
+  <!-- 函数 -->
   <span v-if="isFunction" class="italic">
     <template v-if="deepth === 0">
       <span v-if="isArrowFunction">{{value}}</span>
@@ -10,12 +11,17 @@
       <span class="function">ƒ</span>
     </template>
   </span>
+  <!-- 对象 -->
   <span v-else-if="isObject">
     <span>{</span>
     <template v-if="deepth === 0">
-      <span v-for="(name, index) in displayPropertyNames" :key="index" v-if="index < maxDisplayPropertyCount">
-        <span>{{name}}: </span>
-        <text-inline-block :value="value[name]" :deepth="deepth + 1" />
+      <span v-for="(propName, index) in displayPropertyNames" :key="index" v-if="index < maxDisplayPropertyCount">
+        <span>{{propName}}: </span>
+        <text-inline-block
+          :name="propName"
+          :value="value[propName]"
+          :deepth="deepth + 1"
+        />
         <span v-if="index !== Math.min(maxDisplayPropertyCount - 1, displayPropertyNames.length - 1)">, </span>
       </span>
       <span v-if="displayPropertyNames.length >= 5">, ...</span>
@@ -26,7 +32,21 @@
     </template>
     <span>}</span>
   </span>
-  <span v-else :class="valueClass">{{formattedValue}}</span>
+  <!-- 字符串类型 -->
+  <span v-else-if="isString">
+    <template v-if="name">
+      <span class="string-quote">"</span>
+      <span class="string word-break">{{value}}</span>
+      <span class="string-quote">"</span>
+    </template>
+    <template v-else>
+      <span class="word-break">{{value}}</span>
+    </template>
+  </span>
+  <!-- 其他类型 -->
+  <span v-else class="word-break" :class="valueClass">
+    {{formattedValue}}
+  </span>
 </template>
 
 <script>
@@ -97,7 +117,11 @@ import {
 export default {
   name: 'text-inline-block',
   props: {
-    // 要展示的值，任意数据类型
+    // 属性名
+    // 属性名为空时，表示内联块作为根元素展示
+    // 属性名有值时，表示内敛块作为对象的属性值展示
+    name: [String, Symbol],
+    // 属性值
     value: {},
     // 嵌套深度
     // let obj = {a: {b: 2}}
@@ -115,6 +139,9 @@ export default {
     },
     isArrowFunction () {
       return isFunction(this.value) && String(this.value).indexOf('() =>') === 0
+    },
+    isString () {
+      return isString(this.value)
     },
     isObject () {
       return isObject(this.value)
@@ -135,10 +162,6 @@ export default {
       const value = this.value
       if (isNull(value) || isUndefined(value)) {
         return String(value)
-      }
-      // 字符串展示在对象中时，需要引号包裹
-      if (isString(value) && this.deepth > 0) {
-        return JSON.stringify(value)
       }
       return value
     },
@@ -179,5 +202,8 @@ export default {
 }
 .italic {
   font-style: italic;
+}
+.word-break {
+  word-break: break-all;
 }
 </style>

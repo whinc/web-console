@@ -17,6 +17,7 @@
       <!-- <span v-else :class="valueClass">{{formattedValue}}</span>   -->
       <text-inline-block
         v-else
+        :name="name"
         :value="descriptor.value"
       />
     </div>
