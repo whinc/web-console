@@ -7,7 +7,6 @@
       <text-block
         :descriptor="{value}"
         :key="index + '1'"
-        :indentSize="0"
       />
       <span v-if="index !== values.length - 1" class="space" :key="index + '2'">{{space}}</span>
     </template>

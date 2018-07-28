@@ -4,7 +4,7 @@
     <!-- @click.stop 避免事件冒泡到上一级 TextBlock -->
     <div class="prop" @click.stop="isFold = !isFold">
       <!-- 折叠展开符仅当缩进量大于0，或者传入值是对象且属性数量大于0时可见-->
-      <div v-if="indentSize > 0 || properties.length > 0" class="indent" :style="indentStyle">
+      <div v-if="deepth > 0 || properties.length > 0" class="indent" :style="indentStyle">
         <div class="triangle" :class="arrowClass"></div>
       </div>
       <!-- prop name -->
@@ -42,7 +42,7 @@
         :name="item.name"
         :descriptor="item.descriptor"
         :needComputeProps="!isFold"
-        :indentSize="indentSize + 1"
+        :deepth="deepth + 1"
       />
     </div>
   </div>
@@ -113,10 +113,14 @@ export default {
       type: Boolean,
       default: true
     },
-    // 缩进数量
-    indentSize: {
+    // 嵌套深度
+    // obj = {a: 1, b: {c: 2}}
+    // obj 深度为 0
+    // obj.b 深度为 1
+    // obj.b.c 深度为 2
+    deepth: {
       type: Number,
-      default: 1
+      default: 0
     }
   },
   data () {
@@ -182,14 +186,15 @@ export default {
           return [
             {name, descriptor},
             {
-              name: `get ${name}`,
+              // Symbol 类型需要进行转换
+              name: `get ${String(name)}`,
               descriptor: {
                 value: descriptor.get,
                 enumerable: false
               }
             },
             {
-              name: `set ${name}`,
+              name: `set ${String(name)}`,
               descriptor: {
                 value: descriptor.set,
                 enumerable: false
@@ -200,7 +205,7 @@ export default {
           return [
             {name, descriptor},
             {
-              name: `get ${name}`,
+              name: `get ${String(name)}`,
               descriptor: {
                 value: descriptor.get,
                 enumerable: false
@@ -210,7 +215,7 @@ export default {
         } else if (!isFunction(descriptor.get) && isFunction(descriptor.set)) { // 只存在 setter
           return [
             {
-              name: `set ${name}`,
+              name: `set ${String(name)}`,
               descriptor: {
                 value: descriptor.set,
                 enumerable: false
@@ -266,7 +271,7 @@ export default {
     },
     indentStyle () {
       return {
-        width: this.indentSize > 0 ? `${this.indentSize}em` : 'auto' 
+        width: this.deepth > 0 ? `${this.deepth}em` : 'auto' 
       }
     },
     // 折叠/展开箭头样式（使用CSS绘制）
@@ -386,6 +391,7 @@ function propCompareFn (propA, propB) {
     align-items: center;
     justify-content: flex-end;
     padding-right: 3px;
+    flex-shrink: 0;
   }
   .triangle {
     width: 0;
@@ -416,6 +422,7 @@ function propCompareFn (propA, propB) {
   }
   .space {
     white-space: pre;
+    flex-shrink: 0;
   }
 }
 </style>
