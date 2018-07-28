@@ -18,7 +18,7 @@
         v-else
         :name="name"
         :value="descriptor.value"
-        :showObjectDetail="name !== '__proto__'"
+        :showObjectDetail="name !== '__proto__' && isFold"
       />
     </div>
     <!-- 子节点 -->
