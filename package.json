@@ -14,10 +14,10 @@
   "main": "dist/web-console.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build:lib": "vue-cli-service build --target lib --name web-console src/main.js --dest dist",
+    "build": "vue-cli-service build --target lib --name web-console src/main.js --dest dist",
     "build:web": "vue-cli-service build --dest demo",
-    "predepoly:web": "npm run build:web",
-    "depoly:web": "npx gh-pages -d demo",
+    "predepoly": "npm run build:web",
+    "depoly": "npx gh-pages -d demo",
     "test": "vue-cli-service test",
     "e2e": "vue-cli-service e2e",
     "lint": "vue-cli-service lint",

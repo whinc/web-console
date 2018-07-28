@@ -8,17 +8,17 @@ CDN 地址：<https://unpkg.com/@whinc/web-console>
 
 构建单个 js 包
 ```bash
-npm run build:lib
+npm run build
 ```
 
 部署在线demo
 ```bash
-npm run depoly:web
+npm run depoly
 ```
 
 发布到 npm
 ```bash
-npm run build:lib
+npm run build
 npm login
 npm version <new_version>
 npm publish --access=public
