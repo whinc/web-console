@@ -200,7 +200,7 @@
                   // getter and setter
                   'j': {
                     get: () => {
-                      return Math.random()
+                      return Math.random() + ''
                     },
                     set: v => {}
                   },
@@ -221,10 +221,10 @@
                   },
                   'K': {
                     get: function() {
-                      return {
+                      return [{
                         a: 1,
                         b: "b"
-                      }
+                      }]
                     },
                   },
                   // only setter

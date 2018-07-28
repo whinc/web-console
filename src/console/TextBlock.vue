@@ -1,19 +1,29 @@
 <template>
   <div class="text-block">
-    <!-- 键值对 -->
+    <!-- name/value -->
+    <!-- @click.stop 避免事件冒泡到上一级 TextBlock -->
     <div class="prop" @click.stop="isFold = !isFold">
-      <!-- 折叠展开符(指定的缩进量大于0，或者传入值是对象且属性数量大于0) -->
+      <!-- 折叠展开符仅当缩进量大于0，或者传入值是对象且属性数量大于0时可见-->
       <div v-if="indentSize > 0 || properties.length > 0" class="indent" :style="indentStyle">
         <div class="triangle" :class="arrowClass"></div>
       </div>
-      <!-- 键 -->
+      <!-- prop name -->
       <template v-if="hasName">
         <span class="key" :class="[descriptor.enumerable ? 'public' : 'private']">{{name}}</span>
         <span class="space">: </span>
       </template>
-      <!-- 值 -->
-      <!-- get 访问器点击时才计算结果，而且只计算一次 -->
-      <span v-if="isGetAccessor" @click="onClickGetAccessor">{{computedValue}}</span>
+      <!-- prop value -->
+      <!-- getter 访问器点击时才计算结果，而且只计算一次，若计算结果是对象类型不展开 -->
+      <template v-if="isGetAccessor">
+        <text-inline-block
+          v-if="hasComputed"
+          :name="name"
+          :value="computedValue"
+          :showObjectDetail="false"
+        />
+        <span v-else @click.stop="onClickGetAccessor">(...)</span>
+      </template>
+      <!-- value 则直接展示 -->
       <text-inline-block
         v-else
         :name="name"
