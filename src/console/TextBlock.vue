@@ -24,11 +24,15 @@
         <span v-else @click.stop="onClickGetAccessor">(...)</span>
       </template>
       <!-- value 则直接展示 -->
+      <!-- showObjectDetail 说明：-->
+      <!-- 1. 根元素始终显示详情 -->
+      <!-- 2. '__proto__'属性始终显示详情 -->
+      <!-- 3. 折叠时展开详情，展开时不展示详情 -->
       <text-inline-block
         v-else
         :name="name"
         :value="descriptor.value"
-        :showObjectDetail="name !== '__proto__' && isFold"
+        :showObjectDetail="isRoot || (name !== '__proto__' && isFold)"
       />
     </div>
     <!-- 子节点 -->
@@ -126,6 +130,10 @@ export default {
     }
   },
   computed: {
+    // 是否是根元素
+    isRoot () {
+      return !Boolean(this.name)
+    },
     hasName () {
       return !!this.name
     },
