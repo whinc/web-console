@@ -285,33 +285,47 @@ export default {
 /**
  * 获取属性的展示优先级
  * 先按类别划分优先级高低，相同优先级内部再根据字母顺序排序
- * A public         // 0
- * B public         // 
- * a public         // 
- * b public         // 
- * Symbol() public  // 10
- * Symbol(a) public // 
- * A private        // 20
- * B private        // 
- * a private        // 
- * b private        // 
- * Symbol() private // 30
- * get A            // 40
- * set A            // 
+ * public 属性
+ * A          // 0
+ * B          
+ * a          
+ * b          
+ * Symbol()   // 10
+ * Symbol(a)   
+ * _A        // 15
+ * _B
+ * 
+ * private 属性
+ * A         // 20
+ * B         
+ * a         
+ * b         
+ * Symbol()  // 30
+ * Symbol(a)  
+ * _A       // 35
+ * _B
+ * get A     // 40
+ * set A      
  * get B
- * get a            // 
- * set a            // 
+ * get a     
+ * set a     
  * get b
- * __proto__        // 100
+ * __proto__ // 100
  */
 function getPropDisplayPriority (prop) {
   let priority = 0
   if (isString(prop.name)) {
     if (prop.descriptor.enumerable) {
-      priority = 0
+      if (prop.name.indexOf('_') === 0) {
+        priority = 15
+      } else {
+        priority = 0
+      }
     } else {
       if (prop.name.indexOf('get ') === 0 || prop.name.indexOf('set ') === 0) {
         priority = 40
+      } else if (prop.name.indexOf('_') === 0) {
+        priority = 35
       } else {
         priority = 20
       }

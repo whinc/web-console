@@ -180,7 +180,11 @@
                   f3: function say () {},
                   Z: 'Z',
                   M: 'm',
-                  z: 'z'
+                  z: 'z',
+                  // 测试排序规则
+                  __a: 'public __a',
+                  _a: 'public _a',
+                  $a: 'public $a'
                 }
                 Object.defineProperties(obj2, {
                   // value
@@ -235,7 +239,20 @@
                   [Symbol('a')]: {
                     value: '1',
                     enumerable: false
-                  }
+                  },
+                  // 测试属性排序规则
+                  '__b': {
+                    value: 'private __b',
+                    enumerable: false
+                  },
+                  '_b': {
+                    value: 'private _b',
+                    enumerable: false
+                  },
+                  '$b': {
+                    value: 'private $b',
+                    enumerable: false
+                  },
                 })
                 Object.defineProperties(obj2.g, {
                   'h': {
