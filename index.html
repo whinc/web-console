@@ -6,7 +6,7 @@
       #app .mint-button {
         width: 100%;
         margin-bottom: 15px;
-      }</style><link as=script href=./js/app.0d6ec9af.js rel=preload><link as=script href=./js/chunk-vendors.beaa1213.js rel=preload></head><body><script src=https://unpkg.com/vue/dist/vue.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click="onClickPrint('log_format')">打印格式化</mt-button><mt-button type=primary @click="onClickPrint('log_object')">打印对象</mt-button><h2>Network Test</h2><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click="onClickPrint('log_object')">打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=https://unpkg.com/mint-ui/lib/index.js></script><script>new Vue({
+      }</style><link as=script href=./js/app.e284a03c.js rel=preload><link as=script href=./js/chunk-vendors.c27857d6.js rel=preload></head><body><script src=https://unpkg.com/vue/dist/vue.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click="onClickPrint('log_format')">打印格式化</mt-button><mt-button type=primary @click="onClickPrint('log_object')">打印对象</mt-button><h2>Network Test</h2><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click="onClickPrint('log_object')">打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=https://unpkg.com/mint-ui/lib/index.js></script><script>new Vue({
         el: '#app',
         data: function () {
           return {
@@ -37,9 +37,12 @@
             var str = 'hello'
             var obj = {
               a: 1,
-              b: 2
+              b: 2,
+              c: {
+                d: 3
+              }
             }
-            var arr = [1, 2]
+            var arr = [1, 2, [3, obj]]
             switch (type) {
               case 'log':
                 console.log('log')
@@ -75,16 +78,19 @@
                 testLogFormat(numInt, '%f')
                 testLogFormat(numFloat, '%f')
                 testLogFormat(obj, '%s')
+                testLogFormat(obj, '%o')
+                testLogFormat(arr, '%o')
                 testLogFormat(obj, '%O')
+                testLogFormat(arr, '%O')
                 // 测试占位符缺少对应的参数
                 console.log('console.log("-%s%i%d%f%o%O%c-")')
                 console.log('-%s%i%d%f%o%O%c-')
                 // 测试参数多余占位符
-                console.log('console.log("-%s-", 99, 99)')
-                console.log('-%s-', 99, 99)
+                console.log('console.log("-%s-", 99, {a: "1"})')
+                console.log('-%s-', 99, {a: 1})
                 // 测试占位符和参数的高亮
-                console.log("console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})")
-                console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})
+                console.log("console.log('%s-%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {}, [])")
+                console.log('%s-%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {}, [])
                 break
               case 'log_object':
                 // console.log('obj:', {a: 1})
@@ -253,10 +259,10 @@
                     f3: function say () {}
                   }
                 )
-                const arr = [1, 2, {
+                var arr2 = [1, 2, {
                   a: 1
                 }]
-                console.log(arr)
+                console.log(arr2)
                 break
             }
           },
@@ -284,4 +290,4 @@
         console.log('console.log(%' + format + ', %s)', JSON.stringify(value))
         console.log(format, value)
       }</script><script>// init vConsole
-      // var vConsole = new VConsole();</script><script src=./js/app.0d6ec9af.js></script><script src=./js/chunk-vendors.beaa1213.js></script></body></html>
+      // var vConsole = new VConsole();</script><script src=./js/app.e284a03c.js></script><script src=./js/chunk-vendors.c27857d6.js></script></body></html>
