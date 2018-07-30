@@ -38,7 +38,7 @@
 <script>
 import Message from './Message'
 import {TabBar, TabItem, MyButton, MyFootBar, MyFootSeparator} from '@/components'
-import {cloneDeep, _console, uuid} from '@/utils'
+import {_console, uuid} from '@/utils'
 
 export default {
   components: {

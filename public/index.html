@@ -84,9 +84,12 @@
             var str = 'hello'
             var obj = {
               a: 1,
-              b: 2
+              b: 2,
+              c: {
+                d: 3
+              }
             }
-            var arr = [1, 2]
+            var arr = [1, 2, [3, obj]]
             switch (type) {
               case 'log':
                 console.log('log')
@@ -122,16 +125,19 @@
                 testLogFormat(numInt, '%f')
                 testLogFormat(numFloat, '%f')
                 testLogFormat(obj, '%s')
+                testLogFormat(obj, '%o')
+                testLogFormat(arr, '%o')
                 testLogFormat(obj, '%O')
+                testLogFormat(arr, '%O')
                 // 测试占位符缺少对应的参数
                 console.log('console.log("-%s%i%d%f%o%O%c-")')
                 console.log('-%s%i%d%f%o%O%c-')
                 // 测试参数多余占位符
-                console.log('console.log("-%s-", 99, 99)')
-                console.log('-%s-', 99, 99)
+                console.log('console.log("-%s-", 99, {a: "1"})')
+                console.log('-%s-', 99, {a: 1})
                 // 测试占位符和参数的高亮
-                console.log("console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})")
-                console.log('%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {})
+                console.log("console.log('%s-%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {}, [])")
+                console.log('%s-%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {}, [])
                 break
               case 'log_object':
                 // console.log('obj:', {a: 1})
@@ -300,10 +306,10 @@
                     f3: function say () {}
                   }
                 )
-                const arr = [1, 2, {
+                var arr2 = [1, 2, {
                   a: 1
                 }]
-                console.log(arr)
+                console.log(arr2)
                 break
             }
           },

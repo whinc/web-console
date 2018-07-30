@@ -25,14 +25,14 @@
       </template>
       <!-- value 则直接展示 -->
       <!-- showObjectDetail 说明：-->
-      <!-- 1. 根元素始终显示详情 -->
-      <!-- 2. '__proto__'属性始终显示详情 -->
-      <!-- 3. 折叠时展开详情，展开时不展示详情 -->
+      <!-- 如果 TextBlock 是根元素，则根据 showValueDetail 决定是否显示详情 -->
+      <!-- 否则，如果是非'__proto__'属性且处于折叠态时，显示详情 -->
+      <!-- 其他情形不展示详情 -->
       <text-inline-block
         v-else
         :name="name"
         :value="descriptor.value"
-        :showObjectDetail="isRoot || (name !== '__proto__' && isFold)"
+        :showObjectDetail="isRoot ? showValueDetail : (name !== '__proto__' && isFold)"
       />
     </div>
     <!-- 子节点 -->
@@ -92,8 +92,6 @@ export default {
     TextInlineBlock
   },
   props: {
-    // 属性名
-    name: [String, Symbol],
     // 属性描述符，结构同 Object.defineProperty() 的第三个参数
     descriptor: {
       type: Object,
@@ -108,6 +106,8 @@ export default {
         return true
       }
     },
+    // 属性名（可选）
+    name: [String, Symbol],
     // 是否需要立即计算对象属性信息
     needComputeProps: {
       type: Boolean,
@@ -121,6 +121,13 @@ export default {
     deepth: {
       type: Number,
       default: 0
+    },
+    // 根节点是否展示值的详情（仅对根元素有效，对子元素无效）
+    // 为 true 时，对象展示成 {...}，数组展示成 [...]
+    // 位 false 时，对象展示成 Object，数组展示成 Array(n)
+    showValueDetail: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -134,7 +141,6 @@ export default {
     }
   },
   computed: {
-    // 是否是根元素
     isRoot () {
       return !Boolean(this.name)
     },

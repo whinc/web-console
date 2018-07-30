@@ -1,5 +1,4 @@
 
-export {default as cloneDeep} from 'lodash.clonedeep'
 export const isNull = v => v === null
 export const isUndefined = v => v === undefined
 export const isString = v => typeof v === 'string'
@@ -11,6 +10,7 @@ export const isBoolean = v => typeof v === 'boolean'
 export const isObject = v => typeof v === 'object' && v
 
 export const noop = function () {}
+export const cloneDeep = v => JSON.parse(JSON.stringify(v))
 
 /**
  * generate an uuid
