@@ -67,15 +67,15 @@
   <span v-else-if="isString">
     <template v-if="name">
       <span class="string-quote">"</span>
-      <span class="string word-break">{{value}}</span>
+      <span class="string">{{value}}</span>
       <span class="string-quote">"</span>
     </template>
     <template v-else>
-      <span class="word-break">{{value}}</span>
+      <span>{{value}}</span>
     </template>
   </span>
   <!-- 其他类型（注意：不能换行，否则前后会多出一个空白符） -->
-  <span v-else class="word-break" :class="valueClass">{{formattedValue}}</span>
+  <span v-else :class="valueClass">{{formattedValue}}</span>
 </template>
 
 <script>
@@ -242,8 +242,5 @@ export default {
 }
 .italic {
   font-style: italic;
-}
-.word-break {
-  word-break: break-all;
 }
 </style>
