@@ -7,13 +7,13 @@
       <div v-if="deepth > 0 || properties.length > 0" class="indent" :style="indentStyle">
         <div class="triangle" :class="arrowClass"></div>
       </div>
-      <!-- prop name -->
+      <!-- 属性名 -->
       <template v-if="hasName">
         <span class="key" :class="[descriptor.enumerable ? 'public' : 'private']">{{name}}</span>
         <span class="space">: </span>
       </template>
-      <!-- prop value -->
-      <!-- getter 访问器点击时才计算结果，而且只计算一次，若计算结果是对象类型不展开 -->
+      <!-- 属性值 -->
+      <!-- getter 访问器点击时才计算结果，而且只计算一次，且计算结果值始终不展示详情 -->
       <template v-if="isGetAccessor">
         <text-inline-block
           v-if="hasComputed"
@@ -25,14 +25,16 @@
       </template>
       <!-- value 则直接展示 -->
       <!-- showValueDetail 说明：-->
-      <!-- 如果 TextBlock 是根元素，则根据 showRootValueDetail 决定是否显示详情 -->
-      <!-- 否则，如果是非'__proto__'属性且处于折叠态时，显示详情 -->
-      <!-- 其他情形不展示详情 -->
+      <!-- a)如果是根元素，则由 showRootValueDetail 决定是否显示详情 -->
+      <!-- b)否则，如果是非'__proto__'属性且处于折叠态时，也显示详情 -->
+      <!-- c)其他情形不展示详情 -->
+      <!-- 如果是根元素，并且是对象类型，则展示详情页时以斜体展示 -->
       <text-inline-block
         v-else
         :name="name"
         :value="descriptor.value"
         :showValueDetail="isRoot ? showRootValueDetail : (name !== '__proto__' && isFold)"
+        :class="{italic: isRoot && showRootValueDetail && typeof descriptor.value === 'object'}"
       />
     </div>
     <!-- 子节点 -->
@@ -429,6 +431,10 @@ function propCompareFn (propA, propB) {
   .space {
     white-space: pre;
     flex-shrink: 0;
+  }
+
+  .italic {
+    font-style: italic;
   }
 }
 </style>
