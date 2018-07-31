@@ -6,7 +6,7 @@
     <template v-else v-for="(argInfo, index) in argInfoList">
       <text-block
         :descriptor="{value: argInfo.displayValue}"
-        :showValueDetail="argInfo.showValueDetail"
+        :showRootValueDetail="argInfo.showValueDetail"
         :key="index + '1'"
       />
       <span v-if="index !== argInfoList.length - 1" class="space" :key="index + '2'">{{space}}</span>

@@ -14,9 +14,9 @@
   <!-- 数组类型 -->
   <!-- 两种展示 -->
   <!-- [1, 2, 3] 数组作为根元素时，即 deepth 为 0 时 -->
-  <!-- Array(3) 数组作为嵌套元素或者由外部控制时，即 deepth 大于 0 或 showObjectDetail 为 false，如 {a: 1, b: Array(3)}, [1, Array(3)] -->
+  <!-- Array(3) 数组作为嵌套元素或者由外部控制时，即 deepth 大于 0 或 showValueDetail 为 false，如 {a: 1, b: Array(3)}, [1, Array(3)] -->
   <span v-else-if="isArray">
-    <template v-if="showObjectDetail">
+    <template v-if="showValueDetail">
       <template v-if="deepth === 0">
         <span style="color: gray">({{value.length}})&nbsp;</span>
         <span>[</span>
@@ -38,10 +38,10 @@
   <!-- 三种展示-->
   <!-- '{a: 1, b: 2}' 当对象作为根元素时，即 deepth 为 0 -->
   <!-- '{...}' 当对象作为嵌套元素时，即 deepth 大于 0，如 {a: 1, b: {...}} -->
-  <!-- 'Object' 有外部开关控制，即 showObjectDetail 为 true，如 {a: 1, __proto__: Object}  -->
+  <!-- 'Object' 有外部开关控制，即 showValueDetail 为 true，如 {a: 1, __proto__: Object}  -->
   <span v-else-if="isObject">
     <!-- 展示对象详情 -->
-    <template v-if="showObjectDetail">
+    <template v-if="showValueDetail">
       <span>{</span>
       <!-- 第1层属性要展示且最多展示 5 个，超过 5 个后使用省略号替代 -->
       <template v-if="deepth === 0">
@@ -165,7 +165,7 @@ export default {
     // 是否显示对象详情
     // 为 true 时，显式对象的属性字段信息，例如 {a: 1}, [1, 2] 等
     // 为 false 时，则仅对象的类型，例如 Object, Array 等
-    showObjectDetail: {
+    showValueDetail: {
       type: Boolean,
       default: true
     }

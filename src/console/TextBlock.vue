@@ -19,20 +19,20 @@
           v-if="hasComputed"
           :name="name"
           :value="computedValue"
-          :showObjectDetail="false"
+          :showValueDetail="false"
         />
         <span v-else @click.stop="onClickGetAccessor">(...)</span>
       </template>
       <!-- value 则直接展示 -->
-      <!-- showObjectDetail 说明：-->
-      <!-- 如果 TextBlock 是根元素，则根据 showValueDetail 决定是否显示详情 -->
+      <!-- showValueDetail 说明：-->
+      <!-- 如果 TextBlock 是根元素，则根据 showRootValueDetail 决定是否显示详情 -->
       <!-- 否则，如果是非'__proto__'属性且处于折叠态时，显示详情 -->
       <!-- 其他情形不展示详情 -->
       <text-inline-block
         v-else
         :name="name"
         :value="descriptor.value"
-        :showObjectDetail="isRoot ? showValueDetail : (name !== '__proto__' && isFold)"
+        :showValueDetail="isRoot ? showRootValueDetail : (name !== '__proto__' && isFold)"
       />
     </div>
     <!-- 子节点 -->
@@ -125,7 +125,7 @@ export default {
     // 根节点是否展示值的详情（仅对根元素有效，对子元素无效）
     // 为 true 时，对象展示成 {...}，数组展示成 [...]
     // 位 false 时，对象展示成 Object，数组展示成 Array(n)
-    showValueDetail: {
+    showRootValueDetail: {
       type: Boolean,
       default: true
     }
