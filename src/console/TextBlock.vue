@@ -288,7 +288,7 @@ export default {
     },
     textInlineBlockStyle () {
       // 是根节点，且是对象，且需要显示详情时，以斜体展示
-      const b1 = this.isRoot && this.showRootValueDetail && typeof isObject(this.descriptor.value)
+      const b1 = this.isRoot && this.showRootValueDetail && isObject(this.descriptor.value)
       // 函数类型，以斜体展示
       const b2 = isFunction(this.descriptor.value)
       return {
