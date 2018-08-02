@@ -34,7 +34,7 @@
         :name="name"
         :value="descriptor.value"
         :showValueDetail="isRoot ? showRootValueDetail : (name !== '__proto__' && isFold)"
-        :class="{italic: isRoot && showRootValueDetail && typeof descriptor.value === 'object'}"
+        :class="{italic: isRoot && showRootValueDetail && typeof descriptor.value === 'object' && descriptor.value !== null}"
       />
     </div>
     <!-- 子节点 -->
