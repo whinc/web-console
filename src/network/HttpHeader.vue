@@ -1,6 +1,7 @@
 <template>
-  <div>
-    <span class="name">{{formmatedName}}</span>: {{value}}
+  <div class="root">
+    <span class="name">{{formmatedName}}:</span>
+    <span class="source-code">{{value}}</span>
   </div>
 </template>
 
@@ -20,8 +21,18 @@ export default {
 }
 </script>
 
-<style scoped>
-.name {
-  font-weight: bold;
+<style lang="scss" scoped>
+@import '../base';
+
+.root {
+  margin-top: 1px;
+  min-height: $primary-font-size;
+  line-height: $primary-font-size * 5 / 3;
+  .name {
+    color: rgb(33%, 33%, 33%);
+    font-weight: bold;
+    margin-right: 0.25em;
+    white-space: nowrap;
+  }
 }
 </style>

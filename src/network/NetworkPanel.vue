@@ -1,12 +1,10 @@
 <template>
   <div class="network-panel">
     <div class="table">
-      <div class="row">
-        <div class="summary">
+      <div class="head">
           <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">Name</span>
           <span class="cell">Method</span>
           <span class="cell">Status</span>
-        </div>
       </div>
       <div class="row" v-for="item in requestList" :key="item.id">
         <div class="summary" @click="onClickItem(item.id)">
@@ -15,7 +13,7 @@
           <span class="cell">{{item.statusText}}</span>
         </div>
         <div class="detail" v-show="item.isExpand">
-          <tab-bar :is-equal-width="false" :show-indicator="false" v-model="item.activeTab">
+          <tab-bar class="head" :is-equal-width="false" :show-indicator="false" v-model="item.activeTab">
             <tab-item id="headers">Headers</tab-item>
             <tab-item id="response">Response</tab-item>
           </tab-bar>
@@ -188,60 +186,101 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import '../base.scss';
+
 .network-panel {
   height: 100%;
   position: relative;
+
+  .table {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0px;
+    bottom: 39px;
+    overflow-y: scroll;
+    .head {
+      display: flex;
+      flex-direction: row;
+      height: 30px;
+      width: 100%;
+      .cell {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        background-color: $toolbar-bg-color;
+        border-bottom: 1px solid $toolbar-border-color;
+        border-left: 1px solid $toolbar-border-color;
+        justify-content: left;
+        padding: 0px 4px;
+        align-items: center;
+        flex: 1 1;
+        .long {
+          flex: 4 1;
+          display: inline-block;
+          text-overflow: ellipsis;
+          overflow-x: hidden;
+          white-space: nowrap;
+          line-height: 30px;
+        }
+        &:first-child {
+          border-left: none;
+        }
+        &:active {
+          background-color: $toolbar-border-color;
+        }
+      }
+
+    }
+
+    .row {
+      display: flex;
+      flex-direction: column;
+      .summary {
+        height: 30px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        .cell {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          justify-content: left;
+          padding: 0px 4px;
+          align-items: center;
+          flex: 1 1;
+          &.long {
+            flex: 4 1;
+            display: inline-block;
+            text-overflow: ellipsis;
+            overflow-x: hidden;
+            white-space: nowrap;
+            line-height: 30px;
+          }
+        }
+      }
+      .detail {
+        .head {
+          background-color: rgba($toolbar-bg-color, 0.5);
+          color: $tab-fg-color;
+          border-bottom: 1px solid rgba($toolbar-border-color, 0.5);
+          .tab-item {
+            background-color: rgba(0, 0, 0, 0);
+            &.selected {
+              color: $tab-selected-fg-color;
+            }
+          }
+        }
+        .content {
+          max-height: 40vh;
+          overflow-y: scroll;
+          padding: 2px 5px;
+        }
+      }
+    }
+  }
+
 }
 
-.table {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0px;
-  bottom: 39px;
-  overflow-y: scroll;
-}
-
-.table .row {
-  display: flex;
-  flex-direction: column;
-}
-
-.table .row .summary {
-  height: 30px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-.table .row .summary .cell {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: left;
-  padding: 0px 4px;
-  align-items: center;
-  flex: 1 1;
-}
-
-.table .row .summary .cell.long {
-  flex: 4 1;
-  display: inline-block;
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-  white-space: nowrap;
-  line-height: 30px;
-}
-
-.table .row .detail {
-
-}
-
-
-.table .row .detail .content {
-  max-height: 40vh;
-  overflow-y: scroll;
-  padding: 2px 5px;
-}
 </style>

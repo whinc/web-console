@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <pre>{{value}}</pre>
+    <pre class="source-code">{{value}}</pre>
   </div>
 </template>
 
@@ -21,6 +21,5 @@ export default {
 
 <style scoped>
 .content {
-  padding: 5px;
 }
 </style>

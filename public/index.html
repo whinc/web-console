@@ -69,9 +69,13 @@
             var self = this
             if (window.WebConsole) {
               WebConsole.init({
-                activeTab: 'console',
-                panelVisible: false
+                // activeTab: 'console',
+                // panelVisible: false
+                activeTab: 'network',
+                panelVisible: true
               })
+              this.onClickAjax('xhr_get')
+              this.onClickAjax('xhr_post')
             } else {
               setTimeout(function () {
                 self.launchWebConsole()

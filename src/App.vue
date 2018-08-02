@@ -76,15 +76,17 @@ export default {
 </script>
 
 <style lang="scss">
+@import './base.scss';
+
 // 全局样式
 .web-console {
-  font-size: 15px;
+  font-size: $primary-font-size;
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
+  color: rgb(48, 57, 66);
   .source-code {
-    font-size: 14px !important;
+    font-size: $source-code-font-size !important;
     font-family: Menlo, Consolas, monospace;
   }
 
@@ -98,7 +100,7 @@ export default {
 
 
 <style scoped lang="scss">
-
+@import './base.scss';
 .entry { 
   position: fixed;
   right: 20px;
@@ -116,13 +118,13 @@ export default {
 .header-bar {
   height: 40px !important;
   border-bottom: 1px solid #d9d9d9;
-  color: #333;
-  .item::after{
-    content: " ";
-    position: absolute;
-    height: 100%;
-    right: 0;
-    border-right: 1px solid #d9d9d9;
+  background-color: $toolbar-bg-color;
+  .tab-item {
+    color: $tab-fg-color;
+    background-color: rgba(0, 0, 0, 0);
+    &.selected {
+      color: $tab-selected-fg-color;
+    }
   }
 }
 
