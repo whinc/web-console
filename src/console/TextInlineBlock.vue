@@ -1,6 +1,6 @@
 <template>
   <!-- 函数 -->
-  <span v-if="isFunction" class="italic">
+  <span v-if="isFunction">
     <template v-if="deepth === 0">
       <span v-if="isArrowFunction">{{value}}</span>
       <span v-else>
@@ -239,8 +239,5 @@ export default {
 }
 .string-quote {
   color: #222;
-}
-.italic {
-  font-style: italic;
 }
 </style>

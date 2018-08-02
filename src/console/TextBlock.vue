@@ -34,7 +34,7 @@
         :name="name"
         :value="descriptor.value"
         :showValueDetail="isRoot ? showRootValueDetail : (name !== '__proto__' && isFold)"
-        :class="{italic: isRoot && showRootValueDetail && typeof descriptor.value === 'object' && descriptor.value !== null}"
+        :class="textInlineBlockStyle"
       />
     </div>
     <!-- 子节点 -->
@@ -286,6 +286,17 @@ export default {
     arrowClass () {
       return this.properties.length > 0 ? (this.isFold ? 'fold' : 'unfold') : ''
     },
+    textInlineBlockStyle () {
+      // 是根节点，且是对象，且需要显示详情时，以斜体展示
+      const b1 = this.isRoot && this.showRootValueDetail && typeof isObject(this.descriptor.value)
+      // 函数类型，以斜体展示
+      const b2 = isFunction(this.descriptor.value)
+      return {
+        italic: b1 || b2,
+        // 只有根节点需要换行展示，非根节点不换行方便阅读
+        nowrap: !this.isRoot
+      }
+    }
   },
   methods: {
     onClickGetAccessor () {
@@ -435,6 +446,9 @@ function propCompareFn (propA, propB) {
 
   .italic {
     font-style: italic;
+  }
+  .nowrap {
+    white-space: nowrap;
   }
 }
 </style>

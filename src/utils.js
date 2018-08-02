@@ -7,7 +7,7 @@ export const isArray = v => Array.isArray(v)
 export const isNumber = v => typeof v === 'number'
 export const isSymbol = v => typeof v === 'symbol'
 export const isBoolean = v => typeof v === 'boolean'
-export const isObject = v => typeof v === 'object' && v
+export const isObject = v => typeof v === 'object' && v !== null
 
 export const noop = function () {}
 export const cloneDeep = v => JSON.parse(JSON.stringify(v))
