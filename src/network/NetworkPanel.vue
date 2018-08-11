@@ -48,6 +48,7 @@
 <script>
 import {TabContainer, TabContainerItem} from 'mint-ui'
 import {TabBar, TabItem, MyFootBar, MyButton, MyFootSeparator} from '@/components'
+import {nextTick} from '@/utils'
 import HttpHeader from './HttpHeader'
 import HttpResponse from './HttpResponse'
 
@@ -99,51 +100,65 @@ export default {
         xhr.$method = method
         xhr.$url = url
 
-        // 监听请求状态变化，并更新视图状态
-        const _onreadystatechange = xhr.onreadystatechange || function() {}
-        xhr.onreadystatechange = function () {
-          const item = vm.requestList[id] || {}
+        // 返回重写的 onreadystatechange 事件处理程序
+        const getOverrideHandler = () => {
+          // 监听请求状态变化，并更新视图状态
+          const _onreadystatechange = xhr.onreadystatechange || function () {}
+          return function () {
+            console.log('[NetworkPanel] %s ready state: %s', url, xhr.readyState)
+            const item = vm.requestList[id] || {}
 
-          item.readyState = xhr.readyState
-          item.status = 0
-          item.statusText = '-'
-          item.responseType = xhr.responseType
-          switch (xhr.readyState) {
-            case 0: // UNSENT
-              item.statusText = '(pending)'
-              break
-            case 1: // OPENED
-              item.statusText = '(pending)'
-              break
-            case 2: // HEADERS_RECEIVED
-              item.status = xhr.status
-              item.statusText = '(loading)'
-              const headers = xhr.getAllResponseHeaders()
-              const headerArr = headers.split(/[\r\n]+/)
-              headerArr.forEach(line => {
-                if (!line) return
-                const parts = line.split(': ')
-                const header = parts.shift()
-                const value = parts.join(': ')
-                item.headerMap[header] = value
-              })
-              break
-            case 3: // LOADING
-              item.status = xhr.status
-              item.statusText = '(loading)'
-              break
-            case 4: // DONE
-              item.status = xhr.status
-              item.statusText = xhr.status
-              item.response = xhr.response
-              break
-            default:
-              break
+            item.readyState = xhr.readyState
+            item.status = 0
+            item.statusText = '-'
+            item.responseType = xhr.responseType
+            switch (xhr.readyState) {
+              case 0: // UNSENT
+                item.statusText = '(pending)'
+                break
+              case 1: // OPENED
+                item.statusText = '(pending)'
+                break
+              case 2: // HEADERS_RECEIVED
+                item.status = xhr.status
+                item.statusText = '(loading)'
+                const headers = xhr.getAllResponseHeaders()
+                const headerArr = headers.split(/[\r\n]+/)
+                headerArr.forEach(line => {
+                  if (!line) return
+                  const parts = line.split(': ')
+                  const header = parts.shift()
+                  const value = parts.join(': ')
+                  item.headerMap[header] = value
+                })
+                break
+              case 3: // LOADING
+                item.status = xhr.status
+                item.statusText = '(loading)'
+                break
+              case 4: // DONE
+                item.status = xhr.status
+                item.statusText = xhr.status
+                item.response = xhr.response
+                break
+              default:
+                break
+            }
+
+            vm.updateRequest(id, item)
+
+            _onreadystatechange.apply(this, arguments)
           }
+        }
 
-          vm.updateRequest(id, item)
-
-          _onreadystatechange.apply(this, arguments)
+        // 如果 open() 方法调用前，onreadystatechange 已注册，可以立即重写
+        // 否则，在下一个微任务中重写，即等到用户注册后再执行
+        if (typeof xhr.onreadystatechange === 'function') {
+          xhr.onreadystatechange = getOverrideHandler()
+        } else {
+          nextTick(() => {
+            xhr.onreadystatechange = getOverrideHandler()
+          })
         }
 
         _open.apply(this, arguments)

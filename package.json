@@ -19,6 +19,7 @@
     "predepoly": "npm run build:web",
     "depoly": "npx gh-pages -d demo",
     "test": "vue-cli-service test",
+    "testServer": "cd ./server && node index.js",
     "e2e": "vue-cli-service e2e",
     "lint": "vue-cli-service lint",
     "e2e:open": "vue-cli-service e2e:open"

@@ -12,6 +12,14 @@ export const isObject = v => typeof v === 'object' && v !== null
 export const noop = function () {}
 export const cloneDeep = v => JSON.parse(JSON.stringify(v))
 
+export const nextTick = cb => {
+  if (typeof window.Promise === 'function') {
+    Promise.resolve().then(cb)
+  } else {
+    setTimeout(cb, 0)
+  }
+}
+
 /**
  * generate an uuid
  * @returns string
