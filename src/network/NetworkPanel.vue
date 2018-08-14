@@ -13,10 +13,10 @@
           <span class="cell">{{item.statusText}}</span>
         </div>
         <div class="detail" v-show="item.isExpand">
-          <tab-bar class="head" :is-equal-width="false" :show-indicator="false" v-model="item.activeTab">
-            <tab-item id="headers">Headers</tab-item>
-            <tab-item id="response">Response</tab-item>
-          </tab-bar>
+          <v-tab-bar v-model="item.activeTab" :show-bottom-border="false">
+            <v-tab-bar-item id="headers">Headers</v-tab-bar-item>
+            <v-tab-bar-item id="response">Response</v-tab-bar-item>
+          </v-tab-bar>
           <!-- Tab Container -->
           <mt-tab-container v-model="item.activeTab">
             <mt-tab-container-item id="headers" class="content">
@@ -46,16 +46,22 @@
 </template>
 
 <script>
-import {TabContainer, TabContainerItem} from 'mint-ui'
-import {TabBar, TabItem, MyFootBar, MyButton, MyFootSeparator} from '@/components'
-import {nextTick} from '@/utils'
-import HttpHeader from './HttpHeader'
-import HttpResponse from './HttpResponse'
+import { TabContainer, TabContainerItem } from "mint-ui";
+import {
+  VTabBar,
+  VTabBarItem,
+  MyFootBar,
+  MyButton,
+  MyFootSeparator
+} from "@/components";
+import { nextTick } from "@/utils";
+import HttpHeader from "./HttpHeader";
+import HttpResponse from "./HttpResponse";
 
 export default {
   components: {
-    TabItem,
-    TabBar,
+    [VTabBar.name]: VTabBar,
+    [VTabBarItem.name]: VTabBarItem,
     MyFootBar,
     MyFootSeparator,
     MyButton,
@@ -64,145 +70,149 @@ export default {
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem
   },
-  data () {
+  data() {
     return {
       requestList: {}
-    }
+    };
   },
-  mounted () {
-    this.hookXMLHttpRequest()
+  mounted() {
+    this.hookXMLHttpRequest();
   },
   methods: {
-    onClickItem (id) {
-      const item = this.requestList[id]
-      item.isExpand = !item.isExpand
+    onClickItem(id) {
+      const item = this.requestList[id];
+      item.isExpand = !item.isExpand;
     },
-    onClickClear() {
-
-    },
-    onClickHide () {
-      this.$root.$emit('hide')
+    onClickClear() {},
+    onClickHide() {
+      this.$root.$emit("hide");
     },
     /**
      * 拦截 XMLHttpRequest 请求并记录状态
      */
-    hookXMLHttpRequest () {
-      const vm = this
-      const _open = window.XMLHttpRequest.prototype.open
-      const _send = window.XMLHttpRequest.prototype.send
+    hookXMLHttpRequest() {
+      const vm = this;
+      const _open = window.XMLHttpRequest.prototype.open;
+      const _send = window.XMLHttpRequest.prototype.send;
 
-      window.XMLHttpRequest.prototype.open = function (method, url) {
-        const xhr = this
-        const id = vm.getUniqueID()
+      window.XMLHttpRequest.prototype.open = function(method, url) {
+        const xhr = this;
+        const id = vm.getUniqueID();
 
         // 保存数据在 xhr 实例中，方便后续获取
-        xhr.$id = id
-        xhr.$method = method
-        xhr.$url = url
+        xhr.$id = id;
+        xhr.$method = method;
+        xhr.$url = url;
 
         // 返回重写的 onreadystatechange 事件处理程序
         const getOverrideHandler = () => {
           // 监听请求状态变化，并更新视图状态
-          const _onreadystatechange = xhr.onreadystatechange || function () {}
-          return function () {
-            console.log('[NetworkPanel] %s ready state: %s', url, xhr.readyState)
-            const item = vm.requestList[id] || {}
+          const _onreadystatechange = xhr.onreadystatechange || function() {};
+          return function() {
+            console.log(
+              "[NetworkPanel] %s ready state: %s",
+              url,
+              xhr.readyState
+            );
+            const item = vm.requestList[id] || {};
 
-            item.readyState = xhr.readyState
-            item.status = 0
-            item.statusText = '-'
-            item.responseType = xhr.responseType
+            item.readyState = xhr.readyState;
+            item.status = 0;
+            item.statusText = "-";
+            item.responseType = xhr.responseType;
             switch (xhr.readyState) {
               case 0: // UNSENT
-                item.statusText = '(pending)'
-                break
+                item.statusText = "(pending)";
+                break;
               case 1: // OPENED
-                item.statusText = '(pending)'
-                break
+                item.statusText = "(pending)";
+                break;
               case 2: // HEADERS_RECEIVED
-                item.status = xhr.status
-                item.statusText = '(loading)'
-                const headers = xhr.getAllResponseHeaders()
-                const headerArr = headers.split(/[\r\n]+/)
+                item.status = xhr.status;
+                item.statusText = "(loading)";
+                const headers = xhr.getAllResponseHeaders();
+                const headerArr = headers.split(/[\r\n]+/);
                 headerArr.forEach(line => {
-                  if (!line) return
-                  const parts = line.split(': ')
-                  const header = parts.shift()
-                  const value = parts.join(': ')
-                  item.headerMap[header] = value
-                })
-                break
+                  if (!line) return;
+                  const parts = line.split(": ");
+                  const header = parts.shift();
+                  const value = parts.join(": ");
+                  item.headerMap[header] = value;
+                });
+                break;
               case 3: // LOADING
-                item.status = xhr.status
-                item.statusText = '(loading)'
-                break
+                item.status = xhr.status;
+                item.statusText = "(loading)";
+                break;
               case 4: // DONE
-                item.status = xhr.status
-                item.statusText = xhr.status
-                item.response = xhr.response
-                break
+                item.status = xhr.status;
+                item.statusText = xhr.status;
+                item.response = xhr.response;
+                break;
               default:
-                break
+                break;
             }
 
-            vm.updateRequest(id, item)
+            vm.updateRequest(id, item);
 
-            _onreadystatechange.apply(this, arguments)
-          }
-        }
+            _onreadystatechange.apply(this, arguments);
+          };
+        };
 
         // 如果 open() 方法调用前，onreadystatechange 已注册，可以立即重写
         // 否则，在下一个微任务中重写，即等到用户注册后再执行
-        if (typeof xhr.onreadystatechange === 'function') {
-          xhr.onreadystatechange = getOverrideHandler()
+        if (typeof xhr.onreadystatechange === "function") {
+          xhr.onreadystatechange = getOverrideHandler();
         } else {
           nextTick(() => {
-            xhr.onreadystatechange = getOverrideHandler()
-          })
+            xhr.onreadystatechange = getOverrideHandler();
+          });
         }
 
-        _open.apply(this, arguments)
-      }
+        _open.apply(this, arguments);
+      };
 
+      window.XMLHttpRequest.prototype.send = function(...args) {
+        const xhr = this;
+        const id = xhr.$id;
+        const item = vm.requestList[id] || {};
+        item.id = id;
+        item.method = xhr.$method;
+        item.url = xhr.$url;
+        vm.updateRequest(id, item);
 
-      window.XMLHttpRequest.prototype.send = function (...args) {
-        const xhr = this
-        const id = xhr.$id
-        const item = vm.requestList[id] || {}
-        item.id = id
-        item.method = xhr.$method
-        item.url = xhr.$url
-        vm.updateRequest(id, item)
-
-        _send.apply(this, arguments)
-      }
+        _send.apply(this, arguments);
+      };
     },
     getUniqueID() {
-      let id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-          let r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8)
-          return v.toString(16)
-      })
-      return id
+      let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        let r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+      return id;
     },
-    updateRequest (id, item) {
-      const _item = this.requestList[id]
-      if(!_item) {
+    updateRequest(id, item) {
+      const _item = this.requestList[id];
+      if (!_item) {
         /* 添加新元素时声明所有需要用到的字段，使这些字段变为 reactive，后续就可以直接更新字段值 */
-        item.isExpand = false
-        item.activeTab = 'headers'
-        item.headerMap = {}
-        this.$set(this.requestList, id, item)
-        return
+        item.isExpand = false;
+        item.activeTab = "headers";
+        item.headerMap = {};
+        this.$set(this.requestList, id, item);
+        return;
       }
 
-      Object.keys(item).forEach(key => _item[key] = item[key])
+      Object.keys(item).forEach(key => (_item[key] = item[key]));
     }
-  } 
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-@import '../base.scss';
+@import "../base.scss";
 
 .network-panel {
   height: 100%;
@@ -218,7 +228,7 @@ export default {
     .head {
       display: flex;
       flex-direction: row;
-      height: 30px;
+      height: 40px;
       width: 100%;
       .cell {
         display: flex;
@@ -246,7 +256,6 @@ export default {
           background-color: $toolbar-border-color;
         }
       }
-
     }
 
     .row {
@@ -295,7 +304,5 @@ export default {
       }
     }
   }
-
 }
-
 </style>

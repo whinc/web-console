@@ -87,7 +87,7 @@ export default {
   }
 
   // 使用IE盒模型
-  & >>> * {
+  & /deep/ * {
     box-sizing: border-box;
   }
 }

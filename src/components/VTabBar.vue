@@ -1,5 +1,5 @@
 <template>
-  <div class="v-tab-bar">
+  <div class="v-tab-bar" :class="{'show-bottom-border': showBottomBorder}">
     <div class="tab-bar">
       <slot></slot>
     </div>
@@ -10,7 +10,11 @@
 export default {
   name: "v-tab-bar",
   props: {
-    value: String
+    value: String,
+    showBottomBorder: {
+      type: Boolean,
+      default: true
+    }
   },
   methods: {
     updateSelectedItem(id) {
@@ -26,7 +30,9 @@ $toolbar-bg-color: #f3f3f3;
   // position: relative;
   height: 40px;
   background-color: $toolbar-bg-color;
-  border-bottom: 1px solid rgb(205, 205, 205);
+  &.show-bottom-border {
+    border-bottom: 1px solid rgb(205, 205, 205);
+  }
   .tab-bar {
     height: 100%;
     display: flex;
