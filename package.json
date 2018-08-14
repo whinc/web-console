@@ -25,7 +25,9 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
+    "husky": "^1.0.0-rc.13",
     "mint-ui": "^2.2.13",
+    "pretty-quick": "^1.6.0",
     "vue": "^2.5.13"
   },
   "devDependencies": {
@@ -41,7 +43,7 @@
     "gh-pages": "^1.2.0",
     "i": "^0.3.6",
     "node-sass": "^4.9.2",
-    "npm": "^6.2.0",
+    "prettier": "1.14.2",
     "sass-loader": "^6.0.6",
     "vue-template-compiler": "^2.5.13"
   },
@@ -49,5 +51,10 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
 }
