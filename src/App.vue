@@ -6,14 +6,10 @@
     <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
-        <tab-bar class="header-bar" v-model="activeTab" :show-indicator="false" :is-equal-width="false">
-          <tab-item id="console">
-            <span class="item">Console</span>
-          </tab-item>
-          <tab-item id="network">
-            <span class="item">Network</span>
-          </tab-item>
-        </tab-bar>
+        <v-tab-bar style="border-bottom: 1px solid rgb(205, 205, 205)" v-model="activeTab">
+          <v-tab-bar-item id="console">Console</v-tab-bar-item>
+          <v-tab-bar-item id="network">Network</v-tab-bar-item>
+        </v-tab-bar>
         <!-- Tab Container -->
         <mt-tab-container v-model="activeTab">
           <mt-tab-container-item id="console" class="tab-container">
@@ -30,7 +26,7 @@
 
 <script>
 import {Button, Popup, TabContainer, TabContainerItem} from 'mint-ui'
-import {TabBar, TabItem} from './components'
+import {VTabBar, VTabBarItem} from './components'
 import {ConsolePanel} from './console'
 import {NetworkPanel} from './network'
 export default {
@@ -38,8 +34,8 @@ export default {
   components: {
     ConsolePanel,
     NetworkPanel,
-    TabBar,
-    TabItem,
+    [VTabBar.name]: VTabBar,
+    [VTabBarItem.name]: VTabBarItem,
     [Button.name]: Button,
     [Popup.name]: Popup,
     [TabContainer.name]: TabContainer,
