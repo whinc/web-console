@@ -8,27 +8,28 @@
 
 <script>
 export default {
-  name: 'v-tab-bar',
+  name: "v-tab-bar",
   props: {
     value: String
   },
   methods: {
-    updateSelectedItem (id) {
-      this.$emit('input', id)
+    updateSelectedItem(id) {
+      this.$emit("input", id);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-
 $toolbar-bg-color: #f3f3f3;
 .v-tab-bar {
   // position: relative;
+  height: 40px;
+  background-color: $toolbar-bg-color;
+  border-bottom: 1px solid rgb(205, 205, 205);
   .tab-bar {
+    height: 100%;
     display: flex;
-    height: 40px;
-    background-color: $toolbar-bg-color;
   }
   // .tab-slider {
   //   position: absolute;
@@ -41,5 +42,3 @@ $toolbar-bg-color: #f3f3f3;
   // }
 }
 </style>
-
-

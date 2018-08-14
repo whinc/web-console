@@ -6,7 +6,7 @@
     <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
-        <v-tab-bar style="border-bottom: 1px solid rgb(205, 205, 205)" v-model="activeTab">
+        <v-tab-bar v-model="activeTab">
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
         </v-tab-bar>
@@ -25,12 +25,12 @@
 </template>
 
 <script>
-import {Button, Popup, TabContainer, TabContainerItem} from 'mint-ui'
-import {VTabBar, VTabBarItem} from './components'
-import {ConsolePanel} from './console'
-import {NetworkPanel} from './network'
+import { Button, Popup, TabContainer, TabContainerItem } from "mint-ui";
+import { VTabBar, VTabBarItem } from "./components";
+import { ConsolePanel } from "./console";
+import { NetworkPanel } from "./network";
 export default {
-  name: 'app',
+  name: "app",
   components: {
     ConsolePanel,
     NetworkPanel,
@@ -45,39 +45,39 @@ export default {
     initPanelVisible: Boolean,
     initActiveTab: String
   },
-  data () {
+  data() {
     return {
       panelVisible: false,
-      activeTab: 'console'
-    }
+      activeTab: "console"
+    };
   },
-  mounted (){
+  mounted() {
     // 设置初始值
-    this.panelVisible = this.initPanelVisible
-    this.activeTab = this.initActiveTab
+    this.panelVisible = this.initPanelVisible;
+    this.activeTab = this.initActiveTab;
 
-    this.$root.$on('hide', () => {
-      this.hidePanel()
-    })
+    this.$root.$on("hide", () => {
+      this.hidePanel();
+    });
   },
   methods: {
-    showPanel () {
-      this.panelVisible = true
+    showPanel() {
+      this.panelVisible = true;
     },
-    hidePanel () {
-      this.panelVisible = false
+    hidePanel() {
+      this.panelVisible = false;
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
-@import './base.scss';
+@import "./base.scss";
 
 // 全局样式
 .web-console {
   font-size: $primary-font-size;
-  font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: rgb(48, 57, 66);
@@ -91,13 +91,12 @@ export default {
     box-sizing: border-box;
   }
 }
-
 </style>
 
 
 <style scoped lang="scss">
-@import './base.scss';
-.entry { 
+@import "./base.scss";
+.entry {
   position: fixed;
   right: 20px;
   bottom: 20px;

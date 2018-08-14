@@ -1,22 +1,12 @@
 <template>
   <div class="console-panel">
-    <tab-bar v-model="activeType" class="head-bar">
-      <tab-item id="all">
-        <span class="item">All</span>
-      </tab-item>
-      <tab-item id="log">
-        <span class="item">Log</span>
-      </tab-item>
-      <tab-item id="info">
-        <span class="item">Info</span>
-      </tab-item>
-      <tab-item id="warn">
-        <span class="item">Warn</span>
-      </tab-item>
-      <tab-item id="error">
-        <span class="item">Error</span>
-      </tab-item>
-    </tab-bar>
+    <v-tab-bar v-model="activeType">
+      <v-tab-bar-item id="all">All</v-tab-bar-item>
+      <v-tab-bar-item id="log">Log</v-tab-bar-item>
+      <v-tab-bar-item id="info">Info</v-tab-bar-item>
+      <v-tab-bar-item id="warn">Warn</v-tab-bar-item>
+      <v-tab-bar-item id="error">Error</v-tab-bar-item>
+    </v-tab-bar>
     <div class="message-list">
       <message
         v-for="msg in msgList"
@@ -36,22 +26,28 @@
 </template>
 
 <script>
-import Message from './Message'
-import {TabBar, TabItem, MyButton, MyFootBar, MyFootSeparator} from '@/components'
-import {_console, uuid} from '@/utils'
+import Message from "./Message";
+import {
+  VTabBar,
+  VTabBarItem,
+  MyButton,
+  MyFootBar,
+  MyFootSeparator
+} from "@/components";
+import { _console, uuid } from "@/utils";
 
 export default {
   components: {
     Message,
     MyButton,
     MyFootSeparator,
-    TabItem,
-    TabBar,
+    [VTabBar.name]: VTabBar,
+    [VTabBarItem.name]: VTabBarItem,
     MyFootBar
   },
-  data () {
+  data() {
     return {
-      activeType: 'all',
+      activeType: "all",
       /**
        * [{
        *  // 日志类型，取值 all/log/info/error/warn/debug
@@ -61,42 +57,42 @@ export default {
        * }]
        */
       msgList: []
-    }
+    };
   },
   // hook console 输出越早越好，选择最先被执行的 beforeCreate 周期方法进行 hook 操作
-  beforeCreate () {
-    const vm = this
-    const originConsole = { }
-    const names = ['log', 'info', 'error', 'warn', 'debug']
+  beforeCreate() {
+    const vm = this;
+    const originConsole = {};
+    const names = ["log", "info", "error", "warn", "debug"];
     names.forEach(name => {
-      originConsole[name] = window.console[name]
+      originConsole[name] = window.console[name];
 
-      window.console[name] = function (...args) {
+      window.console[name] = function(...args) {
         const msg = {
           id: uuid(),
           type: name,
           logArgs: args
-        }
+        };
         // 冻结计算结果，避免 Vue 添加额外属性
-        vm.msgList.push(Object.freeze(msg))
-        originConsole[name].apply(this, args)
-      }
-    })
+        vm.msgList.push(Object.freeze(msg));
+        originConsole[name].apply(this, args);
+      };
+    });
   },
   methods: {
-    onClickClear () {
-      this.msgList = []
+    onClickClear() {
+      this.msgList = [];
     },
-    onClickHide () {
-      this.$root.$emit('hide')
+    onClickHide() {
+      this.$root.$emit("hide");
     }
   },
-  errorCaptured (error) {
+  errorCaptured(error) {
     // 在浏览器控制台输出错误原因
-    _console.error(error)
-    return false
+    _console.error(error);
+    return false;
   }
-}
+};
 </script>
 
 <style scoped>
@@ -123,7 +119,7 @@ export default {
 
 .message-list {
   position: absolute;
-  top: 30px;
+  top: 40px;
   bottom: 39px;
   width: 100%;
   left: 0px;
