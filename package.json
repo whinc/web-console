@@ -25,9 +25,7 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
-    "husky": "^1.0.0-rc.13",
     "mint-ui": "^2.2.13",
-    "pretty-quick": "^1.6.0",
     "vue": "^2.5.13"
   },
   "devDependencies": {
@@ -44,6 +42,8 @@
     "i": "^0.3.6",
     "node-sass": "^4.9.2",
     "prettier": "1.14.2",
+    "pretty-quick": "^1.6.0",
+    "husky": "^1.0.0-rc.13",
     "sass-loader": "^6.0.6",
     "vue-template-compiler": "^2.5.13"
   },
