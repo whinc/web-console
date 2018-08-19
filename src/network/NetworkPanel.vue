@@ -227,7 +227,8 @@ export default {
 <style lang="scss" scoped>
 @import "../base.scss";
 
-$row-height: 40px;
+$row-height: 35px;
+$row-padding: 4px;
 
 .network-panel {
   height: 100%;
@@ -286,7 +287,7 @@ $row-height: 40px;
       padding: 4px 4px;
       .summary {
         width: 100%;
-        height: $row-height;
+        height: $row-height - $row-padding;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -304,7 +305,7 @@ $row-height: 40px;
             text-overflow: ellipsis;
             overflow-x: hidden;
             white-space: nowrap;
-            line-height: $row-height;
+            line-height: $row-height - $row-padding;
           }
         }
       }
