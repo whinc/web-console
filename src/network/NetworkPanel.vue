@@ -6,8 +6,8 @@
           <span class="cell">Method</span>
           <span class="cell">Status</span>
       </div>
-      <div class="row" v-for="item in requestList" :key="item.id">
-        <div class="summary" @click="onClickItem(item.id)">
+      <div v-for="(item, id) in requestList" :key="id" class="row" :class="{selected: selectedId === id}">
+        <div class="summary" @click="onClickItem(id)">
           <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
           <span class="cell">{{item.method}}</span>
           <span class="cell">{{item.statusText}}</span>
@@ -18,7 +18,7 @@
             <v-tab-bar-item id="response">Response</v-tab-bar-item>
           </v-tab-bar>
           <!-- Tab Container -->
-          <mt-tab-container v-model="item.activeTab">
+          <mt-tab-container v-model="item.activeTab" style="background-color: white">
             <mt-tab-container-item id="headers" class="content">
               <http-header
                 v-for="(value, header) in item.headerMap"
@@ -72,7 +72,10 @@ export default {
   },
   data() {
     return {
-      requestList: {}
+      // 请求列表
+      requestList: {},
+      // 当前选中行在 requestList 中的 id
+      selectedId: ""
     };
   },
   mounted() {
@@ -81,7 +84,17 @@ export default {
   methods: {
     onClickItem(id) {
       const item = this.requestList[id];
-      item.isExpand = !item.isExpand;
+      // 点击同一行，切换展开态
+      // 点击不同行，展开当前选中行，折叠之前选中行
+      if (id === this.selectedId) {
+        item.isExpand = !item.isExpand;
+      } else {
+        this.requestList[id].isExpand = true;
+        if (this.requestList[this.selectedId]) {
+          this.requestList[this.selectedId].isExpand = false;
+        }
+      }
+      this.selectedId = id;
     },
     onClickClear() {},
     onClickHide() {
@@ -214,6 +227,8 @@ export default {
 <style lang="scss" scoped>
 @import "../base.scss";
 
+$row-height: 40px;
+
 .network-panel {
   height: 100%;
   position: relative;
@@ -228,7 +243,7 @@ export default {
     .head {
       display: flex;
       flex-direction: row;
-      height: 40px;
+      height: $row-height;
       width: 100%;
       .cell {
         display: flex;
@@ -247,7 +262,6 @@ export default {
           text-overflow: ellipsis;
           overflow-x: hidden;
           white-space: nowrap;
-          line-height: 30px;
         }
         &:first-child {
           border-left: none;
@@ -259,13 +273,23 @@ export default {
     }
 
     .row {
+      &:nth-child(even) {
+        background-color: rgb(245, 245, 245);
+      }
+      // 放在 :nth-child(odd) 之后
+      &.selected {
+        color: white;
+        background-color: #03a9f4;
+      }
       display: flex;
       flex-direction: column;
+      padding: 4px 4px;
       .summary {
-        height: 30px;
         width: 100%;
+        height: $row-height;
         display: flex;
         flex-direction: row;
+        align-items: center;
         .cell {
           display: flex;
           width: 100%;
@@ -280,7 +304,7 @@ export default {
             text-overflow: ellipsis;
             overflow-x: hidden;
             white-space: nowrap;
-            line-height: 30px;
+            line-height: $row-height;
           }
         }
       }
