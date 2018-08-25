@@ -6,8 +6,8 @@
           <span class="cell">Method</span>
           <span class="cell">Status</span>
       </div>
-      <div v-for="(item, id) in requestList" :key="id" class="row">
-        <div class="summary" @click="onClickItem(id)" :class="{selected: selectedId === id, even: id % 2 === 0}">
+      <div v-for="(item, index) in requestList" :key="item.id" class="row">
+        <div class="summary" @click="onClickItem(item.id)" :class="{selected: selectedId === item.id, even: index % 2 === 0, error: isStatusError(item)}">
           <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
           <span class="cell">{{item.method}}</span>
           <span class="cell">{{item.statusText}}</span>
@@ -58,8 +58,6 @@ import { nextTick } from "@/utils";
 import HttpHeader from "./HttpHeader";
 import HttpResponse from "./HttpResponse";
 
-let _id = 0;
-
 export default {
   components: {
     [VTabBar.name]: VTabBar,
@@ -75,25 +73,38 @@ export default {
   data() {
     return {
       // 请求列表
-      requestList: [],
-      // 当前选中行在 requestList 中的 id
-      selectedId: -1
+      requestMap: {},
+      // 选中请求的编号
+      selectedId: ""
     };
+  },
+  computed: {
+    // 展示的列表（后面会按时间或类型进行排序）
+    requestList() {
+      return Object.keys(this.requestMap).map(key => this.requestMap[key]);
+    }
   },
   mounted() {
     this.hookXMLHttpRequest();
   },
   methods: {
+    isStatusError(item) {
+      if (item.status >= 400 && item.status < 600) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     onClickItem(id) {
-      const item = this.requestList[id];
+      const item = this.requestMap[id];
       // 点击同一行，切换展开态
       // 点击不同行，展开当前选中行，折叠之前选中行
       if (id === this.selectedId) {
         item.isExpand = !item.isExpand;
       } else {
-        this.requestList[id].isExpand = true;
-        if (this.requestList[this.selectedId]) {
-          this.requestList[this.selectedId].isExpand = false;
+        this.requestMap[id].isExpand = true;
+        if (this.requestMap[this.selectedId]) {
+          this.requestMap[this.selectedId].isExpand = false;
         }
       }
       this.selectedId = id;
@@ -112,7 +123,7 @@ export default {
 
       window.XMLHttpRequest.prototype.open = function(method, url) {
         const xhr = this;
-        const id = vm.getNextId();
+        const id = vm.genUUID();
 
         // 保存数据在 xhr 实例中，方便后续获取
         xhr.$id = id;
@@ -124,16 +135,14 @@ export default {
           // 监听请求状态变化，并更新视图状态
           const _onreadystatechange = xhr.onreadystatechange || function() {};
           return function() {
-            console.log(
-              "[NetworkPanel] %s ready state: %s",
-              url,
-              xhr.readyState
-            );
-            const item = vm.requestList[id] || {};
+            // console.log(
+            //   "[NetworkPanel] %s ready state: %s",
+            //   url,
+            //   xhr.readyState
+            // );
+            const item = vm.requestMap[id] || {};
 
             item.readyState = xhr.readyState;
-            item.status = 0;
-            item.statusText = "-";
             item.responseType = xhr.responseType;
             switch (xhr.readyState) {
               case 0: // UNSENT
@@ -190,37 +199,41 @@ export default {
       window.XMLHttpRequest.prototype.send = function(...args) {
         const xhr = this;
         const id = xhr.$id;
-        const item = vm.requestList[id] || {};
+        const item = vm.requestMap[id] || {};
         item.id = id;
         item.method = xhr.$method;
         item.url = xhr.$url;
+        item.status = 0;
+        item.statusText = "-";
         vm.updateRequest(id, item);
 
         _send.apply(this, arguments);
       };
     },
-    getNextId() {
-      // let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
-      //   c
-      // ) {
-      //   let r = (Math.random() * 16) | 0,
-      //     v = c == "x" ? r : (r & 0x3) | 0x8;
-      //   return v.toString(16);
-      // });
-      return _id++;
+    genUUID() {
+      let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        let r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+      return id;
     },
     updateRequest(id, item) {
-      const _item = this.requestList[id];
+      const _item = this.requestMap[id];
       if (!_item) {
-        /* 添加新元素时声明所有需要用到的字段，使这些字段变为 reactive，后续就可以直接更新字段值 */
+        // /* 添加新元素时声明所有需要用到的字段，使这些字段变为 reactive，后续就可以直接更新字段值 */
         item.isExpand = false;
         item.activeTab = "headers";
         item.headerMap = {};
-        this.$set(this.requestList, id, item);
+        this.$set(this.requestMap, id, item);
         return;
       }
 
-      Object.keys(item).forEach(key => (_item[key] = item[key]));
+      Object.keys(item).forEach(key => {
+        _item[key] = item[key];
+      });
     }
   }
 };
@@ -228,6 +241,8 @@ export default {
 
 <style lang="scss" scoped>
 @import "../base.scss";
+
+$status-error-color: rgb(230, 0, 0);
 
 .network-panel {
   height: 100%;
@@ -281,6 +296,9 @@ export default {
         display: flex;
         flex-direction: row;
         align-items: center;
+        &.error {
+          color: $status-error-color;
+        }
         &.even {
           background-color: rgb(245, 245, 245);
         }
