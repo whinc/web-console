@@ -109,7 +109,9 @@ export default {
       }
       this.selectedId = id;
     },
-    onClickClear() {},
+    onClickClear() {
+      this.requestMap = {};
+    },
     onClickHide() {
       this.$root.$emit("hide");
     },
