@@ -27,6 +27,6 @@ window.network = (function() {
         url: "https://runkit.io/runkit/hello-world-api/x.0.0"
       });
     },
-    testRequestParams() {}
+    testRequestParams: function() {}
   };
 })();
