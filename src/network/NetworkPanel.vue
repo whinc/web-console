@@ -6,8 +6,8 @@
           <span class="cell">Method</span>
           <span class="cell">Status</span>
       </div>
-      <div v-for="(item, id) in requestList" :key="id" class="row" :class="{selected: selectedId === id}">
-        <div class="summary" @click="onClickItem(id)">
+      <div v-for="(item, id) in requestList" :key="id" class="row">
+        <div class="summary" @click="onClickItem(id)" :class="{selected: selectedId === id, even: id % 2 === 0}">
           <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
           <span class="cell">{{item.method}}</span>
           <span class="cell">{{item.statusText}}</span>
@@ -58,6 +58,8 @@ import { nextTick } from "@/utils";
 import HttpHeader from "./HttpHeader";
 import HttpResponse from "./HttpResponse";
 
+let _id = 0;
+
 export default {
   components: {
     [VTabBar.name]: VTabBar,
@@ -73,9 +75,9 @@ export default {
   data() {
     return {
       // 请求列表
-      requestList: {},
+      requestList: [],
       // 当前选中行在 requestList 中的 id
-      selectedId: ""
+      selectedId: -1
     };
   },
   mounted() {
@@ -110,7 +112,7 @@ export default {
 
       window.XMLHttpRequest.prototype.open = function(method, url) {
         const xhr = this;
-        const id = vm.getUniqueID();
+        const id = vm.getNextId();
 
         // 保存数据在 xhr 实例中，方便后续获取
         xhr.$id = id;
@@ -197,15 +199,15 @@ export default {
         _send.apply(this, arguments);
       };
     },
-    getUniqueID() {
-      let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
-        c
-      ) {
-        let r = (Math.random() * 16) | 0,
-          v = c == "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-      return id;
+    getNextId() {
+      // let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+      //   c
+      // ) {
+      //   let r = (Math.random() * 16) | 0,
+      //     v = c == "x" ? r : (r & 0x3) | 0x8;
+      //   return v.toString(16);
+      // });
+      return _id++;
     },
     updateRequest(id, item) {
       const _item = this.requestList[id];
@@ -227,9 +229,6 @@ export default {
 <style lang="scss" scoped>
 @import "../base.scss";
 
-$row-height: 35px;
-$row-padding: 4px;
-
 .network-panel {
   height: 100%;
   position: relative;
@@ -244,7 +243,7 @@ $row-padding: 4px;
     .head {
       display: flex;
       flex-direction: row;
-      height: $row-height;
+      height: $list-row-height;
       width: 100%;
       .cell {
         display: flex;
@@ -274,23 +273,21 @@ $row-padding: 4px;
     }
 
     .row {
-      &:nth-child(even) {
-        background-color: rgb(245, 245, 245);
-      }
-      // 放在 :nth-child(odd) 之后
-      &.selected {
-        color: white;
-        background-color: #03a9f4;
-      }
       display: flex;
       flex-direction: column;
-      padding: 4px 4px;
       .summary {
         width: 100%;
-        height: $row-height - $row-padding;
+        height: $list-row-height;
         display: flex;
         flex-direction: row;
         align-items: center;
+        &.even {
+          background-color: rgb(245, 245, 245);
+        }
+        &.selected {
+          color: white;
+          background-color: #2196f3;
+        }
         .cell {
           display: flex;
           width: 100%;
@@ -305,7 +302,7 @@ $row-padding: 4px;
             text-overflow: ellipsis;
             overflow-x: hidden;
             white-space: nowrap;
-            line-height: $row-height - $row-padding;
+            line-height: $list-row-height;
           }
         }
       }
