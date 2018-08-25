@@ -17,10 +17,16 @@ window.network = (function() {
   return {
     // 测试 HTTP 状态码
     testHTTPStatus: function() {
-      console.log("testHTTPStatus");
       [100, 200, 300, 400, 500].forEach(function(status) {
         ajax({ url: baseURL + "/get_status/" + status });
       });
-    }
+      ajax({
+        url: "https://runkit.io/runkit/hello-world-api/1.0.0"
+      });
+      ajax({
+        url: "https://runkit.io/runkit/hello-world-api/x.0.0"
+      });
+    },
+    testRequestParams() {}
   };
 })();
