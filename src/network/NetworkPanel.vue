@@ -20,15 +20,10 @@
           <!-- Tab Container -->
           <mt-tab-container v-model="item.activeTab" style="background-color: white">
             <mt-tab-container-item id="headers" class="content">
-              <http-header
-                v-for="(value, header) in item.headerMap"
-                :key="header"
-                :name="header"
-                :value="value"
-              />
+              <tab-headers :responseHeaders="item.responseHeaders" />
             </mt-tab-container-item>
             <mt-tab-container-item id="response" class="tab-container">
-              <http-response :value="item.response" />
+              <tab-response :value="item.response" />
             </mt-tab-container-item>
           </mt-tab-container>
         </div>
@@ -55,8 +50,8 @@ import {
   MyFootSeparator
 } from "@/components";
 import { nextTick } from "@/utils";
-import HttpHeader from "./HttpHeader";
-import HttpResponse from "./HttpResponse";
+import TabHeaders from "./TabHeaders";
+import TabResponse from "./TabResponse";
 
 export default {
   components: {
@@ -65,10 +60,10 @@ export default {
     MyFootBar,
     MyFootSeparator,
     MyButton,
-    HttpHeader,
-    HttpResponse,
     [TabContainer.name]: TabContainer,
-    [TabContainerItem.name]: TabContainerItem
+    [TabContainerItem.name]: TabContainerItem,
+    [TabHeaders.name]: TabHeaders,
+    [TabResponse.name]: TabResponse
   },
   data() {
     return {
@@ -158,13 +153,15 @@ export default {
                 item.statusText = "(loading)";
                 const headers = xhr.getAllResponseHeaders();
                 const headerArr = headers.split(/[\r\n]+/);
+                const responseHeaders = {};
                 headerArr.forEach(line => {
                   if (!line) return;
                   const parts = line.split(": ");
-                  const header = parts.shift();
+                  const key = parts.shift();
                   const value = parts.join(": ");
-                  item.headerMap[header] = value;
+                  responseHeaders[key] = value;
                 });
+                item.responseHeaders = responseHeaders;
                 break;
               case 3: // LOADING
                 item.status = xhr.status;
@@ -228,7 +225,7 @@ export default {
         // /* 添加新元素时声明所有需要用到的字段，使这些字段变为 reactive，后续就可以直接更新字段值 */
         item.isExpand = false;
         item.activeTab = "headers";
-        item.headerMap = {};
+        item.responseHeaders = {};
         this.$set(this.requestMap, id, item);
         return;
       }

@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="tab-response">
     <pre class="source-code">{{value}}</pre>
   </div>
 </template>
@@ -7,19 +7,20 @@
 
 <script>
 export default {
+  name: "tab-response",
   props: {
     value: String
   },
   computed: {
-    formattedValue () {
-      return this.value
+    formattedValue() {
+      return this.value;
     }
   }
-}
+};
 </script>
 
 
 <style scoped>
-.content {
+.tab-response {
 }
 </style>
