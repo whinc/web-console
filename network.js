@@ -5,13 +5,18 @@ window.network = (function() {
     options = options || {};
     var url = options.url;
     var method = options.method || "GET";
+    var data = options.data || undefined;
+    var requestHeaders = options.requestHeaders || {}
 
     var xhr = new window.XMLHttpRequest();
     // xhr.onreadystatechange = function() {
     //   console.log("readyState:", this.readyState);
     // };
     xhr.open(method, url);
-    xhr.send();
+    Object.keys(requestHeaders).forEach(key => {
+      xhr.setRequestHeader(key, requestHeaders[key])
+    })
+    xhr.send(data);
   }
 
   return {
@@ -27,6 +32,44 @@ window.network = (function() {
         url: "https://runkit.io/runkit/hello-world-api/x.0.0"
       });
     },
-    testRequestParams: function() {}
+    testRequestParams: function() {
+      // GET
+      ajax({ url: baseURL + "/get?a=1&b=2&c=&d"});
+      var email = 'xx@yy.com'
+      var password = 'zz'
+      // POST：plain text
+      ajax({
+        url: baseURL + "/post",
+        method: 'POST',
+        data: 'email='
+        + encodeURIComponent(email)
+        + '&password='
+        + encodeURIComponent(password)
+      });
+      // POST：Form Data
+      ajax({
+        url: baseURL + "/post",
+        method: 'POST',
+        requestHeaders: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: 'email='
+        + encodeURIComponent(email)
+        + '&password='
+        + encodeURIComponent(password)
+      });
+      // POST: JSON
+      ajax({
+        url: baseURL + "/post",
+        method: 'POST',
+        requestHeaders: {
+          'Content-Type': 'application/json;charset=UTF-8'
+        },
+        data: JSON.stringify({
+          email: email,
+          password: password
+        })
+      });
+    }
   };
 })();
