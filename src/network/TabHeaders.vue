@@ -60,7 +60,7 @@ export default {
       arr.push({ key: "Request URL", value: this.requestInfo.url });
 
       const status = this.requestInfo.status;
-      const statusRange = status / 100;
+      const statusRange = parseInt(status / 100);
       if (
         statusRange === 2 ||
         statusRange === 3 ||
@@ -93,6 +93,10 @@ export default {
       }, []);
     },
     sectionRequestHeaders() {
+      return [];
+    },
+    sectionQueryStringParams() {
+      const url = this.requestInfo.url;
       return [];
     }
   }
