@@ -2,7 +2,7 @@ var http = require("http");
 var fs = require("fs");
 const url = require("url");
 
-console.log(url.parse("/get_status/202"));
+console.log(http.STATUS_CODES);
 
 const routes = {
   // 获取不同的 HTTP 状态码

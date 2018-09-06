@@ -7,7 +7,9 @@
       <div class="body">
         <div class="line" v-for="item in sectionGeneral" :key="item.key">
           <span class="name">{{item.key}}: </span>
-          <span class="source-code">{{item.value}}</span>
+          <span class="source-code">
+            <img v-if="item.icon" class="icon" :src="item.icon" />{{item.value}}
+          </span>
         </div>
       </div>
     </div>
@@ -43,6 +45,8 @@
 </template>
 
 <script>
+import { HttpStatus } from "@/constants";
+
 export default {
   props: {
     requestInfo: {
@@ -52,11 +56,28 @@ export default {
   },
   computed: {
     sectionGeneral() {
-      return [
-        { key: "Request URL", value: this.requestInfo.url },
-        { key: "Request Method", value: this.requestInfo.method.toUpperCase() },
-        { key: "Status Code", value: this.requestInfo.status }
-      ];
+      const arr = [];
+      arr.push({ key: "Request URL", value: this.requestInfo.url });
+
+      const status = this.requestInfo.status;
+      const statusRange = status / 100;
+      if (
+        statusRange === 2 ||
+        statusRange === 3 ||
+        statusRange === 4 ||
+        statusRange === 5
+      ) {
+        arr.push({
+          key: "Request Method",
+          value: this.requestInfo.method.toUpperCase()
+        });
+        arr.push({
+          key: "Status Code",
+          value: `${status} ${HttpStatus[status]}`,
+          icon: require(`@/assets/icons/${statusRange}xx.png`)
+        });
+      }
+      return arr;
     },
     sectionResponseHeaders() {
       const responseHeaders = this.requestInfo.responseHeaders;
@@ -109,6 +130,11 @@ export default {
           font-weight: bold;
           margin-right: 0.25em;
           white-space: nowrap;
+        }
+        .icon {
+          width: $primary-font-size * 4 / 5;
+          height: $primary-font-size * 4 / 5;
+          margin-right: 4px;
         }
       }
     }
