@@ -7,7 +7,6 @@
 
 <script>
 export default {
-  name: "tab-response",
   props: {
     value: String
   },

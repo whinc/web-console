@@ -6,28 +6,14 @@
           <span class="cell">Method</span>
           <span class="cell">Status</span>
       </div>
-      <div v-for="(item, index) in requestList" :key="item.id" class="row">
-        <div class="summary" @click="onClickItem(item.id)" :class="{selected: selectedId === item.id, even: index % 2 === 0, error: isStatusError(item)}">
-          <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
-          <span class="cell">{{item.method}}</span>
-          <span class="cell">{{item.statusText}}</span>
-        </div>
-        <div class="detail" v-show="item.isExpand">
-          <v-tab-bar v-model="item.activeTab" :show-bottom-border="false">
-            <v-tab-bar-item id="headers">Headers</v-tab-bar-item>
-            <v-tab-bar-item id="response">Response</v-tab-bar-item>
-          </v-tab-bar>
-          <!-- Tab Container -->
-          <mt-tab-container v-model="item.activeTab" style="background-color: white">
-            <mt-tab-container-item id="headers" class="content">
-              <tab-headers :responseHeaders="item.responseHeaders" />
-            </mt-tab-container-item>
-            <mt-tab-container-item id="response" class="tab-container">
-              <tab-response :value="item.response" />
-            </mt-tab-container-item>
-          </mt-tab-container>
-        </div>
-      </div>
+      <NetworkRequest
+        v-for="(item, index) in requestList"
+        :key="item.id"
+        :item="item"
+        :is-selected="selectedId === item.id"
+        :is-even="index % 2 === 0"
+        @click="onClickItem(item.id)"
+      />
     </div>
     <div class="message-list">
     </div>
@@ -52,6 +38,7 @@ import {
 import { nextTick } from "@/utils";
 import TabHeaders from "./TabHeaders";
 import TabResponse from "./TabResponse";
+import NetworkRequest from "./NetworkRequest";
 
 export default {
   components: {
@@ -63,7 +50,8 @@ export default {
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem,
     [TabHeaders.name]: TabHeaders,
-    [TabResponse.name]: TabResponse
+    [TabResponse.name]: TabResponse,
+    [NetworkRequest.name]: NetworkRequest
   },
   data() {
     return {
@@ -83,13 +71,6 @@ export default {
     this.hookXMLHttpRequest();
   },
   methods: {
-    isStatusError(item) {
-      if (item.status >= 400 && item.status < 600) {
-        return true;
-      } else {
-        return false;
-      }
-    },
     onClickItem(id) {
       const item = this.requestMap[id];
       // 点击同一行，切换展开态
@@ -241,7 +222,7 @@ export default {
 <style lang="scss" scoped>
 @import "../base.scss";
 
-$status-error-color: rgb(230, 0, 0);
+// $status-error-color: rgb(230, 0, 0);
 
 .network-panel {
   height: 100%;
@@ -282,63 +263,6 @@ $status-error-color: rgb(230, 0, 0);
         }
         &:active {
           background-color: $toolbar-border-color;
-        }
-      }
-    }
-
-    .row {
-      display: flex;
-      flex-direction: column;
-      .summary {
-        width: 100%;
-        height: $list-row-height;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        &.error {
-          color: $status-error-color;
-        }
-        &.even {
-          background-color: rgb(245, 245, 245);
-        }
-        &.selected {
-          color: white;
-          background-color: #2196f3;
-        }
-        .cell {
-          display: flex;
-          width: 100%;
-          height: 100%;
-          justify-content: left;
-          padding: 0px 4px;
-          align-items: center;
-          flex: 1 1;
-          &.long {
-            flex: 4 1;
-            display: inline-block;
-            text-overflow: ellipsis;
-            overflow-x: hidden;
-            white-space: nowrap;
-            line-height: $list-row-height;
-          }
-        }
-      }
-      .detail {
-        .head {
-          background-color: rgba($toolbar-bg-color, 0.5);
-          color: $tab-fg-color;
-          border-bottom: 1px solid rgba($toolbar-border-color, 0.5);
-          .tab-item {
-            background-color: rgba(0, 0, 0, 0);
-            &.selected {
-              color: $tab-selected-fg-color;
-            }
-          }
-        }
-        .content {
-          max-height: 40vh;
-          overflow-y: scroll;
-          padding: 2px 5px;
         }
       }
     }

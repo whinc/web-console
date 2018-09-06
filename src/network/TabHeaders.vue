@@ -9,7 +9,6 @@
 
 <script>
 export default {
-  name: "tab-headers",
   props: {
     responseHeaders: {
       type: Object,
