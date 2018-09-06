@@ -13,7 +13,7 @@
       <!-- Tab Container -->
       <mt-tab-container v-model="item.activeTab" style="background-color: white">
         <mt-tab-container-item id="headers" class="content">
-          <TabHeaders :responseHeaders="item.responseHeaders" />
+          <TabHeaders :requestInfo="item" />
         </mt-tab-container-item>
         <mt-tab-container-item id="response" class="tab-container">
           <TabResponse :value="item.response" />
