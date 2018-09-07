@@ -24,6 +24,8 @@ const routes = {
   },
   "/post": function(req, res) {
     res.writeHead(200, {
+      "Access-Control-Allow-Method": "GET,POST,OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "text/plain; charset=utf-8"
     });

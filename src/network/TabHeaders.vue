@@ -14,9 +14,7 @@
       </div>
     </div>
 
-    <div class="divider" />
-
-    <div class="section">
+    <div v-if="sectionResponseHeaders.length > 0" class="section">
       <div class="header">
         <div class="title">Response Headers</div>
       </div>
@@ -28,9 +26,7 @@
       </div>
     </div>
 
-    <div class="divider" />
-
-    <div class="section">
+    <div v-if="sectionRequestHeaders.length > 0" class="section">
       <div class="header">
         <div class="title">Request Headers</div>
       </div>
@@ -41,11 +37,38 @@
         </div>
       </div>
     </div>
+
+    <div v-if="sectionQueryStringParameters.length > 0" class="section">
+      <div class="header">
+        <div class="title">Query String Parameters</div>
+      </div>
+      <div class="body">
+        <div class="line" v-for="item in sectionQueryStringParameters" :key="item.key">
+          <span class="name">{{item.key}}: </span>
+          <span class="source-code">{{item.value}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="sectionRequestPayload.length > 0" class="section">
+      <div class="header">
+        <div class="title">Request Payload</div>
+      </div>
+      <div class="body">
+        <div class="line" v-for="item in sectionRequestPayload" :key="item.key">
+          <span v-if="item.key" class="name">{{item.key}}: </span>
+          <span class="source-code">{{item.value}}</span>
+        </div>
+      </div>
+    </div>
+
   </div>  
 </template>
 
 <script>
 import { HttpStatus } from "@/constants";
+import URLSearchParams from "url-search-params";
+import { _console } from "@/utils";
 
 export default {
   props: {
@@ -93,11 +116,36 @@ export default {
       }, []);
     },
     sectionRequestHeaders() {
-      return [];
+      const requestHeaders = this.requestInfo.requestHeaders;
+      return Object.keys(requestHeaders).reduce((arr, key) => {
+        arr.push({ key, value: requestHeaders[key] });
+        return arr;
+      }, []);
     },
-    sectionQueryStringParams() {
+    sectionQueryStringParameters() {
       const url = this.requestInfo.url;
-      return [];
+      if (!url) return [];
+
+      const arr = [];
+      const index = url.indexOf("?");
+      if (index !== -1) {
+        const searchPart = url.slice(index + 1);
+        const params = new URLSearchParams(searchPart);
+        for (let pair of params.entries()) {
+          arr.push({ key: pair[0], value: pair[1] });
+        }
+      }
+      return arr;
+    },
+    sectionRequestPayload() {
+      const data = this.requestInfo.data;
+      const requestHeaders = this.requestInfo.requestHeaders;
+      if (!data) return [];
+
+      if (requestHeaders["Content-Type"] === "") {
+      }
+
+      return [{ value: data }];
     }
   }
 };
@@ -110,11 +158,9 @@ export default {
   display: flex;
   flex-direction: column;
   color: rgb(33%, 33%, 33%);
-  .divider {
-    border-bottom: solid 1px #e0e0e0;
-  }
   .section {
     padding-bottom: 5px;
+    border-bottom: solid 1px #e0e0e0;
     .header {
       display: flex;
       flex-direction: row;

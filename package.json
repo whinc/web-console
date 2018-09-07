@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "mint-ui": "^2.2.13",
+    "url-search-params": "^1.0.2",
     "vue": "^2.5.13"
   },
   "devDependencies": {

@@ -96,16 +96,18 @@ export default {
      */
     hookXMLHttpRequest() {
       const vm = this;
-      const _open = window.XMLHttpRequest.prototype.open;
-      const _send = window.XMLHttpRequest.prototype.send;
+      const XMLHttpRequest = window.XMLHttpRequest;
+      const _open = XMLHttpRequest.prototype.open;
+      const _send = XMLHttpRequest.prototype.send;
+      const _setRequestHeaders = XMLHttpRequest.prototype.setRequestHeader;
 
-      window.XMLHttpRequest.prototype.open = function(method, url) {
+      XMLHttpRequest.prototype.open = function(method, url) {
         const xhr = this;
         const id = vm.genUUID();
 
         // 保存数据在 xhr 实例中，方便后续获取
         xhr.$id = id;
-        xhr.$method = method;
+        xhr.$method = (method || "GET").toUpperCase();
         xhr.$url = url;
 
         // 返回重写的 onreadystatechange 事件处理程序
@@ -176,7 +178,7 @@ export default {
         _open.apply(this, arguments);
       };
 
-      window.XMLHttpRequest.prototype.send = function(...args) {
+      XMLHttpRequest.prototype.send = function(...args) {
         const xhr = this;
         const id = xhr.$id;
         const item = vm.requestMap[id] || {};
@@ -185,9 +187,24 @@ export default {
         item.url = xhr.$url;
         item.status = 0;
         item.statusText = "-";
+        if (xhr.$method === "GET" || xhr.$method === "HEAD") {
+          item.data = null;
+        } else {
+          item.data = args[0] || null;
+        }
         vm.updateRequest(id, item);
 
         _send.apply(this, arguments);
+      };
+
+      XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+        const xhr = this;
+        const id = this.$id;
+        const item = vm.requestMap[id] || {};
+        item.requestHeaders = { ...item.requestHeaders, [header]: value };
+        vm.updateRequest(id, item);
+
+        _setRequestHeaders.apply(this, arguments);
       };
     },
     genUUID() {
@@ -201,19 +218,25 @@ export default {
       return id;
     },
     updateRequest(id, item) {
-      const _item = this.requestMap[id];
-      if (!_item) {
-        // /* 添加新元素时声明所有需要用到的字段，使这些字段变为 reactive，后续就可以直接更新字段值 */
-        item.isExpand = false;
-        item.activeTab = "headers";
-        item.responseHeaders = {};
-        this.$set(this.requestMap, id, item);
-        return;
-      }
+      let _item = this.requestMap[id];
 
-      Object.keys(item).forEach(key => {
-        _item[key] = item[key];
-      });
+      if (_item) {
+        // 拷贝新值
+        Object.keys(item).forEach(key => {
+          _item[key] = item[key];
+        });
+      } else {
+        // 添加初始值，并拷贝新值
+        _item = {
+          isExpand: false,
+          activeTab: "headers",
+          responseHeaders: {},
+          requestHeaders: {},
+          ...item
+        };
+        // 首次添加时使用 $set 触发 vue 跟踪数据变化
+        this.$set(this.requestMap, id, _item);
+      }
     }
   }
 };
