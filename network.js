@@ -6,7 +6,7 @@ window.network = (function() {
     var url = options.url;
     var method = options.method || "GET";
     var data = options.data || undefined;
-    var requestHeaders = options.requestHeaders || {}
+    var requestHeaders = options.requestHeaders || {};
 
     var xhr = new window.XMLHttpRequest();
     // xhr.onreadystatechange = function() {
@@ -14,8 +14,8 @@ window.network = (function() {
     // };
     xhr.open(method, url);
     Object.keys(requestHeaders).forEach(key => {
-      xhr.setRequestHeader(key, requestHeaders[key])
-    })
+      xhr.setRequestHeader(key, requestHeaders[key]);
+    });
     xhr.send(data);
   }
 
@@ -26,44 +26,48 @@ window.network = (function() {
         ajax({ url: baseURL + "/get_status/" + status });
       });
       ajax({
-        url: "https://runkit.io/runkit/hello-world-api/1.0.0"
+        url:
+          "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15850781443"
       });
       ajax({
-        url: "https://runkit.io/runkit/hello-world-api/x.0.0"
+        url:
+          "https://www.baifubao.com/callback?cmd=1059&callback=phone&phone=15850781443"
       });
     },
     testRequestParams: function() {
       // GET
-      ajax({ url: baseURL + "/get?a=1&b=2&c=&d"});
-      var email = 'xx@yy.com'
-      var password = 'zz'
+      ajax({ url: baseURL + "/get?a=1&b=2&c=&d" });
+      var email = "xx@yy.com";
+      var password = "zz";
       // POST：plain text
       ajax({
         url: baseURL + "/post",
-        method: 'POST',
-        data: 'email='
-        + encodeURIComponent(email)
-        + '&password='
-        + encodeURIComponent(password)
+        method: "POST",
+        data:
+          "email=" +
+          encodeURIComponent(email) +
+          "&password=" +
+          encodeURIComponent(password)
       });
       // POST：Form Data
       ajax({
         url: baseURL + "/post",
-        method: 'POST',
+        method: "POST",
         requestHeaders: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          "Content-Type": "application/x-www-form-urlencoded"
         },
-        data: 'email='
-        + encodeURIComponent(email)
-        + '&password='
-        + encodeURIComponent(password)
+        data:
+          "email=" +
+          encodeURIComponent(email) +
+          "&password=" +
+          encodeURIComponent(password)
       });
       // POST: JSON
       ajax({
         url: baseURL + "/post",
-        method: 'POST',
+        method: "POST",
         requestHeaders: {
-          'Content-Type': 'application/json;charset=UTF-8'
+          "Content-Type": "application/json;charset=UTF-8"
         },
         data: JSON.stringify({
           email: email,
