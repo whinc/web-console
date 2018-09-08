@@ -73,6 +73,16 @@ window.network = (function() {
           email: email,
           password: password
         })
+        // data: '{"email": aa}'
+      });
+      // POST: JSON with invalid format
+      ajax({
+        url: baseURL + "/post",
+        method: "POST",
+        requestHeaders: {
+          "Content-Type": "application/json;charset=UTF-8"
+        },
+        data: '{"email": aa}'
       });
     }
   };
