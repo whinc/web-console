@@ -14,7 +14,7 @@
   "main": "dist/web-console.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name WebConsole --dest dist src/main.js",
+    "build": "vue-cli-service build --target lib --name web-console --dest dist src/main.js",
     "build:web": "vue-cli-service build --dest demo",
     "predepoly": "npm run build:web",
     "depoly": "npx gh-pages -d demo",
