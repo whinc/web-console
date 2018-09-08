@@ -3,7 +3,6 @@ import App from "./App.vue";
 
 Vue.config.productionTip = false;
 
-let isInit = false;
 const load = options => {
   if (
     document.readyState === "interactive" ||
@@ -28,8 +27,10 @@ const load = options => {
   }
 };
 
-class WebConsole {
-  static init(options = {}) {
+let isInit = false;
+
+export default {
+  init(options = {}) {
     if (isInit) {
       console.warn("WebConsole can only be initialize once");
       return;
@@ -38,12 +39,4 @@ class WebConsole {
     load(options);
     isInit = true;
   }
-}
-
-if (window && !window.WebConsole) {
-  window.WebConsole = WebConsole;
-} else {
-  console.warn("window.WebConsole is not empty");
-}
-
-export default WebConsole;
+};

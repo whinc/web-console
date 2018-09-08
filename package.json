@@ -14,7 +14,7 @@
   "main": "dist/web-console.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name web-console src/main.js --dest dist",
+    "build": "vue-cli-service build --target lib --name WebConsole --dest dist src/main.js",
     "build:web": "vue-cli-service build --dest demo",
     "predepoly": "npm run build:web",
     "depoly": "npx gh-pages -d demo",
@@ -27,27 +27,27 @@
   "dependencies": {
     "mint-ui": "^2.2.13",
     "url-search-params": "^1.0.2",
-    "vue": "^2.5.13"
+    "vue": "^2.5.17"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-rc.8",
-    "@vue/cli-plugin-e2e-cypress": "^3.0.0-rc.8",
-    "@vue/cli-plugin-eslint": "^3.0.0-rc.8",
-    "@vue/cli-plugin-unit-jest": "^3.0.0-rc.8",
-    "@vue/cli-service": "^3.0.0-rc.8",
-    "@vue/test-utils": "^1.0.0-beta.21",
+    "@vue/cli-plugin-babel": "^3.0.1",
+    "@vue/cli-plugin-e2e-cypress": "^3.0.1",
+    "@vue/cli-plugin-eslint": "^3.0.1",
+    "@vue/cli-plugin-unit-jest": "^3.0.1",
+    "@vue/cli-service": "^3.0.1",
+    "@vue/test-utils": "^1.0.0-beta.25",
     "babel-core": "^7.0.0-0",
     "babel-jest": "^22.4.4",
     "babel-plugin-component": "^1.1.1",
     "gh-pages": "^1.2.0",
     "husky": "^1.0.0-rc.13",
     "i": "^0.3.6",
-    "node-sass": "^4.9.2",
-    "nodemon": "^1.18.3",
+    "node-sass": "^4.9.3",
+    "nodemon": "^1.18.4",
     "prettier": "1.14.2",
     "pretty-quick": "^1.6.0",
     "sass-loader": "^6.0.6",
-    "vue-template-compiler": "^2.5.13"
+    "vue-template-compiler": "^2.5.17"
   },
   "browserslist": [
     "> 1%",
