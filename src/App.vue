@@ -1,7 +1,26 @@
 <template>
   <div class="web-console">
     <!-- 悬浮按钮 -->
-    <mt-button type="primary" class="entry" @click="showPanel">web-console</mt-button>
+    <img
+      v-if="entryStyle === 'icon'"
+      src="@/assets/icons/chrome_logo.png" class="entry icon"
+      :style="{right: right + 'px', bottom: bottom + 'px'}"
+      @click="showPanel"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd"
+    />
+    <button
+      v-else
+      class="entry button"
+      :style="{right: right + 'px', bottom: bottom + 'px'}"
+      @click="showPanel"
+      @touchstart="onTouchStart"
+      @touchmove="onTouchMove"
+      @touchend="onTouchEnd"
+    >
+      web-console
+    </button>
 
     <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
@@ -25,7 +44,7 @@
 </template>
 
 <script>
-import { Button, Popup, TabContainer, TabContainerItem } from "mint-ui";
+import { Popup, TabContainer, TabContainerItem } from "mint-ui";
 import { VTabBar, VTabBarItem } from "./components";
 import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";
@@ -36,25 +55,32 @@ export default {
     NetworkPanel,
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
-    [Button.name]: Button,
     [Popup.name]: Popup,
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem
   },
   props: {
     initPanelVisible: Boolean,
-    initActiveTab: String
+    initActiveTab: String,
+    // 入口样式，支持 'icon' 和 'button'
+    initEntryStyle: String
   },
   data() {
     return {
+      entryStyle: "icon",
       panelVisible: false,
-      activeTab: "console"
+      activeTab: "console",
+      right: 20,
+      bottom: 20
     };
   },
   mounted() {
     // 设置初始值
     this.panelVisible = this.initPanelVisible;
     this.activeTab = this.initActiveTab;
+    this.entryStyle = this.initEntryStyle;
+
+    this.isTouched = false;
 
     this.$root.$on("hide", () => {
       this.hidePanel();
@@ -66,6 +92,35 @@ export default {
     },
     hidePanel() {
       this.panelVisible = false;
+    },
+    onTouchStart(e) {
+      this.isTouched = true;
+      const touch = e.changedTouches[0];
+      this.prevClientX = touch.clientX;
+      this.prevClientY = touch.clientY;
+    },
+    onTouchMove(e) {
+      if (!this.isTouched) return;
+      const touch = e.changedTouches[0];
+      this.right -= touch.clientX - this.prevClientX;
+      this.bottom -= touch.clientY - this.prevClientY;
+      // 防止滑出边界
+      this.right = Math.min(
+        Math.max(this.right, 0),
+        document.documentElement.clientWidth - e.target.clientWidth - 1
+      );
+      this.bottom = Math.min(
+        Math.max(this.bottom, 0),
+        document.documentElement.clientHeight - e.target.clientHeight
+      );
+      this.prevClientX = touch.clientX;
+      this.prevClientY = touch.clientY;
+
+      // 避免滚动底层元素
+      e.preventDefault();
+    },
+    onTouchEnd() {
+      this.isTouched = false;
     }
   }
 };
@@ -100,6 +155,22 @@ export default {
   position: fixed;
   right: 20px;
   bottom: 20px;
+  z-index: 99999;
+  &.icon {
+    border-radius: 16px;
+    box-shadow: 0 0 32px rgba(0, 0, 0, 0.4);
+  }
+  &.button {
+    font-size: 1em;
+    font-weight: bold;
+    padding: 0.6em 1em;
+    border-radius: 0.3em;
+    background-color: #26a2ff;
+    color: white;
+    outline: none;
+    border: none;
+    box-shadow: 0 0 0.61538462em rgba(0, 0, 0, 0.4);
+  }
 }
 
 .panel {
