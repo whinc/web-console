@@ -50,12 +50,12 @@
       </div>
     </div>
 
-    <div v-if="sectionRequestPayload.length > 0" class="section">
+    <div v-if="sectionRequestPayload.headers.length > 0" class="section">
       <div class="header">
-        <div class="title">Request Payload</div>
+        <div class="title">{{sectionRequestPayload.title}}</div>
       </div>
       <div class="body">
-        <div class="line" v-for="item in sectionRequestPayload" :key="item.key">
+        <div class="line" v-for="item in sectionRequestPayload.headers" :key="item.key">
           <span v-if="item.key" class="name">{{item.key}}: </span>
           <span class="source-code">{{item.value}}</span>
         </div>
@@ -138,14 +138,42 @@ export default {
       return arr;
     },
     sectionRequestPayload() {
-      const data = this.requestInfo.data;
-      const requestHeaders = this.requestInfo.requestHeaders;
-      if (!data) return [];
+      const result = {
+        title: "Request Payload",
+        headers: []
+      };
 
-      if (requestHeaders["Content-Type"] === "") {
+      const data = this.requestInfo.data;
+      if (!data) return result;
+
+      const requestHeaders = this.requestInfo.requestHeaders;
+      const mimeType = (requestHeaders["Content-Type"] || "")
+        .split(";")[0]
+        .replace(/(^\s+)|(\s+$)/g, "");
+      switch (mimeType) {
+        case "application/x-www-form-urlencoded":
+          result.title = "Form Data";
+          const params = new URLSearchParams(data);
+          for (let pair of params.entries()) {
+            result.headers.push({
+              key: decodeURIComponent(pair[0]),
+              value: decodeURIComponent(pair[1])
+            });
+          }
+          break;
+        case "application/json":
+          try {
+            result.headers.push({ value: JSON.parse(data) });
+          } catch (error) {
+            result.headers.push({ value: data });
+          }
+          break;
+        default:
+          result.headers.push({ value: data });
+          break;
       }
 
-      return [{ value: data }];
+      return result;
     }
   }
 };

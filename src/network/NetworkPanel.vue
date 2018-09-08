@@ -221,21 +221,16 @@ export default {
       let _item = this.requestMap[id];
 
       if (_item) {
-        // 拷贝新值
-        Object.keys(item).forEach(key => {
-          _item[key] = item[key];
-        });
+        this.$set(this.requestMap, id, { ..._item, ...item });
       } else {
         // 添加初始值，并拷贝新值
-        _item = {
+        const initValue = {
           isExpand: false,
           activeTab: "headers",
           responseHeaders: {},
-          requestHeaders: {},
-          ...item
+          requestHeaders: {}
         };
-        // 首次添加时使用 $set 触发 vue 跟踪数据变化
-        this.$set(this.requestMap, id, _item);
+        this.$set(this.requestMap, id, { ...initValue, ...item });
       }
     }
   }
