@@ -1,26 +1,28 @@
 <template>
   <div class="web-console">
     <!-- 悬浮按钮 -->
-    <img
-      v-if="entryStyle === 'icon'"
-      src="@/assets/icons/chrome_logo.png" class="entry icon"
-      :style="{right: right + 'px', bottom: bottom + 'px'}"
-      @click="showPanel"
-      @touchstart="onTouchStart"
-      @touchmove="onTouchMove"
-      @touchend="onTouchEnd"
-    />
-    <button
-      v-else
-      class="entry button"
-      :style="{right: right + 'px', bottom: bottom + 'px'}"
-      @click="showPanel"
-      @touchstart="onTouchStart"
-      @touchmove="onTouchMove"
-      @touchend="onTouchEnd"
-    >
-      web-console
-    </button>
+    <template v-if="!panelVisible">
+      <img
+        v-if=" entryStyle === 'icon'"
+        src="@/assets/icons/chrome_logo.png" class="entry icon"
+        :style="{right: right + 'px', bottom: bottom + 'px'}"
+        @click="showPanel"
+        @touchstart="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend="onTouchEnd"
+      />
+      <button
+        v-else
+        class="entry button"
+        :style="{right: right + 'px', bottom: bottom + 'px'}"
+        @click="showPanel"
+        @touchstart="onTouchStart"
+        @touchmove="onTouchMove"
+        @touchend="onTouchEnd"
+      >
+        web-console
+      </button>
+    </template>
 
     <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
