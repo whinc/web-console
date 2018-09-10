@@ -41,8 +41,8 @@ const WebConsole = {
   }
 };
 
-if (process.env.NODE_ENV !== "production") {
-  // 测试时使用
+// 注入到全局对象
+if (!window["web-console"]) {
   window["web-console"] = WebConsole;
 }
 
