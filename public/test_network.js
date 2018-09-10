@@ -1,4 +1,4 @@
-window.network = (function() {
+window.$network = (function() {
   var baseURL = "http://localhost:8090";
 
   function ajax(options) {

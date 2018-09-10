@@ -29,7 +29,7 @@ const load = options => {
 
 let isInit = false;
 
-export default {
+const WebConsole = {
   init(options = {}) {
     if (isInit) {
       console.warn("WebConsole can only be initialize once");
@@ -40,3 +40,10 @@ export default {
     isInit = true;
   }
 };
+
+if (process.env.NODE_ENV !== "production") {
+  // 测试时使用
+  window["web-console"] = WebConsole;
+}
+
+export default WebConsole;

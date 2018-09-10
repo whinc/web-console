@@ -28,12 +28,12 @@
         <h2>Console Test</h2>
         <mt-button type="primary" @click="onClickPrint('log_level')">打印不同级别日志</mt-button>
         <mt-button type="primary" @click="onClickPrint('log_params')">打印多参数</mt-button>
-        <mt-button type="primary" @click="onClickPrint('log_format')">打印格式化</mt-button>
+        <mt-button type="primary" @click="$console.testFormat()">打印格式化</mt-button>
         <mt-button type="primary" @click="onClickPrint('log_object')">打印对象</mt-button>
 
         <h2>Network Test</h2>
-        <mt-button type="primary" @click="network.testHTTPStatus()">测试 HTTP 状态码</mt-button>
-        <mt-button type="primary" @click="network.testRequestParams()">测试请求参数</mt-button>
+        <mt-button type="primary" @click="$network.testHTTPStatus()">测试 HTTP 状态码</mt-button>
+        <mt-button type="primary" @click="$network.testRequestParams()">测试请求参数</mt-button>
         <mt-button type="primary" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
         <mt-button type="primary" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
       </div>
@@ -54,7 +54,8 @@
     </div>
     <!-- import JavaScript -->
     <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
-    <script src="./network.js"></script>
+    <script src="./test_console.js"></script>
+    <script src="./test_network.js"></script>
     <script type="text/javascript">
       new Vue({
         el: "#app",
@@ -65,8 +66,11 @@
           };
         },
         computed: {
-          network () {
-            return window.network
+          $network () {
+            return window.$network
+          },
+          $console () {
+            return window.$console
           }
         },
         mounted: function() {
@@ -75,17 +79,18 @@
         methods: {
           launchWebConsole: function() {
             var self = this;
-            if (window.WebConsole) {
-              WebConsole.init({
-                // activeTab: 'console',
+            if (window['web-console']) {
+              window['web-console'].init({
+                activeTab: 'console',
                 // panelVisible: false
-                activeTab: "network",
-                panelVisible: false,
+                // activeTab: "network",
+                panelVisible: true,
                 entryStyle: 'icon'
               });
               // 启动时自动运行测试用例
-              // window.network.testHTTPStatus()
-              window.network.testRequestParams()
+              this.$console.testFormat()
+              // this.$network.testHTTPStatus()
+              // this.$network.testRequestParams()
             } else {
               setTimeout(function() {
                 self.launchWebConsole();
@@ -129,40 +134,6 @@
                 break;
               case "log_params":
                 console.log("aa", 100, true, null, undefined, { a: "a" }, Symbol());
-                break;
-              case "log_format":
-                // 测试占位符的支持类型
-                testLogFormat(numInt, "%i");
-                testLogFormat(numFloat, "%i");
-                testLogFormat(numInt, "%d");
-                testLogFormat(numFloat, "%d");
-                testLogFormat(numInt, "%f");
-                testLogFormat(numFloat, "%f");
-                testLogFormat(obj, "%s");
-                testLogFormat(obj, "%o");
-                testLogFormat(arr, "%o");
-                testLogFormat(obj, "%O");
-                testLogFormat(arr, "%O");
-                // 测试占位符缺少对应的参数
-                console.log('console.log("-%s%i%d%f%o%O%c-")');
-                console.log("-%s%i%d%f%o%O%c-");
-                // 测试参数多余占位符
-                console.log('console.log("-%s-", 99, {a: "1"})');
-                console.log("-%s-", 99, { a: 1 });
-                // 测试占位符和参数的高亮
-                console.log(
-                  "console.log('%s-%s-%s-%s-%s-%s-%s', 100, true, null, undefined, '100', {}, [])"
-                );
-                console.log(
-                  "%s-%s-%s-%s-%s-%s-%s",
-                  100,
-                  true,
-                  null,
-                  undefined,
-                  "100",
-                  {},
-                  []
-                );
                 break;
               case "log_object":
                 // console.log('obj:', {a: 1})
@@ -398,10 +369,10 @@
       }
     </script>
     <!-- <script src="https://unpkg.com/@whinc/web-console"></script> -->
-    <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <!-- <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
     <script>
       var vConsole = new VConsole();
-    </script>
+    </script> -->
     <!-- built files will be auto injected -->
   </body>
 </html>
