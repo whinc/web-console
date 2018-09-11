@@ -54,8 +54,8 @@ npm run depoly
 发布到 npm
 
 ```bash
-npm run build
 npm version <new_version>
+npm run build
 npm login
 npm publish --access=public
 ```
