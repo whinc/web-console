@@ -2,9 +2,27 @@ var http = require("http");
 var fs = require("fs");
 const url = require("url");
 
-console.log(http.STATUS_CODES);
-
 const routes = {
+  "/get_data": function(req, res) {
+    const queryParams = url.parse(req.url, true).query;
+    const mimeType = queryParams["mime_type"];
+    const responseHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": mimeType || "text/plain"
+    };
+    res.writeHead(200, responseHeaders);
+
+    switch (mimeType) {
+      case "application/json":
+        // res.end(JSON.stringify(http.STATUS_CODES))
+        res.end(JSON.stringify(http.STATUS_CODES, null, 4));
+        break;
+      case "text/plain":
+      default:
+        res.end("nothing");
+        break;
+    }
+  },
   // 获取不同的 HTTP 状态码
   "/get_status/\\d+": function(req, res) {
     const pathname = url.parse(req.url).pathname;
@@ -39,9 +57,7 @@ const httpServer = http
     const pathname = urlObj.pathname;
     console.log("received request:", pathname);
 
-    const key = Object.keys(routes).find(route =>
-      new RegExp(route).test(pathname)
-    );
+    const key = Object.keys(routes).find(route => new RegExp(route).test(pathname));
     if (key) {
       routes[key](req, res);
     } else {

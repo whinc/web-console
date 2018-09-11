@@ -25,13 +25,9 @@ window.$network = (function() {
       [100, 200, 300, 400, 500].forEach(function(status) {
         ajax({ url: baseURL + "/get_status/" + status });
       });
+      ajax({ url: "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15850781443" });
       ajax({
-        url:
-          "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15850781443"
-      });
-      ajax({
-        url:
-          "https://www.baifubao.com/callback?cmd=1059&callback=phone&phone=15850781443"
+        url: "https://www.baifubao.com/callback?cmd=1059&callback=phone&phone=15850781443"
       });
     },
     testRequestParams: function() {
@@ -43,11 +39,7 @@ window.$network = (function() {
       ajax({
         url: baseURL + "/post",
         method: "POST",
-        data:
-          "email=" +
-          encodeURIComponent(email) +
-          "&password=" +
-          encodeURIComponent(password)
+        data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
       });
       // POST：Form Data
       ajax({
@@ -56,11 +48,7 @@ window.$network = (function() {
         requestHeaders: {
           "Content-Type": "application/x-www-form-urlencoded"
         },
-        data:
-          "email=" +
-          encodeURIComponent(email) +
-          "&password=" +
-          encodeURIComponent(password)
+        data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
       });
       // POST: JSON
       ajax({
@@ -83,6 +71,12 @@ window.$network = (function() {
           "Content-Type": "application/json;charset=UTF-8"
         },
         data: '{"email": aa}'
+      });
+    },
+    // 测试响应数据类型
+    testResponseData() {
+      ajax({
+        url: baseURL + "/get_data/?mime_type=" + encodeURIComponent("application/json")
       });
     }
   };

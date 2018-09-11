@@ -84,12 +84,7 @@ export default {
 
       const status = this.requestInfo.status;
       const statusRange = parseInt(status / 100);
-      if (
-        statusRange === 2 ||
-        statusRange === 3 ||
-        statusRange === 4 ||
-        statusRange === 5
-      ) {
+      if (statusRange === 2 || statusRange === 3 || statusRange === 4 || statusRange === 5) {
         arr.push({
           key: "Request Method",
           value: this.requestInfo.method.toUpperCase()
@@ -147,9 +142,7 @@ export default {
       if (!data) return result;
 
       const requestHeaders = this.requestInfo.requestHeaders;
-      const mimeType = (requestHeaders["Content-Type"] || "")
-        .split(";")[0]
-        .replace(/(^\s+)|(\s+$)/g, "");
+      const mimeType = (requestHeaders["Content-Type"] || "").split(";")[0].replace(/(^\s+)|(\s+$)/g, "");
       switch (mimeType) {
         case "application/x-www-form-urlencoded":
           result.title = "Form Data";
@@ -186,6 +179,8 @@ export default {
   display: flex;
   flex-direction: column;
   color: rgb(33%, 33%, 33%);
+  max-height: 50vh;
+  overflow-y: scroll;
   .section {
     padding-bottom: 5px;
     border-bottom: solid 1px #e0e0e0;

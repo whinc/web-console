@@ -1,6 +1,6 @@
 <template>
   <div class="tab-response">
-    <pre class="source-code">{{value}}</pre>
+    <pre class="data source-code">{{value}}</pre>
   </div>
 </template>
 
@@ -19,7 +19,13 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
 .tab-response {
+  padding: 0px 5px;
+  max-height: 50vh;
+  overflow-y: scroll;
+  .data {
+    overflow-x: scroll;
+  }
 }
 </style>
