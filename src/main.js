@@ -9,7 +9,7 @@ const load = options => {
     document.readyState === "complete"
   ) {
     const root = document.createElement("div");
-    document.body.appendChild(root);
+    (document.documentElement || document.body).appendChild(root);
 
     let vm = new Vue({
       el: root,
