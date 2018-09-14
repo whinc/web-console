@@ -74,9 +74,12 @@ window.$network = (function() {
       });
     },
     // 测试响应数据类型
+    // 参考 http://devdocs.io/http/basics_of_http/mime_types
     testResponseData() {
-      ajax({
-        url: baseURL + "/get_data/?mime_type=" + encodeURIComponent("application/json")
+      const mimeTypeList = ["application/json", "text/html"];
+
+      mimeTypeList.forEach(mimeType => {
+        ajax({ url: baseURL + "/get_data/?mime_type=" + encodeURIComponent(mimeType) });
       });
     }
   };

@@ -12,14 +12,28 @@ const routes = {
     };
     res.writeHead(200, responseHeaders);
 
+    // 参考 http://devdocs.io/http/basics_of_http/mime_types
     switch (mimeType) {
+      case "application/octet-stream":
+        break;
+      case "text/javascript":
+      case "application/javascript":
+        res.end(`function () { console.log('hello world') }`);
+        break;
       case "application/json":
         // res.end(JSON.stringify(http.STATUS_CODES))
         res.end(JSON.stringify(http.STATUS_CODES, null, 4));
         break;
+      case "image/jpeg":
+        break;
+      case "image/png":
+        break;
+      case "text/html":
+        res.end(`<html><body><h1>hello world</h1></body></html>`);
+        break;
       case "text/plain":
       default:
-        res.end("nothing");
+        res.end("this is a plain text.");
         break;
     }
   },

@@ -1,11 +1,13 @@
 <template>
   <div class="network-panel">
-    <div class="table">
-      <div class="head">
-          <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">Name</span>
-          <span class="cell">Method</span>
-          <span class="cell">Status</span>
-      </div>
+    <div class="head">
+      <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">
+        Name {{requestList.length > 0 ? `(${requestList.length})` : ''}}
+      </span>
+      <span class="cell">Method</span>
+      <span class="cell">Status</span>
+    </div>
+    <div class="body">
       <NetworkRequest
         v-for="(item, index) in requestList"
         :key="item.id"
@@ -15,26 +17,14 @@
         @click="onClickItem(item.id)"
       />
     </div>
-    <div class="message-list">
-    </div>
-    <my-foot-bar>
-      <my-button @click="onClickClear">Clear</my-button>
-      <my-foot-separator/>
-      <my-button @click="onClickHide">Hide</my-button>
-    </my-foot-bar>
+    <VFootBar :buttons="footBarButtons" class="foot" />
   </div>
 
 </template>
 
 <script>
 import { TabContainer, TabContainerItem } from "mint-ui";
-import {
-  VTabBar,
-  VTabBarItem,
-  MyFootBar,
-  MyButton,
-  MyFootSeparator
-} from "@/components";
+import { VTabBar, VTabBarItem, VFootBar } from "@/components";
 import { nextTick } from "@/utils";
 import TabHeaders from "./TabHeaders";
 import TabResponse from "./TabResponse";
@@ -44,9 +34,7 @@ export default {
   components: {
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
-    MyFootBar,
-    MyFootSeparator,
-    MyButton,
+    VFootBar,
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem,
     [TabHeaders.name]: TabHeaders,
@@ -65,6 +53,22 @@ export default {
     // 展示的列表（后面会按时间或类型进行排序）
     requestList() {
       return Object.keys(this.requestMap).map(key => this.requestMap[key]);
+    },
+    footBarButtons() {
+      return [
+        {
+          text: "Clear",
+          click: () => {
+            this.requestMap = {};
+          }
+        },
+        {
+          text: "Hide",
+          click: () => {
+            this.$root.$emit("hide");
+          }
+        }
+      ];
     }
   },
   mounted() {
@@ -84,12 +88,6 @@ export default {
         }
       }
       this.selectedId = id;
-    },
-    onClickClear() {
-      this.requestMap = {};
-    },
-    onClickHide() {
-      this.$root.$emit("hide");
     },
     /**
      * 拦截 XMLHttpRequest 请求并记录状态
@@ -208,9 +206,7 @@ export default {
       };
     },
     genUUID() {
-      let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
-        c
-      ) {
+      let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
         let r = (Math.random() * 16) | 0,
           v = c == "x" ? r : (r & 0x3) | 0x8;
         return v.toString(16);
@@ -226,7 +222,7 @@ export default {
         // 添加初始值，并拷贝新值
         const initValue = {
           isExpand: false,
-          activeTab: "headers",
+          activeTab: "response",
           responseHeaders: {},
           requestHeaders: {}
         };
@@ -240,50 +236,48 @@ export default {
 <style lang="scss" scoped>
 @import "../base.scss";
 
-// $status-error-color: rgb(230, 0, 0);
-
 .network-panel {
-  height: 100%;
-  position: relative;
-
-  .table {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0px;
-    bottom: 39px;
-    overflow-y: scroll;
-    .head {
+  height: $panel-height;
+  display: flex;
+  flex-direction: column;
+  .head {
+    flex: none;
+    display: flex;
+    flex-direction: row;
+    height: $list-row-height;
+    width: 100%;
+    .cell {
       display: flex;
-      flex-direction: row;
-      height: $list-row-height;
       width: 100%;
-      .cell {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        background-color: $toolbar-bg-color;
-        border-bottom: 1px solid $toolbar-border-color;
-        border-left: 1px solid $toolbar-border-color;
-        justify-content: left;
-        padding: 0px 4px;
-        align-items: center;
-        flex: 1 1;
-        .long {
-          flex: 4 1;
-          display: inline-block;
-          text-overflow: ellipsis;
-          overflow-x: hidden;
-          white-space: nowrap;
-        }
-        &:first-child {
-          border-left: none;
-        }
-        &:active {
-          background-color: $toolbar-border-color;
-        }
+      height: 100%;
+      background-color: $toolbar-bg-color;
+      border-bottom: 1px solid $toolbar-border-color;
+      border-left: 1px solid $toolbar-border-color;
+      justify-content: left;
+      padding: 0px 4px;
+      align-items: center;
+      flex: 1 1;
+      .long {
+        flex: 4 1;
+        display: inline-block;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+        white-space: nowrap;
+      }
+      &:first-child {
+        border-left: none;
+      }
+      &:active {
+        background-color: $toolbar-border-color;
       }
     }
+  }
+  .body {
+    flex-grow: 1;
+    overflow-y: scroll;
+  }
+  .foot {
+    flex: none;
   }
 }
 </style>

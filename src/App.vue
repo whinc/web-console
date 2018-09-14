@@ -33,10 +33,10 @@
         </v-tab-bar>
         <!-- Tab Container -->
         <mt-tab-container v-model="activeTab">
-          <mt-tab-container-item id="console" class="tab-container">
+          <mt-tab-container-item id="console">
             <console-panel />
           </mt-tab-container-item>
-          <mt-tab-container-item id="network" class="tab-container">
+          <mt-tab-container-item id="network">
             <network-panel />
           </mt-tab-container-item>
         </mt-tab-container>
@@ -107,14 +107,8 @@ export default {
       this.right -= touch.clientX - this.prevClientX;
       this.bottom -= touch.clientY - this.prevClientY;
       // 防止滑出边界
-      this.right = Math.min(
-        Math.max(this.right, 0),
-        document.documentElement.clientWidth - e.target.clientWidth - 1
-      );
-      this.bottom = Math.min(
-        Math.max(this.bottom, 0),
-        document.documentElement.clientHeight - e.target.clientHeight
-      );
+      this.right = Math.min(Math.max(this.right, 0), document.documentElement.clientWidth - e.target.clientWidth - 1);
+      this.bottom = Math.min(Math.max(this.bottom, 0), document.documentElement.clientHeight - e.target.clientHeight);
       this.prevClientX = touch.clientX;
       this.prevClientY = touch.clientY;
 
@@ -194,9 +188,5 @@ export default {
       color: $tab-selected-fg-color;
     }
   }
-}
-
-.tab-container {
-  height: 75vh;
 }
 </style>

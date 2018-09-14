@@ -27,13 +27,7 @@
 
 <script>
 import Message from "./Message";
-import {
-  VTabBar,
-  VTabBarItem,
-  MyButton,
-  MyFootBar,
-  MyFootSeparator
-} from "@/components";
+import { VTabBar, VTabBarItem, MyButton, MyFootBar, MyFootSeparator } from "@/components";
 import { _console, uuid } from "@/utils";
 
 export default {
@@ -95,9 +89,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "../base.scss";
+
 .console-panel {
-  height: 100%;
+  height: $panel-height;
   position: relative;
 }
 

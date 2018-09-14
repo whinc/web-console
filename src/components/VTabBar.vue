@@ -25,11 +25,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$toolbar-bg-color: #f3f3f3;
+@import "../base.scss";
 .v-tab-bar {
   // position: relative;
-  height: 40px;
-  background-color: $toolbar-bg-color;
+  height: $tabbar-height;
+  background-color: $tabbar-bg-color;
   &.show-bottom-border {
     border-bottom: 1px solid rgb(205, 205, 205);
   }
