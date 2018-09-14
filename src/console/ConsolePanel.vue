@@ -1,14 +1,14 @@
 <template>
   <div class="console-panel">
-    <v-tab-bar v-model="activeType">
-      <v-tab-bar-item id="all">All</v-tab-bar-item>
-      <v-tab-bar-item id="log">Log</v-tab-bar-item>
-      <v-tab-bar-item id="info">Info</v-tab-bar-item>
-      <v-tab-bar-item id="warn">Warn</v-tab-bar-item>
-      <v-tab-bar-item id="error">Error</v-tab-bar-item>
-    </v-tab-bar>
-    <div class="message-list">
-      <message
+    <VTabBar v-model="activeType">
+      <VTabBarItem id="all">All</VTabBarItem>
+      <VTabBarItem id="log">Log</VTabBarItem>
+      <VTabBarItem id="info">Info</VTabBarItem>
+      <VTabBarItem id="warn">Warn</VTabBarItem>
+      <VTabBarItem id="error">Error</VTabBarItem>
+    </VTabBar>
+    <div class="body">
+      <Message
         v-for="msg in msgList"
         :key="msg.id"
         v-if="msg.type === activeType || activeType === 'all'"
@@ -17,27 +17,21 @@
         :logArgs="msg.logArgs"
       />
     </div>
-    <my-foot-bar>
-      <my-button @click="onClickClear">Clear</my-button>
-      <my-foot-separator/>
-      <my-button @click="onClickHide">Hide</my-button>
-    </my-foot-bar>
+    <VFootBar class="foot" :buttons="footBarButtons" />
   </div>
 </template>
 
 <script>
 import Message from "./Message";
-import { VTabBar, VTabBarItem, MyButton, MyFootBar, MyFootSeparator } from "@/components";
+import { VTabBar, VTabBarItem, VFootBar } from "@/components";
 import { _console, uuid } from "@/utils";
 
 export default {
   components: {
     Message,
-    MyButton,
-    MyFootSeparator,
-    [VTabBar.name]: VTabBar,
-    [VTabBarItem.name]: VTabBarItem,
-    MyFootBar
+    VFootBar,
+    VTabBar,
+    VTabBarItem
   },
   data() {
     return {
@@ -52,6 +46,24 @@ export default {
        */
       msgList: []
     };
+  },
+  computed: {
+    footBarButtons() {
+      return [
+        {
+          text: "Clear",
+          click: () => {
+            this.msgList = [];
+          }
+        },
+        {
+          text: "Hide",
+          click: () => {
+            this.$root.$emit("hide");
+          }
+        }
+      ];
+    }
   },
   // hook console 输出越早越好，选择最先被执行的 beforeCreate 周期方法进行 hook 操作
   beforeCreate() {
@@ -73,14 +85,7 @@ export default {
       };
     });
   },
-  methods: {
-    onClickClear() {
-      this.msgList = [];
-    },
-    onClickHide() {
-      this.$root.$emit("hide");
-    }
-  },
+  methods: {},
   errorCaptured(error) {
     // 在浏览器控制台输出错误原因
     _console.error(error);
@@ -94,31 +99,14 @@ export default {
 
 .console-panel {
   height: $panel-height;
-  position: relative;
-}
-
-.head-bar {
-  color: #333;
-}
-
-.head-bar .item {
   display: flex;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-}
-
-.head-bar .item.selected {
-  border-bottom: 1px solid #2196f3;
-}
-
-.message-list {
-  position: absolute;
-  top: 40px;
-  bottom: 39px;
-  width: 100%;
-  left: 0px;
-  overflow-y: scroll;
+  flex-direction: column;
+  .body {
+    flex-grow: 1;
+    overflow-y: scroll;
+  }
+  .foot {
+    flex: none;
+  }
 }
 </style>
