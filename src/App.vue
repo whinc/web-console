@@ -76,6 +76,20 @@ export default {
       bottom: 20
     };
   },
+  watch: {
+    panelVisible(value) {
+      if (value) {
+        this.originPosition = document.body.style.position;
+        this.originTop = window.scrollY;
+        document.body.style.position = "fixed";
+        document.body.style.top = -this.originTop + "px";
+      } else {
+        document.body.style.position = this.originPosition;
+        document.body.style.top = "";
+        window.scrollTo(0, this.originTop);
+      }
+    }
+  },
   mounted() {
     // 设置初始值
     this.panelVisible = this.initPanelVisible;
