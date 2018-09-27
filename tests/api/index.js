@@ -18,18 +18,31 @@ const routes = {
         break;
       case "text/javascript":
       case "application/javascript":
-        res.end(`function () { console.log('hello world') }`);
+        fs.readFile("./data/response.js", function(err, data) {
+          res.end(data);
+        });
         break;
       case "application/json":
-        // res.end(JSON.stringify(http.STATUS_CODES))
-        res.end(JSON.stringify(http.STATUS_CODES, null, 4));
+        fs.readFile("./data/response.json", function(err, data) {
+          res.end(data);
+        });
         break;
       case "image/jpeg":
         break;
       case "image/png":
+        fs.readFile("./data/response.png", function(err, data) {
+          res.end(data);
+        });
         break;
       case "text/html":
-        res.end(`<html><body><h1>hello world</h1></body></html>`);
+        fs.readFile("./data/response.html", function(err, data) {
+          res.end(data);
+        });
+        break;
+      case "text/css":
+        fs.readFile("./data/response.css", function(err, data) {
+          res.end(data);
+        });
         break;
       case "text/plain":
       default:

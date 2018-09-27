@@ -18,6 +18,7 @@
     "build:web": "vue-cli-service build --dest demo",
     "predepoly": "npm run build:web",
     "depoly": "npx gh-pages -d demo",
+    "report": "vue-cli-service build --report",
     "test": "vue-cli-service test",
     "test:api": "cd ./tests/api && nodemon index.js",
     "e2e": "vue-cli-service e2e",
@@ -25,6 +26,7 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
+    "highlight.js": "^9.12.0",
     "mint-ui": "^2.2.13",
     "url-search-params": "^1.0.2",
     "vue": "^2.5.17"

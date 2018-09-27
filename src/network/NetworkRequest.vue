@@ -16,7 +16,7 @@
           <TabHeaders :requestInfo="item" />
         </mt-tab-container-item>
         <mt-tab-container-item id="response" class="tab-container">
-          <TabResponse :value="item.response" />
+          <TabResponse :contentType="contentType" :content="item.response" />
         </mt-tab-container-item>
       </mt-tab-container>
     </div>
@@ -51,6 +51,11 @@ export default {
     isEven: {
       type: Boolean,
       default: false
+    }
+  },
+  computed: {
+    contentType() {
+      return this.item.responseHeaders["content-type"];
     }
   },
   methods: {
