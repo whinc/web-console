@@ -9,12 +9,12 @@
     </div>
     <div class="body">
       <NetworkRequest
-        v-for="(item, index) in requestList"
-        :key="item.id"
-        :item="item"
-        :is-selected="selectedId === item.id"
+        v-for="(requestInfo, index) in requestList"
+        :key="requestInfo.id"
+        :requestInfo="requestInfo"
+        :is-selected="selectedId === requestInfo.id"
         :is-even="index % 2 === 0"
-        @click="onClickItem(item.id)"
+        @click="onClickItem(requestInfo.id)"
       />
     </div>
     <VFootBar :buttons="footBarButtons" class="foot" />
@@ -222,7 +222,7 @@ export default {
         // 添加初始值，并拷贝新值
         const initValue = {
           isExpand: false,
-          activeTab: "response",
+          activeTab: "preview",
           responseHeaders: {},
           requestHeaders: {}
         };

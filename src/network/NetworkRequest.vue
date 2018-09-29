@@ -1,22 +1,26 @@
 <template>
   <div class="request">
-    <div class="summary" @click="$emit('click')" :class="{selected: isSelected, even: isEven, error: isStatusError(item)}">
-      <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{item.url}}</span>
-      <span class="cell">{{item.method}}</span>
-      <span class="cell">{{item.statusText}}</span>
+    <div class="summary" @click="$emit('click')" :class="{selected: isSelected, even: isEven, error: isStatusError(requestInfo)}">
+      <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{requestInfo.url}}</span>
+      <span class="cell">{{requestInfo.method}}</span>
+      <span class="cell">{{requestInfo.statusText}}</span>
     </div>
-    <div class="detail" v-show="item.isExpand">
-      <v-tab-bar v-model="item.activeTab" :show-bottom-border="false">
+    <div class="detail" v-show="requestInfo.isExpand">
+      <v-tab-bar v-model="requestInfo.activeTab" :show-bottom-border="false">
         <v-tab-bar-item id="headers">Headers</v-tab-bar-item>
+        <v-tab-bar-item id="preview">Preview</v-tab-bar-item>
         <v-tab-bar-item id="response">Response</v-tab-bar-item>
       </v-tab-bar>
       <!-- Tab Container -->
-      <mt-tab-container v-model="item.activeTab" style="background-color: white">
+      <mt-tab-container v-model="requestInfo.activeTab" style="background-color: white">
         <mt-tab-container-item id="headers" class="content">
-          <TabHeaders :requestInfo="item" />
+          <TabHeaders :requestInfo="requestInfo" />
+        </mt-tab-container-item>
+        <mt-tab-container-item id="preview" class="tab-container">
+          <TabPreview :requestInfo="requestInfo" />
         </mt-tab-container-item>
         <mt-tab-container-item id="response" class="tab-container">
-          <TabResponse :contentType="contentType" :content="item.response" />
+          <TabResponse :requestInfo="requestInfo" />
         </mt-tab-container-item>
       </mt-tab-container>
     </div>
@@ -28,6 +32,7 @@ import { TabContainer, TabContainerItem } from "mint-ui";
 import { VTabBar, VTabBarItem } from "@/components";
 import TabHeaders from "./TabHeaders";
 import TabResponse from "./TabResponse";
+import TabPreview from "./TabPreview";
 
 export default {
   components: {
@@ -36,11 +41,13 @@ export default {
     [TabContainer.name]: TabContainer,
     [TabContainerItem.name]: TabContainerItem,
     TabHeaders,
-    TabResponse
+    TabResponse,
+    TabPreview
   },
   name: "NetworkRequest",
   props: {
-    item: {
+    // 请求信息
+    requestInfo: {
       type: Object,
       required: true
     },
@@ -53,14 +60,9 @@ export default {
       default: false
     }
   },
-  computed: {
-    contentType() {
-      return this.item.responseHeaders["content-type"];
-    }
-  },
   methods: {
-    isStatusError(item) {
-      if (item.status >= 400 && item.status < 600) {
+    isStatusError(requestInfo) {
+      if (requestInfo.status >= 400 && requestInfo.status < 600) {
         return true;
       } else {
         return false;

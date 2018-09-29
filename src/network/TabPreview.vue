@@ -1,10 +1,12 @@
 <template>
-  <div class="tab-response">
-    <template v-if="isTextData">
-      <pre class="data"><code ref="code" class="hljs" :class="language">{{content}}</code></pre>
+  <div class="tab-preview">
+    <template v-if="isImage">
+      <div class="image-container">
+        <img :src="requestInfo.url" />
+      </div>
     </template>
     <template v-else>
-      <h2 class="no-data">This request has no response data available.</h2>
+      <pre class="data"><code ref="code" class="hljs" :class="language">{{content}}</code></pre>
     </template>
   </div>
 </template>
@@ -55,14 +57,8 @@ export default {
           return "";
       }
     },
-    isTextData() {
-      const contentType = this.contentType;
-      switch (true) {
-        case /image/.test(contentType):
-          return false;
-        default:
-          return true;
-      }
+    isImage() {
+      return /image/.test(this.contentType);
     }
   },
   watch: {
@@ -87,10 +83,19 @@ export default {
 
 
 <style lang="scss" scoped>
-.tab-response {
+.tab-preview {
   padding: 0px 5px;
   max-height: 50vh;
   overflow-y: scroll;
+  .image-container {
+    padding: 20px 20px 10px 20px;
+    text-align: center;
+    img {
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+      background: url("../assets/icons/transparent_bg.png");
+      background-repeat: repeat;
+    }
+  }
   .data {
     overflow-x: scroll;
   }
