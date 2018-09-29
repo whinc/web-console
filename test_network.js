@@ -19,68 +19,77 @@ window.$network = (function() {
     xhr.send(data);
   }
 
-  return {
-    // 测试 HTTP 状态码
-    testHTTPStatus: function() {
-      [100, 200, 300, 400, 500].forEach(function(status) {
-        ajax({ url: baseURL + "/get_status/" + status });
-      });
-      ajax({ url: "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15850781443" });
-      ajax({
-        url: "https://www.baifubao.com/callback?cmd=1059&callback=phone&phone=15850781443"
-      });
-    },
-    testRequestParams: function() {
-      // GET
-      ajax({ url: baseURL + "/get?a=1&b=2&c=&d" });
-      var email = "xx@yy.com";
-      var password = "zz";
-      // POST：plain text
-      ajax({
-        url: baseURL + "/post",
-        method: "POST",
-        data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
-      });
-      // POST：Form Data
-      ajax({
-        url: baseURL + "/post",
-        method: "POST",
-        requestHeaders: {
-          "Content-Type": "application/x-www-form-urlencoded"
-        },
-        data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
-      });
-      // POST: JSON
-      ajax({
-        url: baseURL + "/post",
-        method: "POST",
-        requestHeaders: {
-          "Content-Type": "application/json;charset=UTF-8"
-        },
-        data: JSON.stringify({
-          email: email,
-          password: password
-        })
-        // data: '{"email": aa}'
-      });
-      // POST: JSON with invalid format
-      ajax({
-        url: baseURL + "/post",
-        method: "POST",
-        requestHeaders: {
-          "Content-Type": "application/json;charset=UTF-8"
-        },
-        data: '{"email": aa}'
-      });
-    },
-    // 测试响应数据类型
-    // 参考 http://devdocs.io/http/basics_of_http/mime_types
-    testResponseData() {
-      const mimeTypeList = ["application/json", "text/html"];
+  // 测试 HTTP 状态码
+  function testHTTPStatus() {
+    [100, 200, 300, 400, 500].forEach(function(status) {
+      ajax({ url: baseURL + "/get_status/" + status });
+    });
+    ajax({ url: "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15850781443" });
+    ajax({
+      url: "https://www.baifubao.com/callback?cmd=1059&callback=phone&phone=15850781443"
+    });
+  }
 
-      mimeTypeList.forEach(mimeType => {
-        ajax({ url: baseURL + "/get_data/?mime_type=" + encodeURIComponent(mimeType) });
-      });
-    }
+  /**
+   * 测试请求参数
+   */
+  function testRequestParams() {
+    // GET
+    ajax({ url: baseURL + "/get?a=1&b=2&c=&d" });
+    var email = "xx@yy.com";
+    var password = "zz";
+    // POST：plain text
+    ajax({
+      url: baseURL + "/post",
+      method: "POST",
+      data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
+    });
+    // POST：Form Data
+    ajax({
+      url: baseURL + "/post",
+      method: "POST",
+      requestHeaders: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
+    });
+    // POST: JSON
+    ajax({
+      url: baseURL + "/post",
+      method: "POST",
+      requestHeaders: {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      data: JSON.stringify({
+        email: email,
+        password: password
+      })
+      // data: '{"email": aa}'
+    });
+    // POST: JSON with invalid format
+    ajax({
+      url: baseURL + "/post",
+      method: "POST",
+      requestHeaders: {
+        "Content-Type": "application/json;charset=UTF-8"
+      },
+      data: '{"email": aa}'
+    });
+  }
+
+  // 测试响应数据类型
+  // 参考 http://devdocs.io/http/basics_of_http/mime_types
+  function testResponseData() {
+    const mimeTypeList = ["application/json", "application/javascript", "text/html", "text/css", "image/png"];
+
+    mimeTypeList.forEach(mimeType => {
+      ajax({ url: baseURL + "/get_data/?mime_type=" + encodeURIComponent(mimeType) });
+    });
+  }
+
+  return {
+    testHTTPStatus,
+    testResponseData,
+    testRequestParams
   };
 })();
