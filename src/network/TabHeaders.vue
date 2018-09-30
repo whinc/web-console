@@ -176,11 +176,12 @@ export default {
 @import "../base";
 
 .tab-headers {
+  margin: 0 5px;
   display: flex;
   flex-direction: column;
   color: rgb(33%, 33%, 33%);
-  max-height: 50vh;
-  overflow-y: scroll;
+  height: 75vw;
+  overflow: scroll;
   .section {
     padding-bottom: 5px;
     border-bottom: solid 1px #e0e0e0;

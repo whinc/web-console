@@ -12,14 +12,14 @@
         <v-tab-bar-item id="response">Response</v-tab-bar-item>
       </v-tab-bar>
       <!-- Tab Container -->
-      <mt-tab-container v-model="requestInfo.activeTab" style="background-color: white">
-        <mt-tab-container-item id="headers" class="content">
+      <mt-tab-container v-model="requestInfo.activeTab" class="tab-container">
+        <mt-tab-container-item id="headers">
           <TabHeaders :requestInfo="requestInfo" />
         </mt-tab-container-item>
-        <mt-tab-container-item id="preview" class="tab-container">
+        <mt-tab-container-item id="preview">
           <TabPreview :requestInfo="requestInfo" />
         </mt-tab-container-item>
-        <mt-tab-container-item id="response" class="tab-container">
+        <mt-tab-container-item id="response">
           <TabResponse :requestInfo="requestInfo" />
         </mt-tab-container-item>
       </mt-tab-container>
@@ -125,10 +125,8 @@ $status-error-color: rgb(230, 0, 0);
         }
       }
     }
-    .content {
-      max-height: 40vh;
-      overflow-y: scroll;
-      padding: 2px 5px;
+    .tab-container {
+      background-color: white;
     }
   }
 }

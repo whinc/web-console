@@ -1,13 +1,17 @@
 <template>
   <div class="tab-preview">
-    <template v-if="isImage">
-      <div class="image-container">
-        <img :src="requestInfo.url" />
-      </div>
-    </template>
-    <template v-else>
+    <div v-if="isImage" class="image-container">
+      <img :src="requestInfo.url" />
+    </div>
+    <div v-else-if="isPlain" class="html-container">
+      <iframe :src="'data:text/plain,' + requestInfo.response" sandbox="" />
+    </div>
+    <div v-else-if="isHtml" class="html-container">
+      <iframe :src="'data:text/html,' + requestInfo.response" sandbox="" />
+    </div>
+    <div v-else>
       <pre class="data"><code ref="code" class="hljs" :class="language">{{content}}</code></pre>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -59,11 +63,19 @@ export default {
     },
     isImage() {
       return /image/.test(this.contentType);
+    },
+    isPlain() {
+      return [/text\/plain/].some(regexp => regexp.test(this.contentType));
+    },
+    isHtml() {
+      return [/text\/html/].some(regexp => regexp.test(this.contentType));
     }
   },
   watch: {
     // 内容变化时重新计算高亮
     content(newValue) {
+      if (!this.$refs.code) return;
+
       // 解析并高亮比较耗时，放在异步函数中处理
       setTimeout(() => {
         let result;
@@ -84,16 +96,27 @@ export default {
 
 <style lang="scss" scoped>
 .tab-preview {
-  padding: 0px 5px;
-  max-height: 50vh;
-  overflow-y: scroll;
+  height: 75vw;
+  overflow: scroll;
   .image-container {
+    height: 100%;
     padding: 20px 20px 10px 20px;
     text-align: center;
     img {
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
       background: url("../assets/icons/transparent_bg.png");
       background-repeat: repeat;
+    }
+  }
+  .html-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    iframe {
+      border: none;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      flex-grow: 1;
+      margin: 20px;
     }
   }
   .data {

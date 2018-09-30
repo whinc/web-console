@@ -28,9 +28,22 @@ const routes = {
         });
         break;
       case "image/jpeg":
+        fs.readFile("./data/response.jpg", function(err, data) {
+          res.end(data);
+        });
         break;
       case "image/png":
         fs.readFile("./data/response.png", function(err, data) {
+          res.end(data);
+        });
+        break;
+      case "image/gif":
+        fs.readFile("./data/response.gif", function(err, data) {
+          res.end(data);
+        });
+        break;
+      case "image/svg+xml":
+        fs.readFile("./data/response.svg", function(err, data) {
           res.end(data);
         });
         break;
@@ -46,7 +59,9 @@ const routes = {
         break;
       case "text/plain":
       default:
-        res.end("this is a plain text.");
+        fs.readFile("./data/response.txt", function(err, data) {
+          res.end(data);
+        });
         break;
     }
   },

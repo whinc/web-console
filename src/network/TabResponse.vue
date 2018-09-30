@@ -1,11 +1,11 @@
 <template>
   <div class="tab-response">
-    <template v-if="isTextData">
-      <pre class="data"><code ref="code" class="hljs" :class="language">{{content}}</code></pre>
-    </template>
-    <template v-else>
-      <h2 class="no-data">This request has no response data available.</h2>
-    </template>
+    <div v-if="isTextData" class="data">
+      <pre><code ref="code" class="hljs" :class="language">{{content}}</code></pre>
+    </div>
+    <div v-else class="no-data">
+      <h2>This request has no response data available.</h2>
+    </div>
   </div>
 </template>
 
@@ -68,6 +68,7 @@ export default {
   watch: {
     // 内容变化时重新计算高亮
     content(newValue) {
+      if (!this.$refs.code) return;
       // 解析并高亮比较耗时，放在异步函数中处理
       setTimeout(() => {
         let result;
@@ -88,14 +89,22 @@ export default {
 
 <style lang="scss" scoped>
 .tab-response {
-  padding: 0px 5px;
-  max-height: 50vh;
-  overflow-y: scroll;
+  height: 75vw;
+  overflow: scroll;
   .data {
     overflow-x: scroll;
+    height: 100%;
+    pre,
+    code {
+      height: 100%;
+    }
   }
   .no-data {
+    height: 100%;
     color: hsla(0, 0%, 65%, 1);
+    h1 {
+      height: 100%;
+    }
   }
 }
 </style>
