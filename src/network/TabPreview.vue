@@ -4,13 +4,16 @@
       <img :src="requestInfo.url" />
     </div>
     <div v-else-if="isPlain" class="html-container">
-      <iframe :src="'data:text/plain,' + requestInfo.response" sandbox="" />
+      <iframe :src="'data:text/plain,' + content" sandbox="" />
     </div>
     <div v-else-if="isHtml" class="html-container">
-      <iframe :src="'data:text/html,' + requestInfo.response" sandbox="" />
+      <iframe :src="'data:text/html,' + content" sandbox="" />
+    </div>
+    <div v-else-if="isJSON && isValidJSON(content)">
+      <VJSONViewer :value="parseJSON(content)" />
     </div>
     <div v-else>
-      <pre class="data"><code ref="code" class="hljs" :class="language">{{content}}</code></pre>
+      <pre class="data"><code ref="code" class="source-code hljs" :class="language">{{content}}</code></pre>
     </div>
   </div>
 </template>
@@ -23,6 +26,7 @@ import css from "highlight.js/lib/languages/css";
 import htmlbars from "highlight.js/lib/languages/htmlbars";
 import xml from "highlight.js/lib/languages/xml";
 import json from "highlight.js/lib/languages/json";
+import { VJSONViewer } from "@/components";
 // import 'highlight.js/styles/default.css'
 import "./chrome.scss";
 hljs.registerLanguage("javascript", javascript);
@@ -32,6 +36,9 @@ hljs.registerLanguage("xml", xml);
 hljs.registerLanguage("json", json);
 
 export default {
+  components: {
+    VJSONViewer
+  },
   props: {
     requestInfo: {
       type: Object,
@@ -65,10 +72,13 @@ export default {
       return /image/.test(this.contentType);
     },
     isPlain() {
-      return [/text\/plain/].some(regexp => regexp.test(this.contentType));
+      return /plain/.test(this.contentType);
     },
     isHtml() {
-      return [/text\/html/].some(regexp => regexp.test(this.contentType));
+      return /html/.test(this.contentType);
+    },
+    isJSON() {
+      return /json/.test(this.contentType);
     }
   },
   watch: {
@@ -78,6 +88,7 @@ export default {
 
       // 解析并高亮比较耗时，放在异步函数中处理
       setTimeout(() => {
+        if (!this.$refs.code) return;
         let result;
         console.log("contentType", this.contentType, "language:", this.language);
 
@@ -88,6 +99,19 @@ export default {
         }
         this.$refs.code.innerHTML = result.value;
       });
+    }
+  },
+  methods: {
+    isValidJSON(text) {
+      try {
+        JSON.parse(text);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    },
+    parseJSON(text) {
+      return JSON.parse(text);
     }
   }
 };

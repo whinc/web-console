@@ -1,7 +1,7 @@
 <template>
   <div class="tab-response">
     <div v-if="isTextData" class="data">
-      <pre><code ref="code" class="hljs" :class="language">{{content}}</code></pre>
+      <pre><code ref="code" class="source-code hljs" :class="language">{{content}}</code></pre>
     </div>
     <div v-else class="no-data">
       <h2>This request has no response data available.</h2>

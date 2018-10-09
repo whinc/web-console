@@ -1,5 +1,6 @@
 <template>
   <div class="network-panel">
+    <!-- <VJSONViewer :value="value" /> -->
     <div class="head">
       <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">
         Name {{requestList.length > 0 ? `(${requestList.length})` : ''}}
@@ -23,26 +24,34 @@
 </template>
 
 <script>
-import { TabContainer, TabContainerItem } from "mint-ui";
-import { VTabBar, VTabBarItem, VFootBar } from "@/components";
+import { VFootBar, VJSONViewer } from "@/components";
 import { nextTick } from "@/utils";
-import TabHeaders from "./TabHeaders";
-import TabResponse from "./TabResponse";
 import NetworkRequest from "./NetworkRequest";
 
 export default {
   components: {
-    [VTabBar.name]: VTabBar,
-    [VTabBarItem.name]: VTabBarItem,
     VFootBar,
-    [TabContainer.name]: TabContainer,
-    [TabContainerItem.name]: TabContainerItem,
-    [TabHeaders.name]: TabHeaders,
-    [TabResponse.name]: TabResponse,
-    [NetworkRequest.name]: NetworkRequest
+    VJSONViewer,
+    NetworkRequest
   },
   data() {
     return {
+      value: {
+        a: 1,
+        b: true,
+        c: "c",
+        d: [1.23, true, "c", { a: 1, b: 2 }],
+        e: {
+          a: 1,
+          b: true,
+          c: "c",
+          d: null,
+          e1: 1,
+          e2: 1,
+          e3: 1,
+          e4: "a"
+        }
+      },
       // 请求列表
       requestMap: {},
       // 选中请求的编号
@@ -105,7 +114,7 @@ export default {
 
         // 保存数据在 xhr 实例中，方便后续获取
         xhr.$id = id;
-        xhr.$method = (method || "GET").toUpperCase();
+        xhr.$method = typeof method === "string" ? method.toUpperCase() : method;
         xhr.$url = url;
 
         // 返回重写的 onreadystatechange 事件处理程序

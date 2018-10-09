@@ -79,15 +79,16 @@ export default {
   },
   computed: {
     sectionGeneral() {
+      const requestInfo = this.requestInfo;
       const arr = [];
-      arr.push({ key: "Request URL", value: this.requestInfo.url });
+      arr.push({ key: "Request URL", value: requestInfo.url });
 
-      const status = this.requestInfo.status;
+      const status = requestInfo.status;
       const statusRange = parseInt(status / 100);
       if (statusRange === 2 || statusRange === 3 || statusRange === 4 || statusRange === 5) {
         arr.push({
           key: "Request Method",
-          value: this.requestInfo.method.toUpperCase()
+          value: requestInfo.method.toUpperCase()
         });
         arr.push({
           key: "Status Code",

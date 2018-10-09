@@ -97,7 +97,7 @@ const httpServer = http
   .createServer(function(req, res) {
     const urlObj = url.parse(req.url);
     const pathname = urlObj.pathname;
-    console.log("received request:", pathname);
+    console.log("received request:", pathname + "?" + urlObj.query);
 
     const key = Object.keys(routes).find(route => new RegExp(route).test(pathname));
     if (key) {

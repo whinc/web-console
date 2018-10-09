@@ -155,6 +155,10 @@ export default {
   & /deep/ * {
     box-sizing: border-box;
   }
+
+  pre {
+    margin: 0;
+  }
 }
 </style>
 
