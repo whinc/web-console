@@ -80,7 +80,17 @@ window.$network = (function() {
   // 测试响应数据类型
   // 参考 http://devdocs.io/http/basics_of_http/mime_types
   function testResponseData() {
-    const mimeTypeList = ["application/json", "application/javascript", "text/html", "text/css", "image/png"];
+    const mimeTypeList = [
+      "application/json",
+      "application/javascript",
+      "text/plain",
+      "text/html",
+      "text/css",
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/svg+xml"
+    ];
 
     mimeTypeList.forEach(mimeType => {
       ajax({ url: baseURL + "/get_data/?mime_type=" + encodeURIComponent(mimeType) });
