@@ -39,23 +39,14 @@ WebConsole.init();
 
 # 部署 & 发布
 
-构建单个 js 包
-
-```
-npm run build
-```
-
-部署在线 demo
+更新 github.io 在线示例：
 
 ```
 npm run depoly
 ```
 
-发布到 npm
+发布到 npm 仓库：
 
 ```bash
 npm version <new_version>
-npm run build
-npm login
-npm publish --access=public
 ```
