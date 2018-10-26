@@ -19,6 +19,7 @@
     "predepoly": "npm run build:web",
     "depoly": "npx gh-pages -d demo",
     "postversion": "npm run build && npm login && npm publish --access=public",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "report": "vue-cli-service build --report",
     "test": "vue-cli-service test",
     "test:api": "cd ./tests/api && nodemon index.js",
@@ -33,6 +34,8 @@
     "vue": "^2.5.17"
   },
   "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "@commitlint/config-conventional": "^7.1.2",
     "@vue/cli-plugin-babel": "^3.0.1",
     "@vue/cli-plugin-e2e-cypress": "^3.0.1",
     "@vue/cli-plugin-eslint": "^3.0.1",
@@ -42,6 +45,7 @@
     "babel-core": "^7.0.0-0",
     "babel-jest": "^22.4.4",
     "babel-plugin-component": "^1.1.1",
+    "cz-conventional-changelog": "^2.1.0",
     "gh-pages": "^1.2.0",
     "husky": "^1.0.0-rc.13",
     "i": "^0.3.6",
@@ -59,10 +63,16 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "prettier": {
     "printWidth": 120
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }
