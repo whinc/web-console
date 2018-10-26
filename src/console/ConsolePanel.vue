@@ -8,10 +8,11 @@
       <VTabBarItem id="error">Error</VTabBarItem>
     </VTabBar>
     <div class="body">
+      <!-- 不同面板的切换比较频繁，v-show 比 v-if 更适合该场景 -->
       <Message
         v-for="msg in msgList"
         :key="msg.id"
-        v-if="msg.type === activeType || activeType === 'all'"
+        v-show="msg.type === activeType || activeType === 'all'"
         :msgId="msg.id"
         :type="msg.type"
         :logArgs="msg.logArgs"
