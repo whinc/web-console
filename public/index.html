@@ -30,6 +30,7 @@
         <mt-button type="primary" @click="onClickPrint('log_params')">打印多参数</mt-button>
         <mt-button type="primary" @click="$console.testFormat()">打印格式化</mt-button>
         <mt-button type="primary" @click="onClickPrint('log_object')">打印对象</mt-button>
+        <mt-button type="primary" @click="$console.testException()">触发异常</mt-button>
 
         <h2>Network Test</h2>
         <mt-button type="primary" @click="$network.testHTTPStatus()">测试 HTTP 状态码</mt-button>
