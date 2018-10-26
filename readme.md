@@ -27,7 +27,7 @@ CDN 地址：<https://unpkg.com/@whinc/web-console>
 通过下面代码初始化
 
 ```js
-window["web-console"].init();
+new WebConsole(options);
 ```
 
 ### 在模块中使用
@@ -43,7 +43,7 @@ npm install @whinc/web-console
 ```js
 import WebConsole from "@whinc/web-console";
 
-WebConsole.init();
+new WebConsole(options);
 ```
 
 ## 更新日志
