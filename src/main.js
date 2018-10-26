@@ -3,47 +3,53 @@ import App from "./App.vue";
 
 Vue.config.productionTip = false;
 
-const load = options => {
-  if (
-    document.readyState === "interactive" ||
-    document.readyState === "complete"
-  ) {
-    const root = document.createElement("div");
-    (document.documentElement || document.body).appendChild(root);
+// WebConsole 只能创建一个实例
+let _webConsole = null;
 
-    let vm = new Vue({
-      el: root,
-      render: h =>
-        h(App, {
-          props: {
-            initPanelVisible: options.panelVisible || false,
-            initActiveTab: options.activeTab || "console",
-            initEntryStyle: options.entryStyle || "button"
-          }
-        })
-    });
-  } else {
-    document.addEventListener("readystatechange", load);
-  }
-};
-
-let isInit = false;
-
-const WebConsole = {
-  init(options = {}) {
-    if (isInit) {
-      console.warn("WebConsole can only be initialize once");
-      return;
+class WebConsole {
+  constructor(options) {
+    if (_webConsole) {
+      console.warn("WebConsole has been initialized, return previous instance: %O", _webConsole);
+      return _webConsole;
     }
 
-    load(options);
-    isInit = true;
+    _webConsole = this;
+    this._defaultOptions = {
+      panelVisible: false,
+      activeTab: "console",
+      entryStyle: "button"
+    };
+    this._load(options);
   }
-};
 
-// 注入到全局对象
-if (!window["web-console"]) {
-  window["web-console"] = WebConsole;
+  _load(options = {}) {
+    console.log("web-console start");
+    if (document.readyState === "interactive" || document.readyState === "complete") {
+      const root = document.createElement("div");
+      (document.documentElement || document.body).appendChild(root);
+
+      console.log("web console shoule output me!!!");
+      const defaultOptions = this._defaultOptions;
+      const vm = new Vue({
+        el: root,
+        render: h =>
+          h(App, {
+            props: {
+              initPanelVisible: options.panelVisible || defaultOptions.panelVisible,
+              initActiveTab: options.activeTab || defaultOptions.activeTab,
+              initEntryStyle: options.entryStyle || defaultOptions.entryStyle
+            }
+          })
+      });
+    } else {
+      document.addEventListener("readystatechange", this._load.bind(this));
+    }
+  }
 }
 
+if (!window.WebConsole) {
+  window.WebConsole = WebConsole;
+} else {
+  console.error("Inject WebConsole into window failed");
+}
 export default WebConsole;

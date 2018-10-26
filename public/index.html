@@ -81,11 +81,10 @@
         methods: {
           launchWebConsole: function() {
             var self = this;
-            if (window['web-console']) {
-              window['web-console'].init({
+            if (window.WebConsole) {
+              window.webConsole = new window.WebConsole({
                 activeTab: 'console',
-                panelVisible: true,
-                activeTab: "network",
+                panelVisible: false,
                 entryStyle: 'icon'
               });
               // 启动时自动运行测试用例

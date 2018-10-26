@@ -88,7 +88,7 @@ export default {
       if (statusRange === 2 || statusRange === 3 || statusRange === 4 || statusRange === 5) {
         arr.push({
           key: "Request Method",
-          value: requestInfo.method.toUpperCase()
+          value: (requestInfo.method || "").toUpperCase()
         });
         arr.push({
           key: "Status Code",

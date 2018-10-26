@@ -25,7 +25,7 @@
 
 <script>
 import { VFootBar, VJSONViewer } from "@/components";
-import { nextTick } from "@/utils";
+import { nextTick, _console } from "@/utils";
 import NetworkRequest from "./NetworkRequest";
 
 export default {
@@ -82,6 +82,11 @@ export default {
   },
   mounted() {
     this.hookXMLHttpRequest();
+  },
+  errorCaptured(error) {
+    // 在浏览器控制台输出错误原因
+    _console.error(error);
+    return false;
   },
   methods: {
     onClickItem(id) {
