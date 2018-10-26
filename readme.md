@@ -2,6 +2,13 @@
 
 mobile version of Chrome DevTools.
 
+![Github release](https://img.shields.io/npm/v/@whinc/web-console.svg)
+![总下载量](https://img.shields.io/npm/dt/@whinc/web-console.svg)
+![月下载量](https://img.shields.io/npm/dm/@whinc/web-console.svg)
+![周下载量](https://img.shields.io/npm/dw/@whinc/web-console.svg)
+![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/@whinc/web-console.svg)
+![LINCENSE](https://img.shields.io/github/license/mashape/apistatus.svg)
+
 在线演示：<https://whinc.github.io/web-console/>
 
 CDN 地址：<https://unpkg.com/@whinc/web-console>
@@ -56,3 +63,7 @@ npm run depoly
 ```bash
 npm version <new_version>
 ```
+
+## License
+
+MIT
