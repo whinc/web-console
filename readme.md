@@ -4,9 +4,9 @@
 
 CDN 地址：<https://unpkg.com/@whinc/web-console>
 
-# 引入
+## 开始使用
 
-方式一：通过引入链接使用
+### (1) 在 Web 页中使用
 
 引入下面 vue 和 web-console 的 js 文件
 
@@ -21,7 +21,7 @@ CDN 地址：<https://unpkg.com/@whinc/web-console>
 window["web-console"].init();
 ```
 
-方式二：导入 npm 模块使用
+### (2) 在模块中使用
 
 安装 web-console 包
 
@@ -37,7 +37,11 @@ import WebConsole from "@whinc/web-console";
 WebConsole.init();
 ```
 
-# 部署 & 发布
+## 更新日志
+
+[CHANGELOG](CHANGELOG)
+
+## 部署
 
 更新 github.io 在线示例：
 
