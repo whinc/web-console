@@ -21,12 +21,9 @@ window.$network = (function() {
 
   // 测试 HTTP 状态码
   function testHTTPStatus() {
+    ajax({ url: "https://nodejs.org/dist/latest-v8.x/docs/api/index.json" });
     [100, 200, 300, 400, 500].forEach(function(status) {
       ajax({ url: baseURL + "/get_status/" + status });
-    });
-    ajax({ url: "https://tcc.taobao.com/cc/json/mobile_tel_segment.htm?tel=15850781443" });
-    ajax({
-      url: "https://www.baifubao.com/callback?cmd=1059&callback=phone&phone=15850781443"
     });
   }
 
@@ -98,8 +95,8 @@ window.$network = (function() {
   }
 
   return {
-    testHTTPStatus,
-    testResponseData,
-    testRequestParams
+    testHTTPStatus: testHTTPStatus,
+    testResponseData: testResponseData,
+    testRequestParams: testRequestParams
   };
 })();
