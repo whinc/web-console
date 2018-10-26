@@ -1,3 +1,11 @@
+<a name="0.2.0-rc.9"></a>
+
+# [0.2.0-rc.9](https://github.com/whinc/web-console/compare/v0.2.0-rc.7...v0.2.0-rc.9) (2018-10-26)
+
+### Performance Improvements
+
+- **console:** 提升面板切换性能 ([a068d6c](https://github.com/whinc/web-console/commit/a068d6c))
+
 <a name="0.2.0-rc.7"></a>
 
 # [0.2.0-rc.7](https://github.com/whinc/web-console/compare/v0.2.0-rc.6...v0.2.0-rc.7) (2018-10-09)
