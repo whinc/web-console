@@ -30,36 +30,32 @@
         <v-tab-bar v-model="activeTab">
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
+          <v-tab-bar-item id="application">Application</v-tab-bar-item>
         </v-tab-bar>
-        <!-- Tab Container -->
-        <mt-tab-container v-model="activeTab">
-          <mt-tab-container-item id="console">
-            <console-panel />
-          </mt-tab-container-item>
-          <mt-tab-container-item id="network">
-            <network-panel />
-          </mt-tab-container-item>
-        </mt-tab-container>
+        <ConsolePanel v-show="activeTab === 'console'" />
+        <NetworkPanel v-show="activeTab === 'network'" />
+        <ApplicationPanel v-show="activeTab === 'application'" />
       </div>
     </mt-popup>
   </div>
 </template>
 
 <script>
-import { Popup, TabContainer, TabContainerItem } from "mint-ui";
+import { Popup } from "mint-ui";
 import { VTabBar, VTabBarItem } from "./components";
 import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";
+import { ApplicationPanel } from "./application";
+
 export default {
   name: "app",
   components: {
     ConsolePanel,
     NetworkPanel,
+    ApplicationPanel,
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
-    [Popup.name]: Popup,
-    [TabContainer.name]: TabContainer,
-    [TabContainerItem.name]: TabContainerItem
+    [Popup.name]: Popup
   },
   props: {
     initPanelVisible: Boolean,

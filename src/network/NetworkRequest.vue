@@ -11,24 +11,24 @@
         <v-tab-bar-item id="preview">Preview</v-tab-bar-item>
         <v-tab-bar-item id="response">Response</v-tab-bar-item>
       </v-tab-bar>
-      <!-- Tab Container -->
-      <mt-tab-container v-model="requestInfo.activeTab" class="tab-container">
-        <mt-tab-container-item id="headers">
-          <TabHeaders :requestInfo="requestInfo" />
-        </mt-tab-container-item>
-        <mt-tab-container-item id="preview">
-          <TabPreview :requestInfo="requestInfo" />
-        </mt-tab-container-item>
-        <mt-tab-container-item id="response">
-          <TabResponse :requestInfo="requestInfo" />
-        </mt-tab-container-item>
-      </mt-tab-container>
+
+      <TabHeaders
+        v-show="requestInfo.activeTab === 'headers'"
+        :requestInfo="requestInfo"
+      />
+      <TabPreview
+        v-show="requestInfo.activeTab === 'preview'"
+        :requestInfo="requestInfo"
+      />
+      <TabResponse
+        v-show="requestInfo.activeTab === 'response'"
+        :requestInfo="requestInfo"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { TabContainer, TabContainerItem } from "mint-ui";
 import { VTabBar, VTabBarItem } from "@/components";
 import TabHeaders from "./TabHeaders";
 import TabResponse from "./TabResponse";
@@ -38,8 +38,6 @@ export default {
   components: {
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
-    [TabContainer.name]: TabContainer,
-    [TabContainerItem.name]: TabContainerItem,
     TabHeaders,
     TabResponse,
     TabPreview
