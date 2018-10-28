@@ -10,11 +10,18 @@
 export default {
   name: "v-tab-bar",
   props: {
-    value: String,
+    // TabItem 等宽显示
+    equalWidth: {
+      type: Boolean,
+      default: false
+    },
+    // TabBar 显示下边框
     showBottomBorder: {
       type: Boolean,
       default: true
-    }
+    },
+    // 实现 v-model 指令
+    value: String
   },
   methods: {
     updateSelectedItem(id) {
@@ -37,14 +44,5 @@ export default {
     height: 100%;
     display: flex;
   }
-  // .tab-slider {
-  //   position: absolute;
-  //   left: 0px;
-  //   bottom: 0px;
-  //   height: 2px;
-  //   background-color: #03a9f4;
-  //   transform-origin: 0 100%;
-  //   transition: transform 150ms cubic-bezier(0, 0, 0.2, 1);
-  // }
 }
 </style>

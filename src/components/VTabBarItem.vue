@@ -1,5 +1,5 @@
 <template>
-  <div class="v-tab-bar-item">
+  <div class="v-tab-bar-item" :class="{'equal-width': $parent.equalWidth}">
     <div class="tab-item" :class="{selected: isSelected}" @click="$parent.updateSelectedItem(id)">
       <span><slot></slot></span>
     </div>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'v-tab-bar-item',
+  name: "v-tab-bar-item",
   props: {
     id: {
       type: String,
@@ -17,15 +17,14 @@ export default {
     }
   },
   computed: {
-    isSelected () {
-      return this.$parent.value === this.id
+    isSelected() {
+      return this.$parent.value === this.id;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-
 $toolbar-hover-bg-color: #eaeaea;
 $toolbar-fg-color: #5a5a5a;
 $toolbar-selected-fg-color: #333;
@@ -34,12 +33,14 @@ $toolbar-selected-fg-color: #333;
   position: relative;
   display: flex;
   .tab-item {
+    width: 100%;
     color: $toolbar-fg-color;
     border-left: 2px solid transparent;
     border-right: 2px solid transparent;
     padding: 2px 0.8em;
     display: flex;
     align-items: center;
+    justify-content: center;
     &:active {
       background-color: $toolbar-hover-bg-color;
     }
@@ -56,6 +57,8 @@ $toolbar-selected-fg-color: #333;
     background-color: #03a9f4;
   }
 }
+
+.equal-width {
+  flex: 1;
+}
 </style>
-
-
