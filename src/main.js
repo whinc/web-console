@@ -1,5 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
+import consoleHooks from "./consoleHooks";
 
 Vue.config.productionTip = false;
 
@@ -49,6 +50,7 @@ class WebConsole {
 
 if (!window.WebConsole) {
   window.WebConsole = WebConsole;
+  consoleHooks.install();
 } else {
   console.error("Inject WebConsole into window failed");
 }

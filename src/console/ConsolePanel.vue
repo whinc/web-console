@@ -26,6 +26,7 @@
 import Message from "./Message";
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
 import { _console, uuid } from "@/utils";
+import consoleHooks from "../consoleHooks";
 
 export default {
   components: {
@@ -68,6 +69,9 @@ export default {
   },
   // hook console 输出越早越好，选择最先被执行的 beforeCreate 周期方法进行 hook 操作
   beforeCreate() {
+    // 停止搜集日志（交给 ConsolePanel 进行搜集)
+    consoleHooks.uninstall();
+    // 开始搜集日志
     const vm = this;
     const originConsole = {};
     const names = ["log", "info", "error", "warn", "debug"];
@@ -86,12 +90,16 @@ export default {
       };
     });
   },
-  methods: {},
+  created() {
+    // 将创建之前搜集到的日志按打印顺序追加到日志列表前面
+    this.msgList.unshift(...consoleHooks.getMsgList());
+  },
   errorCaptured(error) {
     // 在浏览器控制台输出错误原因
     _console.error(error);
     return false;
-  }
+  },
+  methods: {}
 };
 </script>
 
