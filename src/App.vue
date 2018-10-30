@@ -78,6 +78,7 @@ export default {
   },
   watch: {
     panelVisible(value) {
+      // 禁止背景滚动（弹窗可见时，将弹窗设为 fixed 定位，使其背景无法滚动，弹窗不可见时再还原）
       if (value) {
         this.originPosition = document.body.style.position;
         this.originTop = window.scrollY;
@@ -88,6 +89,11 @@ export default {
         document.body.style.top = "";
         window.scrollTo(0, this.originTop);
       }
+
+      // 通知子元素弹窗可见性变化
+      this.$nextTick(() => {
+        this.$root.$emit("popup:visibilitychange", value);
+      });
     }
   },
   mounted() {
@@ -98,6 +104,7 @@ export default {
 
     this.isTouched = false;
 
+    // 监听来自子元素的事件：请求隐藏弹窗
     this.$root.$on("hide", () => {
       this.hidePanel();
     });

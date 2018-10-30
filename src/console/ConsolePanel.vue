@@ -7,7 +7,7 @@
       <VTabBarItem id="warn">Warn</VTabBarItem>
       <VTabBarItem id="error">Error</VTabBarItem>
     </VTabBar>
-    <div class="body">
+    <div ref="container" @scroll="onScroll" class="body">
       <!-- 不同面板的切换比较频繁，v-show 比 v-if 更适合该场景 -->
       <Message
         v-for="msg in msgList"
@@ -46,7 +46,13 @@ export default {
        *  logArgs: Array
        * }]
        */
-      msgList: []
+      msgList: [],
+      /**
+       * 是否滚动触底
+       * 为 true 时，新增消息时滚动条将自动定位到底部
+       * 为 false 时，新增消息时滚动条保持位置不变
+       */
+      isBottom: true
     };
   },
   computed: {
@@ -65,6 +71,19 @@ export default {
           }
         }
       ];
+    }
+  },
+  watch: {
+    msgList(val) {
+      const el = this.$refs.container;
+      if (this.isBottom && el) {
+        // 待新增的消息渲染完成后，滚动至底部
+        this.$nextTick(() => {
+          el.scrollTo(0, el.scrollHeight - el.clientHeight);
+        });
+        // _console.log('scroll to:', el.scrollHeight - el.clientHeight)
+      }
+      // _console.log('msgList length:', val.length)
     }
   },
   // hook console 输出越早越好，选择最先被执行的 beforeCreate 周期方法进行 hook 操作
@@ -99,6 +118,15 @@ export default {
     };
     // 开始搜集日志
     hookConsole();
+
+    // 弹窗不可见时，新增数据不会滚动，当弹窗变为可见时，需要执行一次滚动至底部来修正滚动位置
+    this.$root.$on("popup:visibilitychange", visible => {
+      const el = this.$refs.container;
+      if (this.isBottom && el) {
+        // 待新增的消息渲染完成后，滚动至底部
+        el.scrollTo(0, el.scrollHeight - el.clientHeight);
+      }
+    });
   },
   created() {
     // 将创建之前搜集到的日志按打印顺序追加到日志列表前面
@@ -109,7 +137,13 @@ export default {
     _console.error(error);
     return false;
   },
-  methods: {}
+  methods: {
+    onScroll(event) {
+      const el = event.target;
+      this.isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight;
+      // _console.log('scrollTop + clientHeight: %s, scrollHeight: %s, isBottom: %s', el.scrollTop + el.clientHeight, el.scrollHeight, this.isBottom)
+    }
+  }
 };
 </script>
 

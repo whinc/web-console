@@ -5,6 +5,11 @@ window.$console = (function() {
     console.log(format, value);
   }
 
+  function testIntervalLog(interval = 1000) {
+    console.log(Date.now());
+    setTimeout(testIntervalLog.bind(null, arguments), interval);
+  }
+
   function testException() {
     // console.log(new Error('general error'))
     // console.error(new Error('general error'))
@@ -251,6 +256,7 @@ window.$console = (function() {
   return {
     testFormat: testFormat,
     testException: testException,
+    testIntervalLog: testIntervalLog,
     testObject: testObject
   };
 })();

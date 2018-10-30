@@ -31,7 +31,6 @@
         <mt-button type="primary" @click="$console.testFormat()">打印格式化</mt-button>
         <mt-button type="primary" @click="$console.testObject()">打印对象</mt-button>
         <mt-button type="primary" @click="$console.testException()">触发异常</mt-button>
-
         <h2>Network Test</h2>
         <mt-button type="primary" @click="$network.testHTTPStatus()">测试 HTTP 状态码</mt-button>
         <mt-button type="primary" @click="$network.testRequestParams()">测试请求参数</mt-button>
@@ -94,7 +93,8 @@
               // this.$console.testFormat()
               // this.$network.testHTTPStatus()
               // this.$network.testRequestParams()
-              this.$network.testResponseData()
+              // this.$network.testResponseData()
+              // this.$console.testIntervalLog()
             } else {
               setTimeout(function() {
                 self.launchWebConsole();
