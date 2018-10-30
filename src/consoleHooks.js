@@ -1,4 +1,4 @@
-import { uuid } from "@/utils";
+import { uuid, createStack } from "@/utils";
 
 // hook console
 // install 前的 console 接口
@@ -16,10 +16,16 @@ const install = () => {
 
     currentConsole[name] = function(...args) {
       if (active) {
+        const logArgs = args.map(v => {
+          if (v instanceof Error) {
+            createStack(v, currentConsole[name]);
+          }
+          return v;
+        });
         const msg = {
           id: uuid(),
           type: name,
-          logArgs: args
+          logArgs
         };
         // 冻结计算结果，避免 Vue 添加额外属性
         msgList.push(Object.freeze(msg));

@@ -25,7 +25,7 @@
 <script>
 import Message from "./Message";
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
-import { _console, uuid } from "@/utils";
+import { _console, uuid, createStack } from "@/utils";
 import consoleHooks from "../consoleHooks";
 
 export default {
@@ -71,24 +71,34 @@ export default {
   beforeCreate() {
     // 停止搜集日志（交给 ConsolePanel 进行搜集)
     consoleHooks.uninstall();
-    // 开始搜集日志
-    const vm = this;
-    const originConsole = {};
-    const names = ["log", "info", "error", "warn", "debug"];
-    names.forEach(name => {
-      originConsole[name] = window.console[name];
 
-      window.console[name] = function(...args) {
-        const msg = {
-          id: uuid(),
-          type: name,
-          logArgs: args
+    const hookConsole = () => {
+      const vm = this;
+      const originConsole = {};
+      const names = ["log", "info", "error", "warn", "debug"];
+      names.forEach(name => {
+        originConsole[name] = window.console[name];
+
+        window.console[name] = function(...args) {
+          const logArgs = args.map(v => {
+            if (v instanceof Error) {
+              createStack(v, window.console[name]);
+            }
+            return v;
+          });
+          const msg = {
+            id: uuid(),
+            type: name,
+            logArgs
+          };
+          // 冻结计算结果，避免 Vue 添加额外属性
+          vm.msgList.push(Object.freeze(msg));
+          originConsole[name].apply(this, args);
         };
-        // 冻结计算结果，避免 Vue 添加额外属性
-        vm.msgList.push(Object.freeze(msg));
-        originConsole[name].apply(this, args);
-      };
-    });
+      });
+    };
+    // 开始搜集日志
+    hookConsole();
   },
   created() {
     // 将创建之前搜集到的日志按打印顺序追加到日志列表前面

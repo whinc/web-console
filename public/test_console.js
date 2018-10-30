@@ -6,7 +6,10 @@ window.$console = (function() {
   }
 
   function testException() {
-    throw new Error("xxx");
+    // console.log(new Error('general error'))
+    // console.error(new Error('general error'))
+    console.error(new ReferenceError("reference error"));
+    // throw new Error("xxx");
   }
 
   // 打印对象

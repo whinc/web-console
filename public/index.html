@@ -82,6 +82,9 @@
           launchWebConsole: function() {
             var self = this;
             if (window.WebConsole) {
+              // 测试 web-console 加载完毕前的日志输出
+              console.error(new Error('hello'))
+
               window.webConsole = new window.WebConsole({
                 activeTab: 'console',
                 panelVisible: false,

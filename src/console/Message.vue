@@ -15,14 +15,7 @@
 </template>
 
 <script>
-import {
-  isString,
-  isNumber,
-  isObject,
-  isArray,
-  cloneDeep,
-  _console
-} from "@/utils";
+import { isString, isNumber, isObject, isArray, cloneDeep, _console } from "@/utils";
 import TextBlock from "./TextBlock";
 
 export default {
@@ -30,16 +23,25 @@ export default {
     TextBlock
   },
   props: {
+    /**
+     * 消息的唯一ID
+     */
     msgId: {
       type: String,
       required: true
     },
-    // 消息类型：'log', 'info', 'error', 'warn', 'debug'
+    /**
+     * console 日志接口类型
+     * 支持'log', 'info', 'error', 'warn', 'debug'
+     */
     type: {
       type: String,
       required: true
     },
-    // 日志输出函数的参数
+    /**
+     * console 日志接口接收到的参数列表
+     * console.log('%s', 'hello')  // logArgs = ['%s', 'hello']
+     */
     logArgs: {
       type: Array,
       default() {
@@ -56,6 +58,28 @@ export default {
     space() {
       return " ";
     },
+    /**
+     * console 日志接口参数处理后的参数信息列表
+     *
+     * @returns {Array<Object>} 返回数组，数组元素数据结构如下
+     * {
+     *  value,            // 原始值
+     *  placholder,       // 占位符
+     *  displayValue,     // 展示值
+     *  showValueDetail   // 是否展开细节
+     * }
+     *
+     * 例如 console.log('a%sc%s', 'b', {}) 执行，logArgs 接收到 ['a%sc%s', 'b', {}]，argInfoList 返回
+     * [
+     *  {value: 'a', displayValue: 'a', placeholder: ''}
+     *  {value: 'b', displayValue: 'b', placeholder: '%s'}
+     *  {value: 'c', displayValue: 'c', placeholder: ''}
+     *  {value: {}, displayValue: 'Object', placeholder: '%s'}
+     * ]
+     * 观察发现：
+     * 1）存在占位符时，value 和 displayValue 可能不同，取决于希望如何展示
+     * 2）没有占位符时，value 和 displayValue 必然相同
+     */
     argInfoList() {
       // 对 log 参数进行格式化，将占位符替换成对应值
       let argInfoList = format(this.logArgs);
@@ -102,6 +126,13 @@ export default {
             argInfo.displayValue = argInfo.value;
             break;
         }
+
+        // Error 对象和普通对象不同，它不展示对象内部属性结构，而是展示堆栈信息
+        if (argInfo.displayValue instanceof Error) {
+          const err = argInfo.displayValue;
+          argInfo.displayValue = (err.stack || err).toString();
+        }
+
         return argInfo;
       });
       // _console.log('argInfoList2', cloneDeep(argInfoList2))
@@ -115,10 +146,7 @@ export default {
           argInfoList3.push(curArgInfo);
         } else {
           const prevArgInfo = argInfoList3[argInfoList3.length - 1];
-          if (
-            isString(prevArgInfo.displayValue) &&
-            isString(curArgInfo.displayValue)
-          ) {
+          if (isString(prevArgInfo.displayValue) && isString(curArgInfo.displayValue)) {
             prevArgInfo.displayValue += curArgInfo.displayValue;
             prevArgInfo.placeholder += curArgInfo.placeholder;
           } else {
