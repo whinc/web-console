@@ -1,6 +1,6 @@
 <template>
   <!-- 函数 -->
-  <span v-if="isFunction">
+  <span v-if="isFunction" class="text-inline-block function-type">
     <template v-if="deepth === 0">
       <span v-if="isArrowFunction">{{value}}</span>
       <span v-else>
@@ -15,7 +15,7 @@
   <!-- 两种展示 -->
   <!-- [1, 2, 3] 数组作为根元素时，即 deepth 为 0 时 -->
   <!-- Array(3) 数组作为嵌套元素或者由外部控制时，即 deepth 大于 0 或 showValueDetail 为 false，如 {a: 1, b: Array(3)}, [1, Array(3)] -->
-  <span v-else-if="isArray">
+  <span v-else-if="isArray" class="text-inline-block array-type">
     <template v-if="showValueDetail">
       <template v-if="deepth === 0">
         <span style="color: gray">({{value.length}})&nbsp;</span>
@@ -39,7 +39,7 @@
   <!-- '{a: 1, b: 2}' 当对象作为根元素时，即 deepth 为 0 -->
   <!-- '{...}' 当对象作为嵌套元素时，即 deepth 大于 0，如 {a: 1, b: {...}} -->
   <!-- 'Object' 有外部开关控制，即 showValueDetail 为 true，如 {a: 1, __proto__: Object}  -->
-  <span v-else-if="isObject">
+  <span v-else-if="isObject" class="text-inline-block object-type">
     <!-- 展示对象详情 -->
     <template v-if="showValueDetail">
       <span>{</span>
@@ -64,18 +64,18 @@
     <span v-else>Object</span>
   </span>
   <!-- 字符串类型 -->
-  <span v-else-if="isString">
+  <span v-else-if="isString" class="text-inline-block string-type">
     <template v-if="name">
       <span class="string-quote">"</span>
-      <span class="string keep-white-space">{{value}}</span>
+      <span class="string keep-format">{{value}}</span>
       <span class="string-quote">"</span>
     </template>
     <template v-else>
-      <span>{{value}}</span>
+      <span class="keep-format">{{value}}</span>
     </template>
   </span>
-  <!-- 其他类型（注意：不能换行，否则前后会多出一个空白符） -->
-  <span v-else :class="valueClass">{{formattedValue}}</span>
+  <!-- 其他类型 -->
+  <span v-else class="text-inline-block" :class="valueClass">{{formattedValue}}</span>
 </template>
 
 <script>
@@ -148,8 +148,8 @@ export default {
   name: "text-inline-block",
   props: {
     // 属性名
-    // 属性名为空时，表示内联块作为根元素展示
-    // 属性名有值时，表示内敛块作为对象的属性值展示
+    // 属性名为空时，表示内联块作为根元素，展示传入的 value 值，即 <TextInlineBlock/>
+    // 属性名有值时，表示内联块作为对象的属性值，展示 value 值，即 {key: <TextInlineBlock/>}
     name: [String, Symbol],
     // 属性值
     value: {},
@@ -214,8 +214,6 @@ export default {
         undefined: isUndefined(value),
         boolean: isBoolean(value),
         number: isNumber(value),
-        // 字符串仅当放到对象或数组中（即有key）时，需要高亮并带双引号显式
-        string: isString(value) && this.deepth > 0,
         symbol: isSymbol(value)
       };
     }
@@ -245,7 +243,7 @@ export default {
 .string-quote {
   color: #222;
 }
-.keep-white-space {
-  white-space: pre;
+.keep-format {
+  white-space: pre-wrap;
 }
 </style>
