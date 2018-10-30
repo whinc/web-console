@@ -9,7 +9,7 @@
       </div>
       <!-- 属性名 -->
       <template v-if="hasName">
-        <span class="key" :class="[descriptor.enumerable ? 'public' : 'private']">{{name}}</span>
+        <span class="key" :class="[descriptor.enumerable ? 'public' : 'private']">{{displayName}}</span>
         <span class="space">: </span>
       </template>
       <!-- 属性值 -->
@@ -53,7 +53,7 @@
 <script>
 /**
  * 高亮显示传入值，如果值是对象，以树状结构展示，可以折叠展开
- * 
+ *
  * 例如，传入值为 obj
  * obj = {
  *  a: 1,
@@ -64,10 +64,10 @@
  *  a: 1,
  *  b: 2
  * }
- * 
+ *
  * 观察 chrome devtools 的输出，有几个特点：
  * 1）...
- * 
+ *
  * 使用示例：
  * // 展示值
  * <text-block :descriptor="{value: 1}" />
@@ -84,12 +84,12 @@ import {
   isUndefined,
   flatMap,
   _console,
-isFunction
-} from '@/utils'
-import TextInlineBlock from './TextInlineBlock'
+  isFunction
+} from "@/utils";
+import TextInlineBlock from "./TextInlineBlock";
 
 export default {
-  name: 'text-block',
+  name: "text-block",
   components: {
     TextInlineBlock
   },
@@ -100,12 +100,12 @@ export default {
       required: true,
       validator: descriptor => {
         try {
-          Object.defineProperty({}, 'key', descriptor)
+          Object.defineProperty({}, "key", descriptor);
         } catch (error) {
-          _console.error(error.message, 'descriptor:', descriptor)
+          _console.error(error.message, "descriptor:", descriptor);
         }
         // ConsolePanel 内部组件不能再次抛出错误，否则会造成循环错误
-        return true
+        return true;
       }
     },
     // 属性名（可选）
@@ -132,67 +132,82 @@ export default {
       default: true
     }
   },
-  data () {
+  data() {
     return {
       // 是否折叠属性树
       isFold: true,
       // 当前 get 访问器是否已计算（仅当当前 descriptor 含 get 访问器时有效）
       hasComputed: false,
       // 当前 get 访问器计算结果（仅当当前 descriptor 含 get 访问器时有效）
-      computedValue: '(...)'
-    }
+      computedValue: "(...)"
+    };
   },
   computed: {
-    isRoot () {
-      return !Boolean(this.name)
+    isRoot() {
+      return !Boolean(this.name);
     },
-    hasName () {
-      return !!this.name
+    hasName() {
+      return !!this.name;
     },
-    isGetAccessor () {
-      return typeof this.descriptor.get === 'function'
+    /**
+     * 对象 key 的展示值
+     * 考虑 key 为 Symbol 类型或包含特殊字符（如空白符）时的处理
+     */
+    displayName() {
+      let _name = String(this.name);
+      if (_name.indexOf(" ") === 0) {
+        return '"' + _name.replace(/^\s+/, " ") + '"';
+      } else {
+        return _name;
+      }
+    },
+    isGetAccessor() {
+      return typeof this.descriptor.get === "function";
     },
     // 当前对象的所有属性相关信息
-    properties () {
+    properties() {
+      const defaultReturns = [];
+
       // 如不需要计算属性可直接返回以提高性能
       if (!this.needComputeProps) {
-        return []
+        return defaultReturns;
       }
 
       // 获取对象值
       // 如果是值属性，取 value 值；如果是 getter 访问器，取计算值
-      let value
+      let value;
       if (this.isGetAccessor) {
         if (this.hasComputed) {
-          value = this.computedValue
+          value = this.computedValue;
         } else {
-          return []
+          return defaultReturns;
         }
       } else {
-        value = this.descriptor.value
+        value = this.descriptor.value;
       }
 
-      let obj
+      let obj;
       if (isObject(value)) {
-        obj = value
+        obj = value;
       } else if (isFunction(value)) {
-        obj = value
+        obj = value;
       } else {
-        return []
+        return defaultReturns;
       }
 
       // 获取属性名及其描述符
-      const ownKeys = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)]
-      const properties = flatMap(ownKeys, (name) => {
-        const descriptor = Object.getOwnPropertyDescriptor(obj, name)
+      const ownKeys = [...Object.getOwnPropertyNames(obj), ...Object.getOwnPropertySymbols(obj)];
+      const properties = flatMap(ownKeys, name => {
+        const descriptor = Object.getOwnPropertyDescriptor(obj, name);
         if (!descriptor) {
-          return []
+          return [];
         }
 
         // value and writable 与 get/set 访问器不会同时存在
-        if (isFunction(descriptor.get) && isFunction(descriptor.set)) { // 同时存在 getter 和 setter
+        if (isFunction(descriptor.get) && isFunction(descriptor.set)) {
+          // 同时存在 getter 和 setter
           return [
-            {name, descriptor},
+            { name, descriptor },
             {
               // Symbol 类型需要进行转换
               name: `get ${String(name)}`,
@@ -208,10 +223,11 @@ export default {
                 enumerable: false
               }
             }
-          ]
-        } else if (isFunction(descriptor.get) && !isFunction(descriptor.set)) { // 只存在 getter 
+          ];
+        } else if (isFunction(descriptor.get) && !isFunction(descriptor.set)) {
+          // 只存在 getter
           return [
-            {name, descriptor},
+            { name, descriptor },
             {
               name: `get ${String(name)}`,
               descriptor: {
@@ -219,8 +235,9 @@ export default {
                 enumerable: false
               }
             }
-          ]
-        } else if (!isFunction(descriptor.get) && isFunction(descriptor.set)) { // 只存在 setter
+          ];
+        } else if (!isFunction(descriptor.get) && isFunction(descriptor.set)) {
+          // 只存在 setter
           return [
             {
               name: `set ${String(name)}`,
@@ -229,171 +246,186 @@ export default {
                 enumerable: false
               }
             }
-          ]
-        } else { // 不存在 getter 或 setter，即 value 
-          return [{name, descriptor }]
+          ];
+        } else {
+          // 不存在 getter 或 setter，那就是数据访问器了
+          return [{ name, descriptor }];
         }
 
         // _console.log(name, ':', descriptor)
-      })
-        // TODO: JSON.stringify 不能用于将循环引用的结构 JSON 化，需要进行特殊处理，暂且过滤掉存在循环引用的属性
-        // 参考 https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json#
-        // .filter(name => name !== '__ob__')
-      
+      });
+      // TODO: JSON.stringify 不能用于将循环引用的结构 JSON 化，需要进行特殊处理，暂且过滤掉存在循环引用的属性
+      // 参考 https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json#
+      // .filter(name => name !== '__ob__')
+
       // 增加展示'__proto__'属性
-      if (properties.findIndex(v => v.name === '__proto__') === -1) {
+      if (properties.findIndex(v => v.name === "__proto__") === -1) {
         properties.push({
-          name: '__proto__',
+          name: "__proto__",
           descriptor: {
             value: obj.__proto__,
             enumerable: false,
             configurable: true
           }
-        })
+        });
       }
 
       // Object.prototype 不展示'__proto__'属性，而是展示其 get/set 访问器，避免递归
       if (obj === Object.prototype) {
-        let index = properties.findIndex(v => v.name === '__proto__')
+        let index = properties.findIndex(v => v.name === "__proto__");
         if (index !== -1) {
-          properties.splice(index, 1)
-          const descriptor = Object.getOwnPropertyDescriptor(obj, '__proto__')
-          properties.push({
-            name: 'get __proto__',
-            descriptor: {
-              value: descriptor.get,
-              enumerable: false
+          properties.splice(index, 1);
+          const descriptor = Object.getOwnPropertyDescriptor(obj, "__proto__");
+          properties.push(
+            {
+              name: "get __proto__",
+              descriptor: {
+                value: descriptor.get,
+                enumerable: false
+              }
+            },
+            {
+              name: "set __proto__",
+              descriptor: {
+                value: descriptor.set,
+                enumerable: false
+              }
             }
-          }, {
-            name: 'set __proto__',
-            descriptor: {
-              value: descriptor.set,
-              enumerable: false
-            }
-          })
+          );
         }
       }
 
       // 属性排序
-      return properties.sort(propCompareFn)
+      return properties.sort(propCompareFn);
     },
-    indentStyle () {
+    indentStyle() {
       return {
-        width: this.deepth > 0 ? `${this.deepth}em` : 'auto' 
-      }
+        width: this.deepth > 0 ? `${this.deepth}em` : "auto"
+      };
     },
     // 折叠/展开箭头样式（使用CSS绘制）
-    arrowClass () {
-      return this.properties.length > 0 ? (this.isFold ? 'fold' : 'unfold') : ''
+    arrowClass() {
+      return this.properties.length > 0 ? (this.isFold ? "fold" : "unfold") : "";
     },
-    textInlineBlockStyle () {
+    textInlineBlockStyle() {
       // 是根节点，且是对象，且需要显示详情时，以斜体展示
-      const b1 = this.isRoot && this.showRootValueDetail && isObject(this.descriptor.value)
+      const b1 = this.isRoot && this.showRootValueDetail && isObject(this.descriptor.value);
       // 函数类型，以斜体展示
-      const b2 = isFunction(this.descriptor.value)
+      const b2 = isFunction(this.descriptor.value);
       return {
         italic: b1 || b2,
         // 只有根节点需要换行展示，非根节点不换行方便阅读
         nowrap: !this.isRoot
-      }
+      };
     }
   },
   methods: {
-    onClickGetAccessor () {
-      if (!this.hasComputed) {  // 最多计算一次
-        this.hasComputed = true
+    onClickGetAccessor() {
+      if (!this.hasComputed) {
+        // 最多计算一次
+        this.hasComputed = true;
         try {
           // 冻结计算结果，避免 Vue 添加额外属性
-          this.computedValue = Object.freeze(this.descriptor.get())
+          this.computedValue = Object.freeze(this.descriptor.get());
         } catch (error) {
-          _console.error(error)
-          this.computedValue = '(error: ' + error.message + ')'
+          _console.error(error);
+          this.computedValue = "(error: " + error.message + ")";
         }
       }
     }
   }
-}
+};
 
 /**
  * 获取属性的展示优先级
  * 先按类别划分优先级高低，相同优先级内部再根据字母顺序排序
  * public 属性
  * A          // 0
- * B          
- * a          
- * b          
+ * B
+ * a
+ * b
  * Symbol()   // 10
- * Symbol(a)   
+ * Symbol(a)
  * _A        // 15
  * _B
- * 
+ *
  * private 属性
  * A         // 20
- * B         
- * a         
- * b         
+ * B
+ * a
+ * b
  * Symbol()  // 30
- * Symbol(a)  
+ * Symbol(a)
  * _A       // 35
  * _B
  * get A     // 40
- * set A      
+ * set A
  * get B
- * get a     
- * set a     
+ * get a
+ * set a
  * get b
  * __proto__ // 100
  */
-function getPropDisplayPriority (prop) {
-  let priority = 0
+function getPropDisplayPriority(prop) {
+  let priority = 0;
   if (isString(prop.name)) {
     if (prop.descriptor.enumerable) {
-      if (prop.name.indexOf('_') === 0) {
-        priority = 15
+      if (prop.name.indexOf("_") === 0) {
+        priority = 15;
       } else {
-        priority = 0
+        priority = 0;
       }
     } else {
-      if (prop.name.indexOf('get ') === 0 || prop.name.indexOf('set ') === 0) {
-        priority = 40
-      } else if (prop.name.indexOf('_') === 0) {
-        priority = 35
+      if (prop.name.indexOf("get ") === 0 || prop.name.indexOf("set ") === 0) {
+        priority = 40;
+      } else if (prop.name.indexOf("_") === 0) {
+        priority = 35;
       } else {
-        priority = 20
+        priority = 20;
       }
     }
-  } else {  // symbol
+  } else {
+    // symbol
     if (prop.descriptor.enumerable) {
-      priority = 10
+      priority = 10;
     } else {
-      priority = 30
+      priority = 30;
     }
   }
-  if (prop.name === '__proto__') {
-    priority = 100
+  if (prop.name === "__proto__") {
+    priority = 100;
   }
-  return priority
+  return priority;
 }
 
 /**
  * 属性排序比较函数
  */
-function propCompareFn (propA, propB) {
-  let priorityA = getPropDisplayPriority(propA)
-  let priorityB = getPropDisplayPriority(propB)
+function propCompareFn(propA, propB) {
+  let priorityA = getPropDisplayPriority(propA);
+  let priorityB = getPropDisplayPriority(propB);
   // _console.log(propA.name, propB.name, priorityA, priorityB)
-  if (priorityA === priorityB) { // 优先级相同时按字母的 ASCII 码排序，码值越小越靠上
-    const a = String(propA.name)
-    const b = String(propB.name)
-    return a < b ? -1 : (a > b ? 1 : 0)
-  } else { // 否则，优先级越低越靠上
-    return priorityA - priorityB
+  if (priorityA === priorityB) {
+    // 优先级相同时按字母的 ASCII 码排序，码值越小越靠上
+    // 默认比较字母的 ASCII
+    let a = String(propA.name);
+    let b = String(propB.name);
+    if (!isNaN(parseFloat(a)) && !isNaN(parseFloat(b))) {
+      // a, b 都是数字时，比较数值大小
+      a = parseFloat(a);
+      b = parseFloat(b);
+    }
+    return a < b ? -1 : a > b ? 1 : 0;
+  } else {
+    // 否则，优先级越低越靠上
+    return priorityA - priorityB;
   }
 }
 </script>
 
 <style scoped lang="scss">
-.public, .private {
+.public,
+.private {
   color: rgb(136, 19, 145);
 }
 .private {

@@ -67,7 +67,7 @@
   <span v-else-if="isString">
     <template v-if="name">
       <span class="string-quote">"</span>
-      <span class="string">{{value}}</span>
+      <span class="string keep-white-space">{{value}}</span>
       <span class="string-quote">"</span>
     </template>
     <template v-else>
@@ -81,7 +81,7 @@
 <script>
 /**
  * 高亮展示传入的值，如果是对象，在一行内展开
- * 
+ *
  * 例如，传入值为 obj
  * obj = {
  *  a: 1,
@@ -89,7 +89,7 @@
  * }
  * UI 展示成：
  * {a: 1, b: 2}
- * 
+ *
  * 观察 chrome devtools 的输出，有几个特点：
  * 1）最多展示 5 个字段，再多就展示省略号
  * obj = {
@@ -102,7 +102,7 @@
  * }
  * UI 展示：
  * {a: 1, b: 2, c: 3, d: 4, e: 5, ...}
- * 
+ *
  * 2）展示数据属性（包含可枚举和不可枚举），但不展示访问器属性
  * obj = {
  *  // 可枚举
@@ -114,7 +114,7 @@
  * }
  * UI 展示：
  * {a: 1, b: 1}
- * 
+ *
  * 3）函数深度为 0 时展示成 ƒ，深度大于 0 时展示函数的字符串
  * obj = {
  *  a: () => {},
@@ -142,10 +142,10 @@ import {
   _console,
   isArray,
   isFunction
-} from '@/utils'
+} from "@/utils";
 
 export default {
-  name: 'text-inline-block',
+  name: "text-inline-block",
   props: {
     // 属性名
     // 属性名为空时，表示内联块作为根元素展示
@@ -171,42 +171,44 @@ export default {
     }
   },
   computed: {
-    isFunction () {
-      return isFunction(this.value)
+    isFunction() {
+      return isFunction(this.value);
     },
-    isArrowFunction () {
-      return isFunction(this.value) && String(this.value).indexOf('() =>') === 0
+    isArrowFunction() {
+      return isFunction(this.value) && String(this.value).indexOf("() =>") === 0;
     },
-    isArray () {
-      return isArray(this.value)
+    isArray() {
+      return isArray(this.value);
     },
-    isString () {
-      return isString(this.value)
+    isString() {
+      return isString(this.value);
     },
-    isObject () {
-      return isObject(this.value)
+    isObject() {
+      return isObject(this.value);
     },
-    maxDisplayPropertyCount () {
-      return 5
+    maxDisplayPropertyCount() {
+      return 5;
     },
-    displayPropertyNames () {
-      const obj = this.value
-      return Object.getOwnPropertyNames(obj)
-        // 过滤出数据属性
-        .filter(name => {
-          const descriptor = Object.getOwnPropertyDescriptor(obj, name)
-          return 'value' in descriptor
-        })
+    displayPropertyNames() {
+      const obj = this.value;
+      return (
+        Object.getOwnPropertyNames(obj)
+          // 过滤出数据属性
+          .filter(name => {
+            const descriptor = Object.getOwnPropertyDescriptor(obj, name);
+            return "value" in descriptor;
+          })
+      );
     },
-    formattedValue () {
-      const value = this.value
+    formattedValue() {
+      const value = this.value;
       if (isNull(value) || isUndefined(value)) {
-        return String(value)
+        return String(value);
       }
-      return value
+      return value;
     },
-    valueClass () {
-      const value = this.value
+    valueClass() {
+      const value = this.value;
       return {
         null: isNull(value),
         undefined: isUndefined(value),
@@ -215,29 +217,35 @@ export default {
         // 字符串仅当放到对象或数组中（即有key）时，需要高亮并带双引号显式
         string: isString(value) && this.deepth > 0,
         symbol: isSymbol(value)
-      }
+      };
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
 .normal {
   color: #565656;
 }
-.null, .undefined {
+.null,
+.undefined {
   color: rgb(128, 128, 128);
 }
-.boolean, .function {
+.boolean,
+.function {
   color: rgb(13, 34, 170);
 }
 .number {
-  color: #1C00CF;
+  color: #1c00cf;
 }
-.string, .symbol {
+.string,
+.symbol {
   color: rgb(196, 26, 22);
 }
 .string-quote {
   color: #222;
+}
+.keep-white-space {
+  white-space: pre;
 }
 </style>
