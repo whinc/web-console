@@ -24,12 +24,12 @@ class WebConsole {
   }
 
   _load(options = {}) {
-    console.log("web-console start");
+    // console.log("web-console start");
     if (document.readyState === "interactive" || document.readyState === "complete") {
       const root = document.createElement("div");
       (document.documentElement || document.body).appendChild(root);
 
-      console.log("web console shoule output me!!!");
+      // console.log("web console shoule output me!!!");
       const defaultOptions = this._defaultOptions;
       const vm = new Vue({
         el: root,

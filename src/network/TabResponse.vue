@@ -72,7 +72,7 @@ export default {
       // 解析并高亮比较耗时，放在异步函数中处理
       setTimeout(() => {
         let result;
-        console.log("contentType", this.contentType, "language:", this.language);
+        // console.log("contentType", this.contentType, "language:", this.language);
 
         if (this.language) {
           result = hljs.highlight(this.language, this.content, true);

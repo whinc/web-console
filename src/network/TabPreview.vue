@@ -90,7 +90,7 @@ export default {
       setTimeout(() => {
         if (!this.$refs.code) return;
         let result;
-        console.log("contentType", this.contentType, "language:", this.language);
+        // console.log("contentType", this.contentType, "language:", this.language);
 
         if (this.language) {
           result = hljs.highlight(this.language, this.content, true);
