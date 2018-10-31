@@ -1,3 +1,11 @@
+<a name="0.2.0-rc.11"></a>
+
+# [0.2.0-rc.11](https://github.com/whinc/web-console/compare/v0.2.0-rc.10...v0.2.0-rc.11) (2018-10-31)
+
+### Features
+
+- 增加设置(展示版本信息) ([6ab8caa](https://github.com/whinc/web-console/commit/6ab8caa))
+
 <a name="0.2.0-rc.10"></a>
 
 # [0.2.0-rc.10](https://github.com/whinc/web-console/compare/v0.2.0-rc.9...v0.2.0-rc.10) (2018-10-30)
