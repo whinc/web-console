@@ -32,10 +32,7 @@
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
           <template slot="icons">
-            <!-- 设置图标 -->
-            <div class="icon-wrapper" @click="onClickSetting">
-              <img class="icon" style="width: 100%" src="@/assets/icons/setting.svg" />
-            </div>
+            <VIcon name="setting" @click="onClickSetting" />
           </template>
         </v-tab-bar>
         <!-- Tab Container -->
@@ -54,7 +51,7 @@
 
 <script>
 import { Popup, TabContainer, TabContainerItem } from "mint-ui";
-import { VTabBar, VTabBarItem } from "./components";
+import { VTabBar, VTabBarItem, VIcon } from "./components";
 import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";
 export default {
@@ -62,6 +59,7 @@ export default {
   components: {
     ConsolePanel,
     NetworkPanel,
+    VIcon,
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
     [Popup.name]: Popup,
@@ -211,13 +209,5 @@ date: ${process.env.VUE_APP_DATE}`);
   background-color: white;
   display: flex;
   flex-direction: column;
-  .icon-wrapper {
-    width: 40px;
-    padding: 10px 5px;
-    display: flex;
-    .icon {
-      width: 100%;
-    }
-  }
 }
 </style>
