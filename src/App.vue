@@ -3,9 +3,10 @@
     <!-- 悬浮按钮 -->
     <template v-if="!panelVisible">
       <img
-        v-if=" entryStyle === 'icon'"
-        src="@/assets/icons/chrome_logo.png" class="entry icon"
+        v-if="entryStyle === 'icon'"
+        class="entry icon"
         :style="{right: right + 'px', bottom: bottom + 'px'}"
+        src="@/assets/icons/chrome_logo.png"
         @click="showPanel"
         @touchstart="onTouchStart"
         @touchmove="onTouchMove"
@@ -30,6 +31,12 @@
         <v-tab-bar v-model="activeTab">
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
+          <template slot="icons">
+            <!-- 设置图标 -->
+            <div class="icon-wrapper" @click="onClickSetting">
+              <img class="icon" style="width: 100%" src="@/assets/icons/setting.svg" />
+            </div>
+          </template>
         </v-tab-bar>
         <!-- Tab Container -->
         <mt-tab-container v-model="activeTab">
@@ -138,6 +145,11 @@ export default {
     },
     onTouchEnd() {
       this.isTouched = false;
+    },
+    onClickSetting() {
+      alert(`package name: ${process.env.VUE_APP_NAME}
+version: ${process.env.VUE_APP_VERSION}
+date: ${process.env.VUE_APP_DATE}`);
     }
   }
 };
@@ -199,18 +211,12 @@ export default {
   background-color: white;
   display: flex;
   flex-direction: column;
-}
-
-/* Tab栏 */
-.header-bar {
-  height: 40px !important;
-  border-bottom: 1px solid #d9d9d9;
-  background-color: $toolbar-bg-color;
-  .tab-item {
-    color: $tab-fg-color;
-    background-color: rgba(0, 0, 0, 0);
-    &.selected {
-      color: $tab-selected-fg-color;
+  .icon-wrapper {
+    width: 40px;
+    padding: 10px 5px;
+    display: flex;
+    .icon {
+      width: 100%;
     }
   }
 }

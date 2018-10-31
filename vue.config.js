@@ -1,5 +1,11 @@
 const path = require("path");
 
+/** 以 VUE_APP_* 开头的环境变量会替换代码中相应的变量 */
+const npmPkg = require("./package.json");
+process.env.VUE_APP_NAME = npmPkg.name;
+process.env.VUE_APP_VERSION = npmPkg.version;
+process.env.VUE_APP_DATE = new Date().toISOString();
+
 module.exports = {
   css: {
     extract: false

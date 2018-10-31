@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name: 'v-tab-bar-item',
+  name: "v-tab-bar-item",
   props: {
     id: {
       type: String,
@@ -17,15 +17,14 @@ export default {
     }
   },
   computed: {
-    isSelected () {
-      return this.$parent.value === this.id
+    isSelected() {
+      return this.$parent.value === this.id;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-
 $toolbar-hover-bg-color: #eaeaea;
 $toolbar-fg-color: #5a5a5a;
 $toolbar-selected-fg-color: #333;
@@ -33,6 +32,7 @@ $toolbar-selected-fg-color: #333;
 .v-tab-bar-item {
   position: relative;
   display: flex;
+  height: 100%;
   .tab-item {
     color: $toolbar-fg-color;
     border-left: 2px solid transparent;
@@ -57,5 +57,3 @@ $toolbar-selected-fg-color: #333;
   }
 }
 </style>
-
-

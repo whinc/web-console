@@ -1,7 +1,10 @@
 <template>
   <div class="v-tab-bar" :class="{'show-bottom-border': showBottomBorder}">
-    <div class="tab-bar">
+    <div class="item-container">
       <slot></slot>
+    </div>
+    <div class="icon-container">
+      <slot name="icons"></slot>
     </div>
   </div>
 </template>
@@ -27,15 +30,22 @@ export default {
 <style lang="scss" scoped>
 @import "../base.scss";
 .v-tab-bar {
-  // position: relative;
   height: $tabbar-height;
   background-color: $tabbar-bg-color;
+  display: flex;
+  flex: 0 0 auto;
   &.show-bottom-border {
-    border-bottom: 1px solid rgb(205, 205, 205);
+    border-bottom: 1px solid $tabbar-border-color;
   }
-  .tab-bar {
+  .item-container {
     height: 100%;
     display: flex;
+    flex: 1 1 auto;
+  }
+  .icon-container {
+    height: 100%;
+    display: flex;
+    flex: 0 0 none;
   }
   // .tab-slider {
   //   position: absolute;
