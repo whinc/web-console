@@ -25,7 +25,7 @@
 <script>
 import Message from "./Message";
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
-import { _console, uuid, createStack } from "@/utils";
+import { _console, uuid, createStack, eventBus } from "@/utils";
 import consoleHooks from "../consoleHooks";
 
 export default {
@@ -67,7 +67,7 @@ export default {
         {
           text: "Hide",
           click: () => {
-            this.$root.$emit("hide");
+            eventBus.emit(eventBus.POPUP_HIDE);
           }
         }
       ];
@@ -120,7 +120,7 @@ export default {
     hookConsole();
 
     // 弹窗不可见时，新增数据不会滚动，当弹窗变为可见时，需要执行一次滚动至底部来修正滚动位置
-    this.$root.$on("popup:visibilitychange", visible => {
+    eventBus.on(eventBus.POPUP_VISIBILITY_CHANGE, visible => {
       const el = this.$refs.container;
       if (this.isBottom && el) {
         // 待新增的消息渲染完成后，滚动至底部

@@ -54,6 +54,7 @@ import { Popup, TabContainer, TabContainerItem } from "mint-ui";
 import { VTabBar, VTabBarItem, VIcon } from "./components";
 import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";
+import { eventBus } from "@/utils";
 export default {
   name: "app",
   components: {
@@ -97,7 +98,7 @@ export default {
 
       // 通知子元素弹窗可见性变化
       this.$nextTick(() => {
-        this.$root.$emit("popup:visibilitychange", value);
+        eventBus.emit(eventBus.POPUP_VISIBILITY_CHANGE, value);
       });
     }
   },
@@ -110,9 +111,7 @@ export default {
     this.isTouched = false;
 
     // 监听来自子元素的事件：请求隐藏弹窗
-    this.$root.$on("hide", () => {
-      this.hidePanel();
-    });
+    eventBus.on(eventBus.POPUP_HIDE, () => this.hidePanel());
   },
   methods: {
     showPanel() {

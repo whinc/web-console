@@ -61,3 +61,21 @@ export const _console = {
   error: window.console.error,
   log: window.console.log
 };
+
+class EventBus {
+  constructor() {
+    this._vue = new Vue();
+
+    this.POPUP_VISIBILITY_CHANGE = "popup_visibility_change";
+    this.POPUP_HIDE = "popup_hide";
+  }
+  emit(event, ...args) {
+    _console.log('EventBus emit: "%s"', event, ...args);
+    this._vue.$emit(event, ...args);
+  }
+  on(event, callback) {
+    _console.log('EventBus on: "%s"', event);
+    this._vue.$on(event, callback);
+  }
+}
+export const eventBus = new EventBus();
