@@ -19,7 +19,7 @@
     "predepoly": "npm run build:web",
     "depoly": "npx gh-pages -d demo",
     "postversion": "npm run build && npm login && npm publish --access=public && npm run changelog",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md && git commit -m 'docs(changelog): 更新'",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md && git commit -m 'docs(changelog): 更新' || echo 'changelog 没有变化'",
     "report": "vue-cli-service build --report",
     "test": "vue-cli-service test",
     "test:api": "cd ./tests/api && nodemon index.js",
