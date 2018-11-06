@@ -110,8 +110,11 @@ export default {
             type: name,
             logArgs
           };
-          // 冻结计算结果，避免 Vue 添加额外属性
-          vm.msgList.push(Object.freeze(msg));
+          // 错开当前渲染周期，避免当前渲染出现异常时，导致循环渲染输出错误日志
+          vm.$nextTick(() => {
+            // 冻结计算结果，避免 Vue 添加额外属性
+            vm.msgList.push(Object.freeze(msg));
+          });
           originConsole[name].apply(this, args);
         };
       });
