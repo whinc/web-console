@@ -23,7 +23,7 @@
         <span v-for="(v, i) in value" :key="i">
           <text-inline-block
             :name="String(i)"
-            :value="v"
+            :value="short(v)"
             :deepth="deepth + 1"
           />
           <span v-if="i !== value.length - 1">,&nbsp;</span>
@@ -49,7 +49,7 @@
           <span>{{propName}}: </span>
           <text-inline-block
             :name="propName"
-            :value="value[propName]"
+            :value="short(value[propName])"
             :deepth="deepth + 1"
           />
           <span v-if="index !== Math.min(maxDisplayPropertyCount - 1, displayPropertyNames.length - 1)">, </span>
@@ -216,6 +216,16 @@ export default {
         number: isNumber(value),
         symbol: isSymbol(value)
       };
+    }
+  },
+  methods: {
+    short(value) {
+      const maxLen = 40;
+      if (isString(value) && value.length > maxLen) {
+        return value.slice(0, maxLen / 2) + "..." + value.slice(value.length - maxLen / 2);
+      }
+
+      return value;
     }
   }
 };

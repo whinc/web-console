@@ -19,15 +19,6 @@ window.$console = (function() {
 
   // 打印对象
   function testObject() {
-    // console.log('obj:', {a: 1})
-    // break
-    // console.log('this is a object: ', obj, 'wa haha')
-    // console.log({
-    //   c: 3,
-    //   b: 2,
-    //   a: 1
-    // })
-    // break
     let obj2 = {
       // 测试数值类型
       a: 1,
@@ -206,6 +197,16 @@ window.$console = (function() {
     arr["b"] = "b"; // 0x62
     arr["{"] = "{"; // 0x7B
     console.log("数组 key 排序:", arr);
+
+    const thumbObj = {
+      extra: `{"num_total":300,"num_left":157,"discount":"{\"create_time\":1531970051000,\"discount_data\":\"[{\\\"amount_min\\\":\\\"100\\\",\\\"amount_cut\\\":\\\"10\\\"},{\\\"amount_min\\\":\\\"200\\\",\\\"amount_cut\\\":\\\"25\\\"},{\\\"amount_min\\\":\\\"300\\\",\\\"amount_cut\\\":\\\"50\\\"}]\",\"discount_id\":3,\"discount_name\":\"满减-yanger\",\"discount_prod\":\"[\\\"WM-180101001\\\",\\\"WM-180101002\\\",\\\"WM-180101004\\\",\\\"WM-180101006\\\",\\\"WM-180101008\\\",\\\"WM-180525102\\\",\\\"WM-180101017\\\"]\",\"discount_provider\":\"0\",\"discount_status\":\"1\",\"discount_type\":\"1\",\"update_time\":1540458898000}"}`,
+      isChange: false
+    };
+    const thumbObj2 = [
+      `{"num_total":300,"num_left":157,"discount":"{\"create_time\":1531970051000,\"discount_data\":\"[{\\\"amount_min\\\":\\\"100\\\",\\\"amount_cut\\\":\\\"10\\\"},{\\\"amount_min\\\":\\\"200\\\",\\\"amount_cut\\\":\\\"25\\\"},{\\\"amount_min\\\":\\\"300\\\",\\\"amount_cut\\\":\\\"50\\\"}]\",\"discount_id\":3,\"discount_name\":\"满减-yanger\",\"discount_prod\":\"[\\\"WM-180101001\\\",\\\"WM-180101002\\\",\\\"WM-180101004\\\",\\\"WM-180101006\\\",\\\"WM-180101008\\\",\\\"WM-180525102\\\",\\\"WM-180101017\\\"]\",\"discount_provider\":\"0\",\"discount_status\":\"1\",\"discount_type\":\"1\",\"update_time\":1540458898000}"}`
+    ];
+    thumbObj2.push(thumbObj);
+    console.log("测试对象缩略信息：", thumbObj, thumbObj2);
   }
 
   // 格式化输出
