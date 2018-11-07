@@ -52,7 +52,9 @@ export default {
        * 为 true 时，新增消息时滚动条将自动定位到底部
        * 为 false 时，新增消息时滚动条保持位置不变
        */
-      isBottom: true
+      isBottom: true,
+      // 个性化设置
+      showTimestamps: false
     };
   },
   computed: {
@@ -134,6 +136,11 @@ export default {
   created() {
     // 将创建之前搜集到的日志按打印顺序追加到日志列表前面
     this.msgList.unshift(...consoleHooks.getMsgList());
+
+    // 设置发生变化时做出变化
+    eventBus.on(eventBus.SETTINGS_CHANGE, settings => {
+      this.showTimestamps = !!settings.console.showTimestamps;
+    });
   },
   errorCaptured(error) {
     // 在浏览器控制台输出错误原因

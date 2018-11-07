@@ -8,6 +8,8 @@ export const isSymbol = v => typeof v === "symbol";
 export const isBoolean = v => typeof v === "boolean";
 export const isObject = v => typeof v === "object" && v !== null;
 
+export const isDev = process.env.NODE_ENV !== "production";
+
 export const noop = function() {};
 export const cloneDeep = v => JSON.parse(JSON.stringify(v));
 
@@ -57,24 +59,48 @@ export const createStack = (targetObject, constructorOpt) => {
 };
 
 /* 原始的 console 方法  */
-export const _console = {
-  error: window.console.error,
-  log: window.console.log
-};
+const error = window.console.error;
+const log = window.console.log;
+export class Logger {
+  constructor(prefix) {
+    this._prefix = prefix ? prefix + " " : "";
+  }
+  error(...args) {
+    if (isString(args[0])) {
+      args[0] = this._prefix + args[0];
+    } else {
+      args.unshift(this._prefix);
+    }
+    isDev && error.apply(this, args);
+  }
+  log(...args) {
+    if (isString(args[0])) {
+      args[0] = this._prefix + args[0];
+    } else {
+      args.unshift(this._prefix);
+    }
+    isDev && log.apply(this, args);
+  }
+}
+
+export const _console = new Logger();
 
 class EventBus {
   constructor() {
     this._vue = new Vue();
+    this._logger = new Logger("[EventBus]");
 
     this.POPUP_VISIBILITY_CHANGE = "popup_visibility_change";
     this.POPUP_HIDE = "popup_hide";
+    this.SETTINGS_CHANGE = "settings_change";
   }
   emit(event, ...args) {
-    _console.log('EventBus emit: "%s"', event, ...args);
-    this._vue.$emit(event, ...args);
+    this._logger.log('emit: "%s"', event, ...args);
+    // freeze 一下避免 Vue 添加一些额外字段，同时也确保事件数据传递时不被修改
+    this._vue.$emit(event, ...args.map(v => Object.freeze(v)));
   }
   on(event, callback) {
-    _console.log('EventBus on: "%s"', event);
+    this._logger.log('on: "%s"', event);
     this._vue.$on(event, callback);
   }
 }

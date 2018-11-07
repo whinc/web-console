@@ -28,6 +28,7 @@
     <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
+        <!-- Tabbar -->
         <v-tab-bar v-model="activeTab">
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
@@ -44,6 +45,8 @@
             <network-panel />
           </mt-tab-container-item>
         </mt-tab-container>
+        <!-- 设置面板 -->
+        <SettingsPanel v-model="isSettingPanelVisible" />
       </div>
     </mt-popup>
   </div>
@@ -54,12 +57,14 @@ import { Popup, TabContainer, TabContainerItem } from "mint-ui";
 import { VTabBar, VTabBarItem, VIcon } from "./components";
 import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";
+import { SettingsPanel } from "./settings";
 import { eventBus } from "@/utils";
 export default {
   name: "app",
   components: {
     ConsolePanel,
     NetworkPanel,
+    SettingsPanel,
     VIcon,
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
@@ -77,6 +82,7 @@ export default {
     return {
       entryStyle: "icon",
       panelVisible: false,
+      isSettingPanelVisible: true,
       activeTab: "console",
       right: 20,
       bottom: 20
@@ -144,9 +150,10 @@ export default {
       this.isTouched = false;
     },
     onClickSetting() {
-      alert(`package name: ${process.env.VUE_APP_NAME}
-version: ${process.env.VUE_APP_VERSION}
-date: ${process.env.VUE_APP_DATE}`);
+      //       alert(`package name: ${process.env.VUE_APP_NAME}
+      // version: ${process.env.VUE_APP_VERSION}
+      // date: ${process.env.VUE_APP_DATE}`);
+      this.isSettingPanelVisible = true;
     }
   }
 };
@@ -204,6 +211,7 @@ date: ${process.env.VUE_APP_DATE}`);
 }
 
 .panel {
+  position: relative;
   width: 100vw;
   background-color: white;
   display: flex;
