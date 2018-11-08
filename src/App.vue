@@ -162,8 +162,7 @@ export default {
     font-family: Menlo, Consolas, monospace;
   }
 
-  // 使用IE盒模型
-  & /deep/ * {
+  * {
     box-sizing: border-box;
   }
 
