@@ -1,5 +1,6 @@
 <template>
   <div class="message source-code" :class="[type]">
+    <div v-if="showTimestamps" class="timestamps">{{formattedTime}}</div>
     <div v-if="isErrorCaptured" class="error">
       Message 组件内部错误
     </div>
@@ -39,6 +40,17 @@ export default {
       required: true
     },
     /**
+     * 日志时间戳
+     */
+    timestamps: Number,
+    /**
+     * 显示时间戳
+     */
+    showTimestamps: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * console 日志接口接收到的参数列表
      * console.log('%s', 'hello')  // logArgs = ['%s', 'hello']
      */
@@ -57,6 +69,22 @@ export default {
   computed: {
     space() {
       return " ";
+    },
+    formattedTime() {
+      let date = new Date(this.timestamps);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+      const millisconeds = date.getMilliseconds();
+      return (
+        (hours < 10 ? "0" + hours : hours) +
+        ":" +
+        (minutes < 10 ? "0" + minutes : minutes) +
+        ":" +
+        (seconds < 10 ? "0" + seconds : seconds) +
+        "." +
+        (millisconeds < 10 ? "00" + millisconeds : millisconeds < 100 ? "0" + millisconeds : millisconeds)
+      );
     },
     /**
      * console 日志接口参数处理后的参数信息列表
@@ -275,6 +303,12 @@ function format(logArgs) {
     border-bottom: 1px solid hsl(50, 100%, 88%);
     margin-top: -1px;
     background-color: hsl(50, 100%, 95%);
+  }
+
+  .timestamps {
+    color: gray;
+    margin-right: 5px;
+    line-height: 20px;
   }
 }
 

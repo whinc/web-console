@@ -79,50 +79,50 @@ export default {
        * desc 显示在 UI 上的描述
        */
       configs: [
-        // {
-        //   name: 'console',
-        //   desc: 'Console',
-        //   settings: [
-        //     // {
-        //     //   type: 'section',
-        //     //   desc: 'Section1'
-        //     // },
-        //     // {
-        //     //   type: 'text',
-        //     //   desc: 'Section1',
-        //     // },
-        //     {
-        //       type: 'checkbox',
-        //       name: 'showTimestamps',
-        //       value: false,
-        //       desc: 'show timestamps',
-        //     },
-        //     // {
-        //     //   type: 'section',
-        //     //   desc: 'Section1'
-        //     // },
-        //     // {
-        //     //   type: 'checkbox',
-        //     //   desc: 'show timestamp',
-        //     //   value: false
-        //     // },
-        //     // {
-        //     //   type: 'select',
-        //     //   desc: 'select one',
-        //     //   value: '',
-        //     //   options: [
-        //     //     {
-        //     //       text: 'A',
-        //     //       value: 1
-        //     //     },
-        //     //     {
-        //     //       text: 'B',
-        //     //       value: 2
-        //     //     }
-        //     //   ]
-        //     // }
-        //   ]
-        // },
+        {
+          name: "console",
+          desc: "Console",
+          settings: [
+            // {
+            //   type: 'section',
+            //   desc: 'Section1'
+            // },
+            // {
+            //   type: 'text',
+            //   desc: 'Section1',
+            // },
+            {
+              type: "checkbox",
+              name: "showTimestamps",
+              value: false,
+              desc: "show timestamps"
+            }
+            // {
+            //   type: 'section',
+            //   desc: 'Section1'
+            // },
+            // {
+            //   type: 'checkbox',
+            //   desc: 'show timestamp',
+            //   value: false
+            // },
+            // {
+            //   type: 'select',
+            //   desc: 'select one',
+            //   value: '',
+            //   options: [
+            //     {
+            //       text: 'A',
+            //       value: 1
+            //     },
+            //     {
+            //       text: 'B',
+            //       value: 2
+            //     }
+            //   ]
+            // }
+          ]
+        },
         {
           desc: "About",
           settings: [

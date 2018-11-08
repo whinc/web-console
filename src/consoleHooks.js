@@ -25,6 +25,7 @@ const install = () => {
         const msg = {
           id: uuid(),
           type: name,
+          timestamps: Date.now(),
           logArgs
         };
         // 冻结计算结果，避免 Vue 添加额外属性

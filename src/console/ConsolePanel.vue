@@ -15,6 +15,8 @@
         v-show="msg.type === activeType || activeType === 'all'"
         :msgId="msg.id"
         :type="msg.type"
+        :timestamps="msg.timestamps"
+        :showTimestamps="showTimestamps"
         :logArgs="msg.logArgs"
       />
     </div>
@@ -110,6 +112,7 @@ export default {
           const msg = {
             id: uuid(),
             type: name,
+            timestamps: Date.now(),
             logArgs
           };
           // 错开当前渲染周期，避免当前渲染出现异常时，导致循环渲染输出错误日志
