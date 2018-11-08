@@ -82,7 +82,7 @@ export default {
     return {
       entryStyle: "icon",
       panelVisible: false,
-      isSettingPanelVisible: true,
+      isSettingPanelVisible: false,
       activeTab: "console",
       right: 20,
       bottom: 20
@@ -90,18 +90,6 @@ export default {
   },
   watch: {
     panelVisible(value) {
-      // 禁止背景滚动（弹窗可见时，将弹窗设为 fixed 定位，使其背景无法滚动，弹窗不可见时再还原）
-      if (value) {
-        this.originPosition = document.body.style.position;
-        this.originTop = window.scrollY;
-        document.body.style.position = "fixed";
-        document.body.style.top = -this.originTop + "px";
-      } else {
-        document.body.style.position = this.originPosition;
-        document.body.style.top = "";
-        window.scrollTo(0, this.originTop);
-      }
-
       // 通知子元素弹窗可见性变化
       this.$nextTick(() => {
         eventBus.emit(eventBus.POPUP_VISIBILITY_CHANGE, value);

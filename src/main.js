@@ -1,6 +1,42 @@
 import Vue from "vue";
 import App from "./App.vue";
 import consoleHooks from "./consoleHooks";
+import { Logger } from "@/utils";
+
+const logger = new Logger("[main.js]");
+
+// 放在可滚动容器上，在滚动触顶或触底时，可以阻止背景层滚动
+Vue.directive("prevent-bkg-scroll", {
+  bind(el) {
+    let preventMove = false;
+    el.addEventListener("touchstart", function(e) {
+      // logger.log('touchstart scrollTop: %s, clientHeight: %s, scrollHeight: %s', el.scrollTop, el.clientHeight, el.scrollHeight)
+      if (el.scrollTop <= 0) {
+        // 滚动到顶部时将其设置为 1，避免触顶后不能向下滚动(IOS 上 scrollTop 会出现负数)
+        el.scrollTop = 1;
+        // 如果内容不足一屏，则禁用 touchmove
+        if (el.scrollTop === 0) {
+          preventMove = true;
+        }
+      } else if (el.scrollTop + el.clientHeight >= el.scrollHeight) {
+        // 滚动到底部时，将滚动距离设置为最大可滚动距离 - 1，避免触底后不能向上滚动
+        el.scrollTop = el.scrollHeight - el.clientHeight - 1;
+        // 如果内容不足一屏
+        if (el.scrollTop + el.clientHeight === el.scrollHeight) {
+          preventMove = true;
+        }
+      }
+    });
+    el.addEventListener("touchmove", function(e) {
+      if (preventMove) {
+        e.preventDefault();
+      }
+    });
+    el.addEventListener("touchend", function(e) {
+      preventMove = false;
+    });
+  }
+});
 
 Vue.config.productionTip = false;
 

@@ -7,7 +7,7 @@
       <VTabBarItem id="warn">Warn</VTabBarItem>
       <VTabBarItem id="error">Error</VTabBarItem>
     </VTabBar>
-    <div ref="container" @scroll="onScroll" class="body">
+    <div ref="container" @scroll="onScroll" class="body" v-prevent-bkg-scroll>
       <!-- 不同面板的切换比较频繁，v-show 比 v-if 更适合该场景 -->
       <Message
         v-for="msg in msgList"
@@ -166,7 +166,9 @@ export default {
   flex-direction: column;
   .body {
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   .foot {
     flex: none;

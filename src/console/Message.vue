@@ -252,7 +252,11 @@ function format(logArgs) {
   flex-direction: row;
   flex-wrap: wrap;
   padding: 8px 4px;
-  overflow-y: scroll;
+  overflow-y: hidden;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &.log,
   &.debug,
   &.info {
