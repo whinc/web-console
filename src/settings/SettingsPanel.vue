@@ -171,18 +171,18 @@ export default {
     }
   },
   mounted() {
-    // 启动时广播初始配置，后面配置变动时再次广播
-    // logger.log('defaultConfigs:', defaultConfigs)
+    // 加载配置
     this.loadSettings();
-    // 触发一次 setting change 事件，通知其他组件做出相应的处理
+    // 通知配置更新
     this.onSettingsChanged();
   },
   methods: {
+    // 通知配置更新
     onSettingsChanged() {
-      const settings = this.extractSettings(this.configs);
+      const settings = this.configs2Settings(this.configs);
       eventBus.emit(eventBus.SETTINGS_CHANGE, settings);
-      // logger.log('%o --extract--> %o --expand--> %o', this.configs, settings, this.expandSettings(settings))
-      // logger.log("extractSettings:", settings);
+      // logger.log('%o --extract--> %o --expand--> %o', this.configs, settings, this.settings2Configs(settings))
+      // logger.log("configs2Settings:", settings);
     },
     onClickClose() {
       // v-model
@@ -191,7 +191,7 @@ export default {
       this.saveSettings();
     },
     saveSettings() {
-      const settings = this.extractSettings(this.configs);
+      const settings = this.configs2Settings(this.configs);
       window.localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
     },
     loadSettings() {
@@ -199,13 +199,13 @@ export default {
       if (!content) return;
       try {
         const settings = JSON.parse(content);
-        this.expandSettings(settings);
+        this.settings2Configs(settings);
       } catch (err) {
         logger.error(err);
       }
     },
     /**
-     * 从 UI 配置中提取可修改的设置项
+     * 将配置项转为设置项，前者除了包含设置项还包含与 UI 相关的数据，后者指
      * [
      *  {
      *    name: 'aa',
@@ -225,7 +225,7 @@ export default {
      *  }
      * }
      */
-    extractSettings(configs) {
+    configs2Settings(configs) {
       const settings = {};
       this.configs.forEach(item => {
         if (!item.name) return;
@@ -239,8 +239,8 @@ export default {
       });
       return settings;
     },
-    // extractSettings 的逆过程：将设置项恢复到配置项中
-    expandSettings(settings) {
+    // configs2Settings 的逆过程：将设置项恢复到配置项中
+    settings2Configs(settings) {
       const configs = this.configs;
       Object.keys(settings).forEach(name1 => {
         const config = configs.find(item => item.name === name1);
