@@ -58,9 +58,86 @@
 
 <script>
 import { VIcon } from "../components";
-import { eventBus, Logger } from "@/utils";
+import { eventBus, Logger, cloneDeep } from "@/utils";
 
 const logger = new Logger("[SettingsPanel]");
+const KEY_SETTINGS = "web-console:settings";
+
+const defaultConfigs = [
+  {
+    name: "console",
+    desc: "Console",
+    settings: [
+      // {
+      //   type: 'section',
+      //   desc: 'Section1'
+      // },
+      // {
+      //   type: 'text',
+      //   desc: 'Section1',
+      // },
+      {
+        type: "checkbox",
+        name: "showTimestamps",
+        value: false,
+        desc: "show timestamps"
+      }
+      // {
+      //   type: 'section',
+      //   desc: 'Section1'
+      // },
+      // {
+      //   type: 'checkbox',
+      //   desc: 'show timestamp',
+      //   value: false
+      // },
+      // {
+      //   type: 'select',
+      //   desc: 'select one',
+      //   value: '',
+      //   options: [
+      //     {
+      //       text: 'A',
+      //       value: 1
+      //     },
+      //     {
+      //       text: 'B',
+      //       value: 2
+      //     }
+      //   ]
+      // }
+    ]
+  },
+  {
+    desc: "About",
+    settings: [
+      {
+        type: "section",
+        desc: "Package name"
+      },
+      {
+        type: "text",
+        desc: process.env.VUE_APP_NAME
+      },
+      {
+        type: "section",
+        desc: "Version"
+      },
+      {
+        type: "text",
+        desc: process.env.VUE_APP_VERSION
+      },
+      {
+        type: "section",
+        desc: "Build date"
+      },
+      {
+        type: "text",
+        desc: process.env.VUE_APP_DATE
+      }
+    ]
+  }
+];
 
 export default {
   name: "SettingsPanel",
@@ -78,93 +155,77 @@ export default {
        * name 用作存储时的 key
        * desc 显示在 UI 上的描述
        */
-      configs: [
-        {
-          name: "console",
-          desc: "Console",
-          settings: [
-            // {
-            //   type: 'section',
-            //   desc: 'Section1'
-            // },
-            // {
-            //   type: 'text',
-            //   desc: 'Section1',
-            // },
-            {
-              type: "checkbox",
-              name: "showTimestamps",
-              value: false,
-              desc: "show timestamps"
-            }
-            // {
-            //   type: 'section',
-            //   desc: 'Section1'
-            // },
-            // {
-            //   type: 'checkbox',
-            //   desc: 'show timestamp',
-            //   value: false
-            // },
-            // {
-            //   type: 'select',
-            //   desc: 'select one',
-            //   value: '',
-            //   options: [
-            //     {
-            //       text: 'A',
-            //       value: 1
-            //     },
-            //     {
-            //       text: 'B',
-            //       value: 2
-            //     }
-            //   ]
-            // }
-          ]
-        },
-        {
-          desc: "About",
-          settings: [
-            {
-              type: "section",
-              desc: "Package name"
-            },
-            {
-              type: "text",
-              desc: process.env.VUE_APP_NAME
-            },
-            {
-              type: "section",
-              desc: "Version"
-            },
-            {
-              type: "text",
-              desc: process.env.VUE_APP_VERSION
-            },
-            {
-              type: "section",
-              desc: "Build date"
-            },
-            {
-              type: "text",
-              desc: process.env.VUE_APP_DATE
-            }
-          ]
-        }
-      ]
+      configs: cloneDeep(defaultConfigs)
     };
   },
   computed: {
     activedConfig() {
       return this.configs[this.activedIndex];
+    },
+    settings() {}
+  },
+  watch: {
+    value(val) {
+      if (val) {
+      }
     }
   },
   mounted() {
     // 启动时广播初始配置，后面配置变动时再次广播
+    // logger.log('defaultConfigs:', defaultConfigs)
+    this.loadSettings();
+    // 触发一次 setting change 事件，通知其他组件做出相应的处理
+    this.onSettingsChanged();
   },
   methods: {
     onSettingsChanged() {
+      const settings = this.extractSettings(this.configs);
+      eventBus.emit(eventBus.SETTINGS_CHANGE, settings);
+      // logger.log('%o --extract--> %o --expand--> %o', this.configs, settings, this.expandSettings(settings))
+      // logger.log("extractSettings:", settings);
+    },
+    onClickClose() {
+      // v-model
+      this.$emit("input", false);
+
+      this.saveSettings();
+    },
+    saveSettings() {
+      const settings = this.extractSettings(this.configs);
+      window.localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
+    },
+    loadSettings() {
+      const content = window.localStorage.getItem(KEY_SETTINGS);
+      if (!content) return;
+      try {
+        const settings = JSON.parse(content);
+        this.expandSettings(settings);
+      } catch (err) {
+        logger.error(err);
+      }
+    },
+    /**
+     * 从 UI 配置中提取可修改的设置项
+     * [
+     *  {
+     *    name: 'aa',
+     *    setting: [
+     *      {
+     *        name: 'bb',
+     *        value: 'cc'
+     *      }
+     *    ]
+     *  }
+     * ]
+     *
+     * 提取设置：
+     * {
+     *  'aa': {
+     *    'bb': 'cc'
+     *  }
+     * }
+     */
+    extractSettings(configs) {
       const settings = {};
       this.configs.forEach(item => {
         if (!item.name) return;
@@ -176,12 +237,21 @@ export default {
           settings[name1][name2] = item2.value;
         });
       });
-      eventBus.emit(eventBus.SETTINGS_CHANGE, settings);
-      logger.log("setting change: ", settings);
+      return settings;
     },
-    onClickClose() {
-      // v-model
-      this.$emit("input", false);
+    // extractSettings 的逆过程：将设置项恢复到配置项中
+    expandSettings(settings) {
+      const configs = this.configs;
+      Object.keys(settings).forEach(name1 => {
+        const config = configs.find(item => item.name === name1);
+        if (!config) return;
+        Object.keys(settings[name1]).forEach(name2 => {
+          const config2 = config.settings.find(item2 => item2.name === name2);
+          if (!config2) return;
+          config2.value = settings[name1][name2];
+        });
+      });
+      return configs;
     }
   }
 };

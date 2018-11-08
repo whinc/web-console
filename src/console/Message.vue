@@ -1,5 +1,5 @@
 <template>
-  <div class="message source-code" :class="[type]">
+  <div class="message source-code" :class="[message.type]">
     <div v-if="showTimestamps" class="timestamps">{{formattedTime}}</div>
     <div v-if="isErrorCaptured" class="error">
       Message 组件内部错误
@@ -25,40 +25,28 @@ export default {
   },
   props: {
     /**
-     * 消息的唯一ID
+     * 日志消息
+     * {
+     *  // 唯一编号
+     *  id: String,
+     *  // 日志类型 'log', 'info', 'error', 'warn', 'debug'
+     *  type: String,
+     *  // 时间戳
+     *  timestamps: Number,
+     *  // 日志接口参数列表
+     *  logArgs: Array
+     * }
      */
-    msgId: {
-      type: String,
+    message: {
+      type: Object,
       required: true
     },
-    /**
-     * console 日志接口类型
-     * 支持'log', 'info', 'error', 'warn', 'debug'
-     */
-    type: {
-      type: String,
-      required: true
-    },
-    /**
-     * 日志时间戳
-     */
-    timestamps: Number,
     /**
      * 显示时间戳
      */
     showTimestamps: {
       type: Boolean,
       default: false
-    },
-    /**
-     * console 日志接口接收到的参数列表
-     * console.log('%s', 'hello')  // logArgs = ['%s', 'hello']
-     */
-    logArgs: {
-      type: Array,
-      default() {
-        return [];
-      }
     }
   },
   data() {
@@ -71,7 +59,7 @@ export default {
       return " ";
     },
     formattedTime() {
-      let date = new Date(this.timestamps);
+      let date = new Date(this.message.timestamps);
       const hours = date.getHours();
       const minutes = date.getMinutes();
       const seconds = date.getSeconds();
@@ -110,7 +98,7 @@ export default {
      */
     argInfoList() {
       // 对 log 参数进行格式化，将占位符替换成对应值
-      let argInfoList = format(this.logArgs);
+      let argInfoList = format(this.message.logArgs);
       // _console.log('formattedLogArgs', formattedLogArgs)
 
       // 将参数信息对象进一步处理，得到一些与 UI 展示相关的信息

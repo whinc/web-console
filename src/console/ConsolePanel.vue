@@ -13,11 +13,8 @@
         v-for="msg in msgList"
         :key="msg.id"
         v-show="msg.type === activeType || activeType === 'all'"
-        :msgId="msg.id"
-        :type="msg.type"
-        :timestamps="msg.timestamps"
+        :message="msg"
         :showTimestamps="showTimestamps"
-        :logArgs="msg.logArgs"
       />
     </div>
     <VFootBar class="foot" :buttons="footBarButtons" />
