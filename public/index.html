@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
     <title>web-console</title>
-    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <link rel="stylesheet" href="./mint-ui.min.css">
     <style>
       #app {
         height: 100%;
@@ -21,7 +21,7 @@
   </head>
   <body>
     <!-- import Vue before Mint UI -->
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="./vue.min.js"></script>
     <div id="app">
       <h1>WebConsole</h1>
       <div v-if="isDev">
@@ -54,7 +54,7 @@
       <mt-switch v-model='isDev'>切换</mt-switch>
     </div>
     <!-- import JavaScript -->
-    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script src="./mint-ui.min.js"></script>
     <script src="./test_console.js"></script>
     <script src="./test_network.js"></script>
     <script type="text/javascript">
@@ -194,7 +194,7 @@
       }
     </script>
     <!-- <script src="https://unpkg.com/@whinc/web-console"></script> -->
-    <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <!-- <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script> -->
     <script>
       // var vConsole = new VConsole();
     </script>
