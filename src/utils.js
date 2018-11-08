@@ -49,12 +49,13 @@ export const flatMap = (arr, callback) => {
  * @param {*} constructorOpt 该函数（含自身）以上的堆栈都会被忽略
  */
 export const createStack = (targetObject, constructorOpt) => {
+  // Chrome 提供 captureStackTrace 方法记录堆栈信息到目标对象的 stack 属性，参考<https://github.com/dwqs/blog/issues/49>
   if (typeof Error.captureStackTrace === "function") {
-    // 记录堆栈信息到目标对象的 stack 属性，参考<https://github.com/dwqs/blog/issues/49>
     Error.captureStackTrace(targetObject, constructorOpt);
-    if (typeof targetObject.stack === "string") {
-      targetObject.stack = targetObject.stack.replace(/https?:\/\/.*\/([^:]*:\d+):\d+/g, "$1");
-    }
+  }
+  // safari 创建的 Error 对象包含 stack 属性记录堆栈信息
+  if (typeof targetObject.stack === "string") {
+    targetObject.stack = targetObject.stack.replace(/https?:\/\/.*\/(.*)/g, "$1");
   }
 };
 
