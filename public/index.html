@@ -37,6 +37,8 @@
         <mt-button type="primary" @click="$network.testResponseData()">测试响应数据</mt-button>
         <mt-button type="primary" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
         <mt-button type="primary" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
+        <h2>Other</h2>
+        <mt-button type="primary" @click="performanceTest(50)">性能测试</mt-button>
       </div>
       <div v-else>
         <mt-button type="primary" @click="onClickPrint('log')">普通日志(log)</mt-button>
@@ -78,6 +80,16 @@
           this.launchWebConsole();
         },
         methods: {
+          performanceTest (n) {
+            if (n <= 0) return
+            this.$console.testFormat()
+            // this.$network.testHTTPStatus()
+            var that = this
+            that.performanceTest(n - 1)
+            // setTimeout(function () {
+            //   that.performanceTest(n - 1)
+            // }, 10)
+          },
           launchWebConsole: function() {
             var self = this;
             if (window.WebConsole) {
@@ -89,7 +101,6 @@
                 panelVisible: true,
                 entryStyle: 'icon'
               });
-              // 启动时自动运行测试用例
               // this.$console.testFormat()
               // this.$network.testHTTPStatus()
               // this.$network.testRequestParams()

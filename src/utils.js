@@ -22,6 +22,42 @@ export const nextTick = cb => {
 };
 
 /**
+ * 任务调度器
+ * 通过 add() 添加待执行任务，所有任务会按一定的时间间隔顺序执行
+ */
+export class TaskScheduler {
+  // 默认的任务处理器
+  static get default() {
+    return new TaskScheduler();
+  }
+
+  constructor(interval = 20) {
+    this._interval = interval;
+    this._isRunning = false;
+    this._tasks = [];
+  }
+
+  add(task) {
+    if (!isFunction(task)) return;
+
+    this._tasks.push(task);
+    this._runTask();
+  }
+
+  _runTask() {
+    if (this._tasks.length > 0 && !this._isRunning) {
+      this._isRunning = true;
+      const task = this._tasks.shift();
+      setTimeout(() => {
+        task();
+        this._isRunning = false;
+        this._runTask();
+      }, this._interval);
+    }
+  }
+}
+
+/**
  * generate an uuid
  * @returns string
  */

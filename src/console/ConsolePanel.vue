@@ -24,7 +24,7 @@
 <script>
 import Message from "./Message";
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
-import { _console, uuid, createStack, eventBus } from "@/utils";
+import { _console, uuid, createStack, eventBus, TaskScheduler } from "@/utils";
 import consoleHooks from "../consoleHooks";
 
 export default {
@@ -78,19 +78,19 @@ export default {
     msgList(val) {
       const el = this.$refs.container;
       if (this.isBottom && el) {
-        // 待新增的消息渲染完成后，滚动至底部
-        this.$nextTick(() => {
+        // 在合适的时机滚动至底部，避免阻塞交互
+        TaskScheduler.default.add(() => {
           el.scrollTo(0, el.scrollHeight - el.clientHeight);
         });
-        // _console.log('scroll to:', el.scrollHeight - el.clientHeight)
       }
-      // _console.log('msgList length:', val.length)
     }
   },
   // hook console 输出越早越好，选择最先被执行的 beforeCreate 周期方法进行 hook 操作
   beforeCreate() {
     // 停止搜集日志（交给 ConsolePanel 进行搜集)
     consoleHooks.uninstall();
+
+    const taskScheduler = new TaskScheduler();
 
     const hookConsole = () => {
       const vm = this;
@@ -112,11 +112,13 @@ export default {
             timestamps: Date.now(),
             logArgs
           };
-          // 错开当前渲染周期，避免当前渲染出现异常时，导致循环渲染输出错误日志
-          vm.$nextTick(() => {
+          // 1. 优化性能，避免批量打印日志时，UI 假死
+          // 2. 错开当前渲染周期，避免当前渲染出现异常时，导致循环渲染输出错误日志
+          taskScheduler.add(() => {
             // 冻结计算结果，避免 Vue 添加额外属性
             vm.msgList.push(Object.freeze(msg));
           });
+
           originConsole[name].apply(this, args);
         };
       });
@@ -125,6 +127,7 @@ export default {
     hookConsole();
 
     // 弹窗不可见时，新增数据不会滚动，当弹窗变为可见时，需要执行一次滚动至底部来修正滚动位置
+    // TODO: 不是监听弹窗可见，而是监听当前面板可见
     eventBus.on(eventBus.POPUP_VISIBILITY_CHANGE, visible => {
       const el = this.$refs.container;
       if (this.isBottom && el) {
@@ -150,7 +153,11 @@ export default {
   methods: {
     onScroll(event) {
       const el = event.target;
-      this.isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight;
+      /**
+       * 这里使用 el.scrollHeight - 1 作为右侧判断条件，是因为 v-prevent-bkg-scroll 指令内部
+       * 在触底时会强制将滚动内容上移 1px 以避免触底后滚动弹窗底部背景层
+       */
+      this.isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
       // _console.log('scrollTop + clientHeight: %s, scrollHeight: %s, isBottom: %s', el.scrollTop + el.clientHeight, el.scrollHeight, this.isBottom)
     }
   }
