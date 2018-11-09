@@ -20,8 +20,7 @@
       />
     </div>
     <!-- 子节点 -->
-    <!-- 折叠展开使用 v-show 是为了保留组件内部状态 -->
-    <div v-for="(item, index) in properties" :key="String(item.name) + index" v-show="!isFold">
+    <div v-for="(item, index) in properties" :key="String(item.name) + index" v-if="!isFold">
       <JSONTextBlock
         :name="item.name"
         :descriptor="item.descriptor"

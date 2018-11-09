@@ -8,7 +8,7 @@
       <VTabBarItem id="error">Error</VTabBarItem>
     </VTabBar>
     <div ref="container" @scroll="onScroll" class="body" v-prevent-bkg-scroll>
-      <!-- 不同面板的切换比较频繁，v-show 比 v-if 更适合该场景 -->
+      <!-- 不同面板的切换比较频繁，v-show 比 v-if 更适合该场景，可以复用 Message 组件 -->
       <Message
         v-for="msg in msgList"
         :key="msg.id"
