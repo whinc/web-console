@@ -1,6 +1,6 @@
 <template>
   <!-- 函数 -->
-  <span v-if="isFunction">
+  <span v-if="isFunction" class="text-inline-block function-type">
     <template v-if="deepth === 0">
       <span v-if="isArrowFunction">{{value}}</span>
       <span v-else>
@@ -15,7 +15,7 @@
   <!-- 两种展示 -->
   <!-- [1, 2, 3] 数组作为根元素时，即 deepth 为 0 时 -->
   <!-- Array(3) 数组作为嵌套元素或者由外部控制时，即 deepth 大于 0 或 showValueDetail 为 false，如 {a: 1, b: Array(3)}, [1, Array(3)] -->
-  <span v-else-if="isArray">
+  <span v-else-if="isArray" class="text-inline-block array-type">
     <template v-if="showValueDetail">
       <template v-if="deepth === 0">
         <span style="color: gray">({{value.length}})&nbsp;</span>
@@ -23,7 +23,7 @@
         <span v-for="(v, i) in value" :key="i">
           <text-inline-block
             :name="String(i)"
-            :value="v"
+            :value="short(v)"
             :deepth="deepth + 1"
           />
           <span v-if="i !== value.length - 1">,&nbsp;</span>
@@ -39,7 +39,7 @@
   <!-- '{a: 1, b: 2}' 当对象作为根元素时，即 deepth 为 0 -->
   <!-- '{...}' 当对象作为嵌套元素时，即 deepth 大于 0，如 {a: 1, b: {...}} -->
   <!-- 'Object' 有外部开关控制，即 showValueDetail 为 true，如 {a: 1, __proto__: Object}  -->
-  <span v-else-if="isObject">
+  <span v-else-if="isObject" class="text-inline-block object-type">
     <!-- 展示对象详情 -->
     <template v-if="showValueDetail">
       <span>{</span>
@@ -49,7 +49,7 @@
           <span>{{propName}}: </span>
           <text-inline-block
             :name="propName"
-            :value="value[propName]"
+            :value="short(value[propName])"
             :deepth="deepth + 1"
           />
           <span v-if="index !== Math.min(maxDisplayPropertyCount - 1, displayPropertyNames.length - 1)">, </span>
@@ -64,24 +64,24 @@
     <span v-else>Object</span>
   </span>
   <!-- 字符串类型 -->
-  <span v-else-if="isString">
+  <span v-else-if="isString" class="text-inline-block string-type">
     <template v-if="name">
       <span class="string-quote">"</span>
-      <span class="string">{{value}}</span>
+      <span class="string keep-format">{{value}}</span>
       <span class="string-quote">"</span>
     </template>
     <template v-else>
-      <span>{{value}}</span>
+      <span class="keep-format">{{value}}</span>
     </template>
   </span>
-  <!-- 其他类型（注意：不能换行，否则前后会多出一个空白符） -->
-  <span v-else :class="valueClass">{{formattedValue}}</span>
+  <!-- 其他类型 -->
+  <span v-else class="text-inline-block" :class="valueClass">{{formattedValue}}</span>
 </template>
 
 <script>
 /**
  * 高亮展示传入的值，如果是对象，在一行内展开
- * 
+ *
  * 例如，传入值为 obj
  * obj = {
  *  a: 1,
@@ -89,7 +89,7 @@
  * }
  * UI 展示成：
  * {a: 1, b: 2}
- * 
+ *
  * 观察 chrome devtools 的输出，有几个特点：
  * 1）最多展示 5 个字段，再多就展示省略号
  * obj = {
@@ -102,7 +102,7 @@
  * }
  * UI 展示：
  * {a: 1, b: 2, c: 3, d: 4, e: 5, ...}
- * 
+ *
  * 2）展示数据属性（包含可枚举和不可枚举），但不展示访问器属性
  * obj = {
  *  // 可枚举
@@ -114,7 +114,7 @@
  * }
  * UI 展示：
  * {a: 1, b: 1}
- * 
+ *
  * 3）函数深度为 0 时展示成 ƒ，深度大于 0 时展示函数的字符串
  * obj = {
  *  a: () => {},
@@ -142,14 +142,14 @@ import {
   _console,
   isArray,
   isFunction
-} from '@/utils'
+} from "@/utils";
 
 export default {
-  name: 'text-inline-block',
+  name: "text-inline-block",
   props: {
     // 属性名
-    // 属性名为空时，表示内联块作为根元素展示
-    // 属性名有值时，表示内敛块作为对象的属性值展示
+    // 属性名为空时，表示内联块作为根元素，展示传入的 value 值，即 <TextInlineBlock/>
+    // 属性名有值时，表示内联块作为对象的属性值，展示 value 值，即 {key: <TextInlineBlock/>}
     name: [String, Symbol],
     // 属性值
     value: {},
@@ -171,73 +171,89 @@ export default {
     }
   },
   computed: {
-    isFunction () {
-      return isFunction(this.value)
+    isFunction() {
+      return isFunction(this.value);
     },
-    isArrowFunction () {
-      return isFunction(this.value) && String(this.value).indexOf('() =>') === 0
+    isArrowFunction() {
+      return isFunction(this.value) && String(this.value).indexOf("() =>") === 0;
     },
-    isArray () {
-      return isArray(this.value)
+    isArray() {
+      return isArray(this.value);
     },
-    isString () {
-      return isString(this.value)
+    isString() {
+      return isString(this.value);
     },
-    isObject () {
-      return isObject(this.value)
+    isObject() {
+      return isObject(this.value);
     },
-    maxDisplayPropertyCount () {
-      return 5
+    maxDisplayPropertyCount() {
+      return 5;
     },
-    displayPropertyNames () {
-      const obj = this.value
-      return Object.getOwnPropertyNames(obj)
-        // 过滤出数据属性
-        .filter(name => {
-          const descriptor = Object.getOwnPropertyDescriptor(obj, name)
-          return 'value' in descriptor
-        })
+    displayPropertyNames() {
+      const obj = this.value;
+      return (
+        Object.getOwnPropertyNames(obj)
+          // 过滤出数据属性
+          .filter(name => {
+            const descriptor = Object.getOwnPropertyDescriptor(obj, name);
+            return "value" in descriptor;
+          })
+      );
     },
-    formattedValue () {
-      const value = this.value
+    formattedValue() {
+      const value = this.value;
       if (isNull(value) || isUndefined(value)) {
-        return String(value)
+        return String(value);
       }
-      return value
+      return value;
     },
-    valueClass () {
-      const value = this.value
+    valueClass() {
+      const value = this.value;
       return {
         null: isNull(value),
         undefined: isUndefined(value),
         boolean: isBoolean(value),
         number: isNumber(value),
-        // 字符串仅当放到对象或数组中（即有key）时，需要高亮并带双引号显式
-        string: isString(value) && this.deepth > 0,
         symbol: isSymbol(value)
+      };
+    }
+  },
+  methods: {
+    short(value) {
+      const maxLen = 40;
+      if (isString(value) && value.length > maxLen) {
+        return value.slice(0, maxLen / 2) + "..." + value.slice(value.length - maxLen / 2);
       }
+
+      return value;
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
 .normal {
   color: #565656;
 }
-.null, .undefined {
+.null,
+.undefined {
   color: rgb(128, 128, 128);
 }
-.boolean, .function {
+.boolean,
+.function {
   color: rgb(13, 34, 170);
 }
 .number {
-  color: #1C00CF;
+  color: #1c00cf;
 }
-.string, .symbol {
+.string,
+.symbol {
   color: rgb(196, 26, 22);
 }
 .string-quote {
   color: #222;
+}
+.keep-format {
+  white-space: pre-wrap;
 }
 </style>

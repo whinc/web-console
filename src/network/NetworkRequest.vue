@@ -5,7 +5,7 @@
       <span class="cell">{{requestInfo.method}}</span>
       <span class="cell">{{requestInfo.statusText}}</span>
     </div>
-    <div class="detail" v-show="requestInfo.isExpand">
+    <div class="detail" v-if="requestInfo.isExpand">
       <v-tab-bar v-model="requestInfo.activeTab" :show-bottom-border="false">
         <v-tab-bar-item id="headers">Headers</v-tab-bar-item>
         <v-tab-bar-item id="preview">Preview</v-tab-bar-item>

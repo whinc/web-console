@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
     <title>web-console</title>
-    <link rel="stylesheet" href="https://unpkg.com/mint-ui/lib/style.css">
+    <link rel="stylesheet" href="./mint-ui.min.css">
     <style>
       #app {
         height: 100%;
@@ -21,7 +21,7 @@
   </head>
   <body>
     <!-- import Vue before Mint UI -->
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="./vue.min.js"></script>
     <div id="app">
       <h1>WebConsole</h1>
       <div v-if="isDev">
@@ -29,9 +29,8 @@
         <mt-button type="primary" @click="onClickPrint('log_level')">打印不同级别日志</mt-button>
         <mt-button type="primary" @click="onClickPrint('log_params')">打印多参数</mt-button>
         <mt-button type="primary" @click="$console.testFormat()">打印格式化</mt-button>
-        <mt-button type="primary" @click="onClickPrint('log_object')">打印对象</mt-button>
+        <mt-button type="primary" @click="$console.testObject()">打印对象</mt-button>
         <mt-button type="primary" @click="$console.testException()">触发异常</mt-button>
-
         <h2>Network Test</h2>
         <mt-button type="primary" @click="$network.testHTTPStatus()">测试 HTTP 状态码</mt-button>
         <mt-button type="primary" @click="$network.testRequestParams()">测试请求参数</mt-button>
@@ -41,6 +40,8 @@
 
         <h2>Application Test</h2>
         <mt-button type="primary" @click="$network.testHTTPStatus()">测试 Cookie</mt-button>
+        <h2>Other</h2>
+        <mt-button type="primary" @click="performanceTest(50)">性能测试</mt-button>
       </div>
       <div v-else>
         <mt-button type="primary" @click="onClickPrint('log')">普通日志(log)</mt-button>
@@ -50,7 +51,7 @@
         <mt-button type="primary" @click="onClickPrint('error')">报错日志(error)</mt-button>
 
         <mt-button type="default" @click="onClickPrint('log_params')">打印多参数</mt-button>
-        <mt-button type="default" @click="onClickPrint('log_object')">打印对象</mt-button>
+        <mt-button type="default" @click="$console.testObject()">打印对象</mt-button>
 
         <mt-button type="default" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
         <mt-button type="default" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
@@ -58,7 +59,7 @@
       <mt-switch v-model='isDev'>切换</mt-switch>
     </div>
     <!-- import JavaScript -->
-    <script src="https://unpkg.com/mint-ui/lib/index.js"></script>
+    <script src="./mint-ui.min.js"></script>
     <script src="./test_console.js"></script>
     <script src="./test_network.js"></script>
     <script type="text/javascript">
@@ -82,19 +83,35 @@
           this.launchWebConsole();
         },
         methods: {
+          performanceTest (n) {
+            if (n <= 0) return
+            this.$console.testFormat()
+            // this.$network.testHTTPStatus()
+            var that = this
+            that.performanceTest(n - 1)
+            // setTimeout(function () {
+            //   that.performanceTest(n - 1)
+            // }, 10)
+          },
           launchWebConsole: function() {
             var self = this;
             if (window.WebConsole) {
+              // 测试 web-console 加载完毕前的日志输出
+              // console.error(new Error('hello'))
+
+              // 测试日志数量
+              // new Array(11).fill(0).forEach((v, i) => console.log(i))
+
               window.webConsole = new window.WebConsole({
                 activeTab: 'application',
                 panelVisible: true,
                 entryStyle: 'icon'
               });
-              // 启动时自动运行测试用例
               // this.$console.testFormat()
               // this.$network.testHTTPStatus()
               // this.$network.testRequestParams()
-              this.$network.testResponseData()
+              // this.$network.testResponseData()
+              // this.$console.testIntervalLog()
             } else {
               setTimeout(function() {
                 self.launchWebConsole();
@@ -138,185 +155,6 @@
                 break;
               case "log_params":
                 console.log("aa", 100, true, null, undefined, { a: "a" }, Symbol());
-                break;
-              case "log_object":
-                // console.log('obj:', {a: 1})
-                // break
-                // console.log('this is a object: ', obj, 'wa haha')
-                // console.log({
-                //   c: 3,
-                //   b: 2,
-                //   a: 1
-                // })
-                // break
-                let obj2 = {
-                  // 测试数值类型
-                  a: 1,
-                  a5: { a: 1, b: 2, c: { a: 1, b: 2 } },
-                  // 测试数组
-                  a3: [1, 2],
-                  a4: [1, 2, [1, 2, [1, 2, 3], 3], 3],
-                  // 测试属性值很长时的展示
-                  a1: "10101010101010101010101010101010101010101010101001010101",
-                  a2: 10101010101010101010110101010101010110101011010101011010101,
-                  // 测试字符串类型
-                  b: "b",
-                  // 测试转义字符展示
-                  b1: '"b1"',
-                  c: true,
-                  d: undefined,
-                  e: null,
-                  f: Symbol(),
-                  g: {
-                    a: 1,
-                    f1: () => {
-                      return 1;
-                    },
-                    f2: function() {
-                      return 2;
-                    },
-                    b: "b",
-                    c: {
-                      a: 1,
-                      b: "b"
-                    },
-                    d: undefined,
-                    e: null
-                  },
-                  [Symbol()]: 10,
-                  [Symbol("age")]: 28,
-                  f1: function() {},
-                  f2: () => {},
-                  f3: function say() {},
-                  Z: "Z",
-                  M: "m",
-                  z: "z",
-                  // 测试排序规则
-                  __a: "public __a",
-                  _a: "public _a",
-                  $a: "public $a"
-                };
-                Object.defineProperties(obj2, {
-                  // value
-                  h: {
-                    enumerable: true,
-                    configurable: true,
-                    value: 10,
-                    writable: false
-                  },
-                  // value
-                  i: {
-                    enumerable: false,
-                    configurable: false,
-                    value: 10,
-                    writable: true
-                  },
-                  // getter and setter
-                  j: {
-                    get: () => {
-                      return Math.random() + "";
-                    },
-                    set: v => {}
-                  },
-                  J: {
-                    get: () => {
-                      return "" + Math.random();
-                    },
-                    set: v => {}
-                  },
-                  // only getter
-                  k: {
-                    get: function() {
-                      return {
-                        a: 1,
-                        b: "b"
-                      };
-                    }
-                  },
-                  K: {
-                    get: function() {
-                      return [
-                        {
-                          a: 1,
-                          b: "b"
-                        }
-                      ];
-                    }
-                  },
-                  // only setter
-                  l: {
-                    set: function(v) {}
-                  },
-                  [Symbol("a")]: {
-                    value: "1",
-                    enumerable: false
-                  },
-                  // 测试属性排序规则
-                  __b: {
-                    value: "private __b",
-                    enumerable: false
-                  },
-                  _b: {
-                    value: "private _b",
-                    enumerable: false
-                  },
-                  $b: {
-                    value: "private $b",
-                    enumerable: false
-                  }
-                });
-                Object.defineProperties(obj2.g, {
-                  h: {
-                    enumerable: true,
-                    configurable: true,
-                    value: 10
-                  },
-                  i: {
-                    enumerable: false,
-                    configurable: false,
-                    value: 10
-                  },
-                  j: {
-                    get: () => {
-                      return Math.random();
-                    },
-                    set: v => {}
-                  },
-                  k: {
-                    get: function() {
-                      return Math.random();
-                    },
-                    set: function() {}
-                  }
-                });
-                Object.defineProperties(obj2.g.c, {
-                  c: {
-                    enumerable: false,
-                    configurable: false,
-                    value: 10
-                  },
-                  d: {
-                    get: function() {
-                      return Math.random();
-                    },
-                    set: function() {}
-                  }
-                });
-                window.obj2 = obj2;
-                console.log("obj2:", obj2);
-                console.log({
-                  f1: function() {},
-                  f2: () => {},
-                  f3: function say() {}
-                });
-                var arr2 = [
-                  1,
-                  2,
-                  {
-                    a: 1
-                  }
-                ];
-                console.log(arr2);
                 break;
             }
           },
@@ -373,9 +211,9 @@
       }
     </script>
     <!-- <script src="https://unpkg.com/@whinc/web-console"></script> -->
-    <script src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <script src="http://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
     <script>
-      var vConsole = new VConsole();
+      var vConsole = new window.VConsole();
     </script>
     <!-- built files will be auto injected -->
   </body>

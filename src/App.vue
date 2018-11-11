@@ -3,9 +3,10 @@
     <!-- 悬浮按钮 -->
     <template v-if="!panelVisible">
       <img
-        v-if=" entryStyle === 'icon'"
-        src="@/assets/icons/chrome_logo.png" class="entry icon"
+        v-if="entryStyle === 'icon'"
+        class="entry icon"
         :style="{right: right + 'px', bottom: bottom + 'px'}"
+        src="@/assets/icons/chrome_logo.png"
         @click="showPanel"
         @touchstart="onTouchStart"
         @touchmove="onTouchMove"
@@ -27,32 +28,41 @@
     <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel">
+        <!-- Tabbar -->
         <v-tab-bar v-model="activeTab">
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
           <v-tab-bar-item id="application">Application</v-tab-bar-item>
+          <template slot="icons">
+            <VIcon name="setting" @click="onClickSetting" />
+          </template>
         </v-tab-bar>
         <ConsolePanel v-show="activeTab === 'console'" />
         <NetworkPanel v-show="activeTab === 'network'" />
         <ApplicationPanel v-show="activeTab === 'application'" />
+        <!-- 设置面板 -->
+        <SettingsPanel v-model="isSettingPanelVisible" />
       </div>
     </mt-popup>
   </div>
 </template>
 
 <script>
-import { Popup } from "mint-ui";
-import { VTabBar, VTabBarItem } from "./components";
+import { Popup, TabContainer, TabContainerItem } from "mint-ui";
+import { VTabBar, VTabBarItem, VIcon } from "./components";
 import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";
 import { ApplicationPanel } from "./application";
-
+import { SettingsPanel } from "./settings";
+import { eventBus } from "@/utils";
 export default {
   name: "app",
   components: {
     ConsolePanel,
     NetworkPanel,
     ApplicationPanel,
+    SettingsPanel,
+    VIcon,
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
     [Popup.name]: Popup
@@ -67,6 +77,7 @@ export default {
     return {
       entryStyle: "icon",
       panelVisible: false,
+      isSettingPanelVisible: false,
       activeTab: "console",
       right: 20,
       bottom: 20
@@ -74,16 +85,10 @@ export default {
   },
   watch: {
     panelVisible(value) {
-      if (value) {
-        this.originPosition = document.body.style.position;
-        this.originTop = window.scrollY;
-        document.body.style.position = "fixed";
-        document.body.style.top = -this.originTop + "px";
-      } else {
-        document.body.style.position = this.originPosition;
-        document.body.style.top = "";
-        window.scrollTo(0, this.originTop);
-      }
+      // 通知子元素弹窗可见性变化
+      this.$nextTick(() => {
+        eventBus.emit(eventBus.POPUP_VISIBILITY_CHANGE, value);
+      });
     }
   },
   mounted() {
@@ -94,9 +99,8 @@ export default {
 
     this.isTouched = false;
 
-    this.$root.$on("hide", () => {
-      this.hidePanel();
-    });
+    // 监听来自子元素的事件：请求隐藏弹窗
+    eventBus.on(eventBus.POPUP_HIDE, () => this.hidePanel());
   },
   methods: {
     showPanel() {
@@ -127,6 +131,12 @@ export default {
     },
     onTouchEnd() {
       this.isTouched = false;
+    },
+    onClickSetting() {
+      //       alert(`package name: ${process.env.VUE_APP_NAME}
+      // version: ${process.env.VUE_APP_VERSION}
+      // date: ${process.env.VUE_APP_DATE}`);
+      this.isSettingPanelVisible = true;
     }
   }
 };
@@ -147,8 +157,7 @@ export default {
     font-family: Menlo, Consolas, monospace;
   }
 
-  // 使用IE盒模型
-  & /deep/ * {
+  * {
     box-sizing: border-box;
   }
 
@@ -184,23 +193,10 @@ export default {
 }
 
 .panel {
+  position: relative;
   width: 100vw;
   background-color: white;
   display: flex;
   flex-direction: column;
-}
-
-/* Tab栏 */
-.header-bar {
-  height: 40px !important;
-  border-bottom: 1px solid #d9d9d9;
-  background-color: $toolbar-bg-color;
-  .tab-item {
-    color: $tab-fg-color;
-    background-color: rgba(0, 0, 0, 0);
-    &.selected {
-      color: $tab-selected-fg-color;
-    }
-  }
 }
 </style>

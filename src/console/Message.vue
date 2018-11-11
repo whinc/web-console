@@ -1,5 +1,6 @@
 <template>
-  <div class="message source-code" :class="[type]">
+  <div class="message source-code" :class="[message.type]">
+    <div v-if="showTimestamps" class="timestamps">{{formattedTime}}</div>
     <div v-if="isErrorCaptured" class="error">
       Message 组件内部错误
     </div>
@@ -15,14 +16,7 @@
 </template>
 
 <script>
-import {
-  isString,
-  isNumber,
-  isObject,
-  isArray,
-  cloneDeep,
-  _console
-} from "@/utils";
+import { isString, isNumber, isObject, isArray, cloneDeep, _console } from "@/utils";
 import TextBlock from "./TextBlock";
 
 export default {
@@ -30,21 +24,29 @@ export default {
     TextBlock
   },
   props: {
-    msgId: {
-      type: String,
+    /**
+     * 日志消息
+     * {
+     *  // 唯一编号
+     *  id: String,
+     *  // 日志类型 'log', 'info', 'error', 'warn', 'debug'
+     *  type: String,
+     *  // 时间戳
+     *  timestamps: Number,
+     *  // 日志接口参数列表
+     *  logArgs: Array
+     * }
+     */
+    message: {
+      type: Object,
       required: true
     },
-    // 消息类型：'log', 'info', 'error', 'warn', 'debug'
-    type: {
-      type: String,
-      required: true
-    },
-    // 日志输出函数的参数
-    logArgs: {
-      type: Array,
-      default() {
-        return [];
-      }
+    /**
+     * 显示时间戳
+     */
+    showTimestamps: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -56,9 +58,47 @@ export default {
     space() {
       return " ";
     },
+    formattedTime() {
+      let date = new Date(this.message.timestamps);
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+      const millisconeds = date.getMilliseconds();
+      return (
+        (hours < 10 ? "0" + hours : hours) +
+        ":" +
+        (minutes < 10 ? "0" + minutes : minutes) +
+        ":" +
+        (seconds < 10 ? "0" + seconds : seconds) +
+        "." +
+        (millisconeds < 10 ? "00" + millisconeds : millisconeds < 100 ? "0" + millisconeds : millisconeds)
+      );
+    },
+    /**
+     * console 日志接口参数处理后的参数信息列表
+     *
+     * @returns {Array<Object>} 返回数组，数组元素数据结构如下
+     * {
+     *  value,            // 原始值
+     *  placholder,       // 占位符
+     *  displayValue,     // 展示值
+     *  showValueDetail   // 是否展开细节
+     * }
+     *
+     * 例如 console.log('a%sc%s', 'b', {}) 执行，logArgs 接收到 ['a%sc%s', 'b', {}]，argInfoList 返回
+     * [
+     *  {value: 'a', displayValue: 'a', placeholder: ''}
+     *  {value: 'b', displayValue: 'b', placeholder: '%s'}
+     *  {value: 'c', displayValue: 'c', placeholder: ''}
+     *  {value: {}, displayValue: 'Object', placeholder: '%s'}
+     * ]
+     * 观察发现：
+     * 1）存在占位符时，value 和 displayValue 可能不同，取决于希望如何展示
+     * 2）没有占位符时，value 和 displayValue 必然相同
+     */
     argInfoList() {
       // 对 log 参数进行格式化，将占位符替换成对应值
-      let argInfoList = format(this.logArgs);
+      let argInfoList = format(this.message.logArgs);
       // _console.log('formattedLogArgs', formattedLogArgs)
 
       // 将参数信息对象进一步处理，得到一些与 UI 展示相关的信息
@@ -102,6 +142,13 @@ export default {
             argInfo.displayValue = argInfo.value;
             break;
         }
+
+        // Error 对象和普通对象不同，它不展示对象内部属性结构，而是展示堆栈信息
+        if (argInfo.displayValue instanceof Error) {
+          const err = argInfo.displayValue;
+          argInfo.displayValue = (err.stack || err).toString();
+        }
+
         return argInfo;
       });
       // _console.log('argInfoList2', cloneDeep(argInfoList2))
@@ -115,10 +162,7 @@ export default {
           argInfoList3.push(curArgInfo);
         } else {
           const prevArgInfo = argInfoList3[argInfoList3.length - 1];
-          if (
-            isString(prevArgInfo.displayValue) &&
-            isString(curArgInfo.displayValue)
-          ) {
+          if (isString(prevArgInfo.displayValue) && isString(curArgInfo.displayValue)) {
             prevArgInfo.displayValue += curArgInfo.displayValue;
             prevArgInfo.placeholder += curArgInfo.placeholder;
           } else {
@@ -224,7 +268,11 @@ function format(logArgs) {
   flex-direction: row;
   flex-wrap: wrap;
   padding: 8px 4px;
-  overflow-y: scroll;
+  overflow-y: hidden;
+  overflow-x: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   &.log,
   &.debug,
   &.info {
@@ -243,6 +291,12 @@ function format(logArgs) {
     border-bottom: 1px solid hsl(50, 100%, 88%);
     margin-top: -1px;
     background-color: hsl(50, 100%, 95%);
+  }
+
+  .timestamps {
+    color: gray;
+    margin-right: 5px;
+    line-height: 20px;
   }
 }
 

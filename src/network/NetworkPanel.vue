@@ -8,7 +8,7 @@
       <span class="cell">Method</span>
       <span class="cell">Status</span>
     </div>
-    <div class="body">
+    <div class="body" v-prevent-bkg-scroll>
       <NetworkRequest
         v-for="(requestInfo, index) in requestList"
         :key="requestInfo.id"

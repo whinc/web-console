@@ -32,6 +32,7 @@ $toolbar-selected-fg-color: #333;
 .v-tab-bar-item {
   position: relative;
   display: flex;
+  height: 100%;
   .tab-item {
     width: 100%;
     color: $toolbar-fg-color;

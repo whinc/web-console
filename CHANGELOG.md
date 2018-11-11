@@ -1,3 +1,25 @@
+<a name="0.2.0-rc.11"></a>
+
+# [0.2.0-rc.11](https://github.com/whinc/web-console/compare/v0.2.0-rc.10...v0.2.0-rc.11) (2018-10-31)
+
+### Features
+
+- 增加设置(展示版本信息) ([6ab8caa](https://github.com/whinc/web-console/commit/6ab8caa))
+
+<a name="0.2.0-rc.10"></a>
+
+# [0.2.0-rc.10](https://github.com/whinc/web-console/compare/v0.2.0-rc.9...v0.2.0-rc.10) (2018-10-30)
+
+### Bug Fixes
+
+- **console:** 保留消息换行符 ([2d75a7c](https://github.com/whinc/web-console/commit/2d75a7c))
+- **console:** 数组展示 ([8b8faa0](https://github.com/whinc/web-console/commit/8b8faa0))
+
+### Features
+
+- **console:** 打印 Error 对象堆栈信息 ([599206b](https://github.com/whinc/web-console/commit/599206b))
+- **console:** 输出日志时可自动定位到最新位置 ([2509392](https://github.com/whinc/web-console/commit/2509392))
+
 <a name="0.2.0-rc.9"></a>
 
 # [0.2.0-rc.9](https://github.com/whinc/web-console/compare/v0.2.0-rc.7...v0.2.0-rc.9) (2018-10-26)
