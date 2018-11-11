@@ -1,7 +1,7 @@
 <template>
   <div v-if="value" class="settings-panel">
     <div class="toolbar">
-      <VIcon @click="onClickClose" name="close" style="" />
+      <VIcon @click="onClickClose" name="close" style="width: 20px" />
     </div>
     <div class="main">
       <!-- 侧边栏 -->

@@ -34,7 +34,7 @@
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
           <v-tab-bar-item id="application">Application</v-tab-bar-item>
           <template slot="icons">
-            <VIcon name="setting" @click="onClickSetting" />
+            <VIcon name="setting" @click="onClickSetting" style="width: 2em; padding: 0.3em" />
           </template>
         </v-tab-bar>
         <ConsolePanel v-show="activeTab === 'console'" />

@@ -1,7 +1,7 @@
 <template>
   <div class="v-tab-bar-item" :class="{'equal-width': $parent.equalWidth}">
     <div class="tab-item" :class="{selected: isSelected}" @click="$parent.updateSelectedItem(id)">
-      <span><slot></slot></span>
+      <slot></slot>
     </div>
     <div v-if="isSelected" class="tab-slider"></div>
   </div>
