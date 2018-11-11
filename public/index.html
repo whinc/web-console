@@ -94,7 +94,10 @@
             var self = this;
             if (window.WebConsole) {
               // 测试 web-console 加载完毕前的日志输出
-              console.error(new Error('hello'))
+              // console.error(new Error('hello'))
+
+              // 测试日志数量
+              // new Array(11).fill(0).forEach((v, i) => console.log(i))
 
               window.webConsole = new window.WebConsole({
                 activeTab: 'console',

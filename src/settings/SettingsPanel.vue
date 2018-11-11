@@ -19,36 +19,38 @@
       </div>
       <!-- 设置选项 -->
       <div class="content">
-        <div class="title">{{activedConfig.desc}}</div>
         <div
           v-for="(setting, index) in activedConfig.settings || []"
           :key="index"
+          :class="setting.type"
         >
           <template v-if="setting.type === 'section'">
             <div class="section">{{setting.desc}}</div>
+          </template>
+          <template v-else-if="setting.type === 'title'">
+            <span>{{setting.desc}}</span>
+          </template>
+          <template v-else-if="setting.type === 'separator'">
+            <!-- empty div with height -->
           </template>
           <template v-else-if="setting.type === 'text'">
             <div class="text">{{setting.desc}}</div>
           </template>
           <template v-else-if="setting.type === 'checkbox'">
-            <div class="checkbox">
-              <input type="checkbox" v-model="setting.value" :id="index" @change="onSettingsChanged" />
-              <label :for="index">{{setting.desc}}</label>
-            </div>
+            <input type="checkbox" v-model="setting.value" :id="index" @change="onSettingsChanged" />
+            <label :for="index">{{setting.desc}}</label>
           </template>
           <template v-else-if="setting.type === 'select'">
-            <div class="select">
-              <span>{{setting.desc}}</span>
-              <select v-model="setting.value">
-                <option disabled value="">请选择</option>
-                <option
-                  v-for="option in setting.options"
-                  :key="option.name"
-                  :value="option.value">
-                  {{option.text}}
-                </option>
-              </select>
-            </div>
+            <span>{{setting.desc}}</span>
+            <select v-model="setting.value" @change="onSettingsChanged">
+              <option disabled value="">请选择</option>
+              <option
+                v-for="option in setting.options"
+                :key="option.name"
+                :value="option.value">
+                {{option.text}}
+              </option>
+            </select>
           </template>
         </div>
       </div>
@@ -63,78 +65,52 @@ import { eventBus, Logger, cloneDeep } from "@/utils";
 const logger = new Logger("[SettingsPanel]");
 const KEY_SETTINGS = "web-console:settings";
 
+/**
+ * 默认配置
+ * name 作为存储时的键
+ * desc 作为显示的描述文案
+ * settings 是子项
+ *  type 是 UI 类型
+ */
 const defaultConfigs = [
   {
     name: "console",
     desc: "Console",
     settings: [
-      // {
-      //   type: 'section',
-      //   desc: 'Section1'
-      // },
-      // {
-      //   type: 'text',
-      //   desc: 'Section1',
-      // },
+      { type: "title", desc: "Console" },
       {
         type: "checkbox",
         name: "showTimestamps",
         value: false,
-        desc: "show timestamps"
+        desc: "Show timestamps"
+      },
+      { type: "separator" },
+      {
+        type: "select",
+        name: "maxMsgCount",
+        value: 400,
+        desc: "Max message count: ",
+        options: [
+          { text: "400", value: 400 },
+          { text: "800", value: 800 },
+          { text: "1600", value: 1600 },
+          { text: "Infinity", value: Number.MAX_VALUE }
+        ]
       }
-      // {
-      //   type: 'section',
-      //   desc: 'Section1'
-      // },
-      // {
-      //   type: 'checkbox',
-      //   desc: 'show timestamp',
-      //   value: false
-      // },
-      // {
-      //   type: 'select',
-      //   desc: 'select one',
-      //   value: '',
-      //   options: [
-      //     {
-      //       text: 'A',
-      //       value: 1
-      //     },
-      //     {
-      //       text: 'B',
-      //       value: 2
-      //     }
-      //   ]
-      // }
     ]
   },
   {
     desc: "About",
     settings: [
-      {
-        type: "section",
-        desc: "Package name"
-      },
-      {
-        type: "text",
-        desc: process.env.VUE_APP_NAME
-      },
-      {
-        type: "section",
-        desc: "Version"
-      },
-      {
-        type: "text",
-        desc: process.env.VUE_APP_VERSION
-      },
-      {
-        type: "section",
-        desc: "Build date"
-      },
-      {
-        type: "text",
-        desc: process.env.VUE_APP_DATE
-      }
+      { type: "title", desc: "About" },
+      { type: "section", desc: "Package name" },
+      { type: "text", desc: process.env.VUE_APP_NAME },
+      { type: "separator" },
+      { type: "section", desc: "Version" },
+      { type: "text", desc: process.env.VUE_APP_VERSION },
+      { type: "separator" },
+      { type: "section", desc: "Build date" },
+      { type: "text", desc: process.env.VUE_APP_DATE }
     ]
   }
 ];
@@ -152,8 +128,7 @@ export default {
     return {
       activedIndex: 0,
       /**
-       * name 用作存储时的 key
-       * desc 显示在 UI 上的描述
+       * settings 的 UI 配置
        */
       configs: cloneDeep(defaultConfigs)
     };
@@ -319,18 +294,20 @@ $second-text-color: #777;
         margin-bottom: 10px;
         border-bottom: 1px solid #eeeeee;
       }
+      .separator {
+        height: 12px;
+      }
       .section {
-        font-size: 120%;
+        font-size: 110%;
         color: #222;
-        padding-top: 12px;
       }
       .text {
         padding-left: $margin-left;
-        padding-top: 12px;
       }
       .checkbox {
         padding-left: $margin-left;
-        padding-top: 12px;
+        display: flex;
+        align-items: center;
         input {
           width: $primary-font-size;
           height: $primary-font-size;
@@ -338,8 +315,10 @@ $second-text-color: #777;
       }
       .select {
         padding-left: $margin-left;
-        padding-top: 12px;
+        display: flex;
+        align-items: center;
         select {
+          background-color: transparent;
           border: 1px solid rgba(0, 0, 0, 0.2);
           color: #333;
           border-radius: 2px;

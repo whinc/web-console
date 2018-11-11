@@ -24,8 +24,10 @@
 <script>
 import Message from "./Message";
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
-import { _console, uuid, createStack, eventBus, TaskScheduler } from "@/utils";
+import { uuid, createStack, eventBus, TaskScheduler, Logger } from "@/utils";
 import consoleHooks from "../consoleHooks";
+
+const logger = new Logger("[ConsolePanel]");
 
 export default {
   components: {
@@ -52,8 +54,10 @@ export default {
        * 为 false 时，新增消息时滚动条保持位置不变
        */
       isBottom: true,
-      // 个性化设置
-      showTimestamps: false
+      // 显示时间戳
+      showTimestamps: false,
+      // 最大消息数量（超出后移除旧消息）
+      maxMsgCount: Infinity
     };
   },
   computed: {
@@ -112,10 +116,14 @@ export default {
             timestamps: Date.now(),
             logArgs
           };
-          // 1. 优化性能，避免批量打印日志时，UI 假死
-          // 2. 错开当前渲染周期，避免当前渲染出现异常时，导致循环渲染输出错误日志
+          // 1. 性能优化：短时间内批量打印日志时，将打印操作放入队列，之后按顺序依次打印
+          // 2. 修复异常：渲染模板中抛出异常时，打印错误消息，走到这里会再次出发渲染，导致死循环，
+          //             采用任务队列后，相邻两次打印不在同一个执行堆栈中，可以避免这种情况
           taskScheduler.add(() => {
-            // 冻结计算结果，避免 Vue 添加额外属性
+            // 移除超出的消息
+            while (vm.msgList.length >= vm.maxMsgCount) vm.msgList.shift();
+
+            // 冻结消息对象，避免 Vue 添加额外属性
             vm.msgList.push(Object.freeze(msg));
           });
 
@@ -138,16 +146,26 @@ export default {
   },
   created() {
     // 将创建之前搜集到的日志按打印顺序追加到日志列表前面
-    this.msgList.unshift(...consoleHooks.getMsgList());
+    // 如果超出最大消息数量，则截取最新的那部分
+    const msgList = consoleHooks.getMsgList();
+    if (msgList.length > this.maxMsgCount) {
+      this.msgList.unshift(...msgList.slice(msgList.length - this.maxMsgCount));
+      logger.log(
+        "当前消息数量(%d)超出最大消息数量(%d)，截断后消息数量(%d)",
+        msgList.length,
+        this.maxMsgCount,
+        this.msgList.length
+      );
+    } else {
+      this.msgList.unshift(...msgList);
+    }
 
-    // 设置发生变化时做出变化
-    eventBus.on(eventBus.SETTINGS_CHANGE, settings => {
-      this.showTimestamps = !!settings.console.showTimestamps;
-    });
+    // 监听设置变化事件
+    eventBus.on(eventBus.SETTINGS_CHANGE, this.onSettingsChanged.bind(this));
   },
   errorCaptured(error) {
     // 在浏览器控制台输出错误原因
-    _console.error(error);
+    logger.error(error);
     return false;
   },
   methods: {
@@ -158,7 +176,11 @@ export default {
        * 在触底时会强制将滚动内容上移 1px 以避免触底后滚动弹窗底部背景层
        */
       this.isBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-      // _console.log('scrollTop + clientHeight: %s, scrollHeight: %s, isBottom: %s', el.scrollTop + el.clientHeight, el.scrollHeight, this.isBottom)
+      // logger.log('scrollTop + clientHeight: %s, scrollHeight: %s, isBottom: %s', el.scrollTop + el.clientHeight, el.scrollHeight, this.isBottom)
+    },
+    onSettingsChanged(settings) {
+      this.showTimestamps = !!settings.console.showTimestamps;
+      this.maxMsgCount = settings.console.maxMsgCount;
     }
   }
 };
