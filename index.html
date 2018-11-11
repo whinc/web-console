@@ -6,7 +6,7 @@
       #app .mint-button {
         width: 100%;
         margin-bottom: 15px;
-      }</style><link href=js/app.fd05de39.js rel=preload as=script><link href=js/chunk-vendors.a469c99e.js rel=preload as=script></head><body><script src=./vue.min.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click=$console.testFormat()>打印格式化</mt-button><mt-button type=primary @click=$console.testObject()>打印对象</mt-button><mt-button type=primary @click=$console.testException()>触发异常</mt-button><h2>Network Test</h2><mt-button type=primary @click=$network.testHTTPStatus()>测试 HTTP 状态码</mt-button><mt-button type=primary @click=$network.testRequestParams()>测试请求参数</mt-button><mt-button type=primary @click=$network.testResponseData()>测试响应数据</mt-button><mt-button type=primary @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=primary @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click=$console.testObject()>打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=./mint-ui.min.js></script><script src=./test_console.js></script><script src=./test_network.js></script><script>new Vue({
+      }</style><link href=js/app.6866d899.js rel=preload as=script><link href=js/chunk-vendors.28d5b225.js rel=preload as=script></head><body><script src=./vue.min.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click=$console.testFormat()>打印格式化</mt-button><mt-button type=primary @click=$console.testObject()>打印对象</mt-button><mt-button type=primary @click=$console.testException()>触发异常</mt-button><h2>Network Test</h2><mt-button type=primary @click=$network.testHTTPStatus()>测试 HTTP 状态码</mt-button><mt-button type=primary @click=$network.testRequestParams()>测试请求参数</mt-button><mt-button type=primary @click=$network.testResponseData()>测试响应数据</mt-button><mt-button type=primary @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=primary @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button><h2>Application Test</h2><mt-button type=primary @click=$network.testHTTPStatus()>测试 Cookie</mt-button><h2>Other</h2><mt-button type=primary @click=performanceTest(50)>性能测试</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click=$console.testObject()>打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=./mint-ui.min.js></script><script src=./test_console.js></script><script src=./test_network.js></script><script>new Vue({
         el: "#app",
         data: function() {
           return {
@@ -26,18 +26,30 @@
           this.launchWebConsole();
         },
         methods: {
+          performanceTest (n) {
+            if (n <= 0) return
+            this.$console.testFormat()
+            // this.$network.testHTTPStatus()
+            var that = this
+            that.performanceTest(n - 1)
+            // setTimeout(function () {
+            //   that.performanceTest(n - 1)
+            // }, 10)
+          },
           launchWebConsole: function() {
             var self = this;
             if (window.WebConsole) {
               // 测试 web-console 加载完毕前的日志输出
-              console.error(new Error('hello'))
+              // console.error(new Error('hello'))
+
+              // 测试日志数量
+              // new Array(11).fill(0).forEach((v, i) => console.log(i))
 
               window.webConsole = new window.WebConsole({
-                activeTab: 'console',
+                activeTab: 'application',
                 panelVisible: true,
                 entryStyle: 'icon'
               });
-              // 启动时自动运行测试用例
               // this.$console.testFormat()
               // this.$network.testHTTPStatus()
               // this.$network.testRequestParams()
@@ -139,4 +151,4 @@
       function testLogFormat(value, format) {
         console.log("console.log(%" + format + ", %s)", JSON.stringify(value));
         console.log(format, value);
-      }</script><script src=http://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js></script><script>var vConsole = new window.VConsole();</script><script src=js/chunk-vendors.a469c99e.js></script><script src=js/app.fd05de39.js></script></body></html>
+      }</script><script src=http://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js></script><script>var vConsole = new window.VConsole();</script><script src=js/chunk-vendors.28d5b225.js></script><script src=js/app.6866d899.js></script></body></html>
