@@ -141,11 +141,17 @@ export default {
     }
   }
   &__cell {
-    border: 1px solid #aaa;
+    // border: 1px solid #aaa;
+    // border-bottom: 1px solid transparent;
     border-bottom: 1px solid transparent;
-    padding: 0 2px;
+    padding: 0 4px;
+    &:first-child {
+      border-right: 1px solid #aaa;
+    }
     &--head {
-      border: 1px solid #aaa;
+      font-weight: normal;
+      border-top: 1px solid rgb(205, 205, 205);
+      border-bottom: 1px solid #aaa;
     }
   }
 }
