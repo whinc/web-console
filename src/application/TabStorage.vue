@@ -1,6 +1,6 @@
 <template>
-  <div class="tab-cookie">
-    <div class="tab-cookie__head toolbar">
+  <div class="tab-storage">
+    <div class="tab-storage__head toolbar">
       <VIcon name="refresh" class="toolbar__button" @click="onRefresh" />
       <VIcon name="ban" class="toolbar__button" @click="onClearAll" />
       <VIcon name="close" class="toolbar__button" @click="onClearSelected" />
@@ -9,19 +9,19 @@
     <table class="table">
       <thead>
         <tr class="table__row table__row--head">
-          <th class="table__cell table__cell--head">Name</th>
+          <th class="table__cell table__cell--head">Key</th>
           <th class="table__cell table__cell--head">Value</th>
         </tr>
       </thead>
       <tbody>
         <tr
-          v-for="{name, value} in filteredCookieList"
-          :key="name"
+          v-for="(value, key) in filteredKeyValueMap"
+          :key="key"
           class="table__row"
-          :class="{'table__row--selected': select === name}"
-          @click="select = name"
+          :class="{'table__row--selected': select === key}"
+          @click="select = key"
         >
-          <td class="table__cell">{{name}}</td>
+          <td class="table__cell">{{key}}</td>
           <td class="table__cell">{{value}}</td>
         </tr>
       </tbody>
@@ -32,67 +32,105 @@
 <script>
 import { cookie } from "cookie_js";
 import { VIcon } from "@/components";
-import { _console } from "@/utils";
+import { Logger } from "@/utils";
+
+const logger = new Logger("[TabStorage]");
+
 export default {
   components: {
     VIcon
+  },
+  props: {
+    storageType: {
+      type: String,
+      required: true,
+      validator(val) {
+        return val === "localStorage" || val === "sessionStorage";
+      }
+    }
   },
   data() {
     return {
       filter: "",
       select: "",
-      // 数据结构 [{name: String, value: String}]
-      cookieList: []
+      /**
+       * storage 数据结构
+       * {
+       *  key: String,
+       *  value: String
+       * }
+       */
+      keyValueMap: {}
     };
   },
   computed: {
-    filteredCookieList() {
-      const cookieList = this.cookieList;
+    storage() {
+      return window[this.storageType];
+    },
+    filteredKeyValueMap() {
+      const keyValueMap = this.keyValueMap;
       const filter = this.filter;
-      let filteredCookieList = this.cookieList;
       if (filter) {
-        filteredCookieList = this.cookieList.filter(cookie => cookie.name.indexOf(filter) !== -1);
+        return Object.keys(keyValueMap)
+          .filter(key => key.indexOf(filter) >= 0)
+          .reduce((r, key) => {
+            r[key] = keyValueMap[key];
+            return r;
+          }, {});
+      } else {
+        return keyValueMap;
       }
-
-      filteredCookieList.sort((a, b) => {
-        if (a.name > b.name) return 1;
-        else if (a.name < b.name) return -1;
-        else return 0;
-      });
-      return filteredCookieList;
+    }
+  },
+  watch: {
+    storageType() {
+      this.onRefresh();
     }
   },
   mounted() {
+    // TODO: 优化点：可见时才刷新
     this.onRefresh();
+    // 监听 storage 变化事件
+    // 只有在其他页面修改 localStorage 才会触发，并且要求其他页面与当前页面同域名，sessionStorage 修改不会触发改事件
+    window.addEventListener("storage", e => {
+      if (e.key in this.keyValueMap) {
+        this.keyValueMap[e.key] = e.newValue;
+      } else {
+        this.$set(this.keyValueMap, e.key, e.newValue);
+      }
+    });
   },
   methods: {
     onRefresh() {
-      const cookies = cookie.all();
-      this.cookieList = Object.keys(cookies).map(name => ({ name, value: cookies[name] }));
+      const storage = this.storage;
+      const length = this.storage.length;
+      let key = "";
+      let value = "";
+      let keyValueMap = {};
+      for (let i = 0; i < length; ++i) {
+        key = storage.key(i);
+        value = storage.getItem(key);
+        keyValueMap[key] = value;
+      }
+      this.keyValueMap = keyValueMap;
     },
     onClearAll() {
-      this.cookieList = [];
-      this.select = "";
-      cookie.empty();
+      this.keyValueMap = {};
+      this.storage.clear();
     },
     onClearSelected() {
-      const select = this.select;
-      if (!select) return;
+      const key = this.select;
+      if (!key) return;
 
-      cookie.remove(select);
-      const foundIndex = this.cookieList.findIndex(cookie => cookie.name === select);
-      if (foundIndex !== -1) {
-        this.cookieList.splice(foundIndex, 1);
-      }
-      // 选中下一个
-      this.select = this.cookieList[foundIndex] ? this.cookieList[foundIndex].name : "";
+      this.storage.removeItem(key);
+      this.$delete(this.keyValueMap, key);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.tab-cookie {
+.tab-storage {
   height: 100%;
   display: flex;
   flex-direction: column;

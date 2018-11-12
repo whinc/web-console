@@ -53,6 +53,9 @@ export default {
     height: 100%;
     display: flex;
     flex: 0 0 none;
+    &:active {
+      background-color: #eaeaea;
+    }
   }
 }
 </style>

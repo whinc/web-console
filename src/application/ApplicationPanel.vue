@@ -5,25 +5,22 @@
       <VTabBarItem id="localStorage">Local Storage</VTabBarItem>
       <VTabBarItem id="sessionStorage">Session Storage</VTabBarItem>
     </VTabBar>
-    <TabCookie v-show="activeTab === 'cookie'" />
-    <TabLocalStorage v-show="activeTab === 'localStorage'" />
-    <TabSessionStorage v-show="activeTab === 'sessionStorage'" />
+    <TabCookie v-if="activeTab === 'cookie'" />
+    <TabStorage v-else-if="activeTab === 'localStorage' || activeTab === 'sessionStorage'" :storageType="activeTab" />
   </div>
 </template>
 
 <script>
 import { VTabBar, VTabBarItem } from "@/components";
 import TabCookie from "./TabCookie";
-import TabLocalStorage from "./TabLocalStorage";
-import TabSessionStorage from "./TabSessionStorage";
+import TabStorage from "./TabStorage";
 
 export default {
   components: {
     VTabBar,
     VTabBarItem,
     TabCookie,
-    TabLocalStorage,
-    TabSessionStorage
+    TabStorage
   },
   data() {
     return {
