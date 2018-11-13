@@ -135,7 +135,7 @@ export default {
   display: flex;
   flex-direction: column;
   &__head {
-    height: 2.4em;
+    flex: 0 0 2.4em;
   }
 }
 
@@ -167,6 +167,8 @@ export default {
 }
 
 .table {
+  width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   border-left: none;
   &__row {
@@ -186,6 +188,13 @@ export default {
     padding: 0 4px;
     &:first-child {
       border-right: 1px solid #aaa;
+
+      /* 超出显示省略号 */
+      width: 30%;
+      overflow: hidden;
+      word-break: keep-all;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     &--head {
       font-weight: normal;
