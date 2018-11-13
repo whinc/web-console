@@ -55,7 +55,9 @@ export default {
       const filter = this.filter;
       let filteredCookieList = this.cookieList;
       if (filter) {
-        filteredCookieList = this.cookieList.filter(cookie => cookie.name.indexOf(filter) !== -1);
+        filteredCookieList = this.cookieList.filter(
+          cookie => cookie.name.indexOf(filter) >= 0 || cookie.value.indexOf(filter) >= 0
+        );
       }
 
       filteredCookieList.sort((a, b) => {

@@ -76,7 +76,7 @@ export default {
       const filter = this.filter;
       if (filter) {
         return Object.keys(keyValueMap)
-          .filter(key => key.indexOf(filter) >= 0)
+          .filter(key => key.indexOf(filter) >= 0 || keyValueMap[key].indexOf(filter) >= 0)
           .reduce((r, key) => {
             r[key] = keyValueMap[key];
             return r;
