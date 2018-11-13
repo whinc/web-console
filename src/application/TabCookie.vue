@@ -6,29 +6,24 @@
       <VIcon name="close" class="toolbar__button" @click="onClearSelected" />
       <input class="toolbar__input" type="text" placeholder="Filter" v-model="filter" />
     </div>
-    <table class="table">
-      <thead>
-        <tr class="table__row table__row--head">
-          <th class="table__cell table__cell--head">Name</th>
-          <th class="table__cell table__cell--head">Value</th>
-        </tr>
-      </thead>
-    </table>
-    <div class="scroll-y" v-prevent-bkg-scroll>
-      <table class="table">
-        <tbody>
-          <tr
+    <div class="table">
+      <div class="table__head">
+        <div class="table__row table__row--head">
+          <div class="table__cell table__cell--head">Name</div>
+          <div class="table__cell table__cell--head">Value</div>
+        </div>
+      </div>
+      <div class="table__body" v-prevent-bkg-scroll>
+        <div class="table__row"
             v-for="{name, value} in filteredCookieList"
             :key="name"
-            class="table__row"
             :class="{'table__row--selected': select === name}"
             @click="select = name"
           >
-            <td class="table__cell"><span>{{name}}</span></td>
-            <td class="table__cell"><span>{{value}}</span></td>
-          </tr>
-        </tbody>
-      </table>
+          <div class="table__cell">{{name}}</div>
+          <div class="table__cell">{{value}}</div>
+        </div>
+      </div>
     </div>
   </div>  
 </template>
@@ -139,16 +134,22 @@ export default {
 }
 
 .table {
-  width: 100%;
-  table-layout: fixed;
-  border-collapse: collapse;
-  border-left: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  &__head {
+    flex: 0 0 30px;
+  }
+  &__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
   &__row {
-    height: 2em;
+    height: 30px;
+    display: flex;
     &--head {
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
+      border-top: 1px solid rgb(205, 205, 205);
+      border-bottom: 1px solid #aaa;
     }
     &--selected {
       color: white;
@@ -156,21 +157,24 @@ export default {
     }
   }
   &__cell {
-    border-bottom: 1px solid transparent;
+    height: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
     padding: 0 4px;
+
+    // 超出时可滚动
+    border-right: 1px solid #aaa;
+    white-space: nowrap;
+    overflow-x: auto;
     &:first-child {
-      border-right: 1px solid #aaa;
-      /* 超出显示省略号 */
-      width: 30%;
-      overflow: hidden;
-      word-break: keep-all;
-      white-space: nowrap;
-      text-overflow: ellipsis;
+      flex: 0 0 30%;
+      max-width: 30%;
     }
     &--head {
-      font-weight: normal;
-      border-top: 1px solid rgb(205, 205, 205);
-      border-bottom: 1px solid #aaa;
+    }
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 }
