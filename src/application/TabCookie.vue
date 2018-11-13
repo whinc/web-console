@@ -13,19 +13,23 @@
           <th class="table__cell table__cell--head">Value</th>
         </tr>
       </thead>
-      <tbody>
-        <tr
-          v-for="{name, value} in filteredCookieList"
-          :key="name"
-          class="table__row"
-          :class="{'table__row--selected': select === name}"
-          @click="select = name"
-        >
-          <td class="table__cell"><span>{{name}}</span></td>
-          <td class="table__cell"><span>{{value}}</span></td>
-        </tr>
-      </tbody>
     </table>
+    <div class="scroll-y" v-prevent-bkg-scroll>
+      <table class="table">
+        <tbody>
+          <tr
+            v-for="{name, value} in filteredCookieList"
+            :key="name"
+            class="table__row"
+            :class="{'table__row--selected': select === name}"
+            @click="select = name"
+          >
+            <td class="table__cell"><span>{{name}}</span></td>
+            <td class="table__cell"><span>{{value}}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>  
 </template>
 
@@ -99,6 +103,10 @@ export default {
   &__head {
     flex: 0 0 2.4em;
   }
+}
+
+.scroll-y {
+  overflow-y: auto;
 }
 
 .toolbar {

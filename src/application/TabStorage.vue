@@ -13,19 +13,23 @@
           <th class="table__cell table__cell--head">Value</th>
         </tr>
       </thead>
-      <tbody>
-        <tr
-          v-for="(value, key) in filteredKeyValueMap"
-          :key="key"
-          class="table__row"
-          :class="{'table__row--selected': select === key}"
-          @click="select = key"
-        >
-          <td class="table__cell">{{key}}</td>
-          <td class="table__cell">{{value}}</td>
-        </tr>
-      </tbody>
     </table>
+    <div class="scroll-y" v-prevent-bkg-scroll>
+      <table class="table">
+        <tbody>
+          <tr
+            v-for="(value, key) in filteredKeyValueMap"
+            :key="key"
+            class="table__row"
+            :class="{'table__row--selected': select === key}"
+            @click="select = key"
+          >
+            <td class="table__cell">{{key}}</td>
+            <td class="table__cell">{{value}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>  
 </template>
 
@@ -137,6 +141,10 @@ export default {
   &__head {
     flex: 0 0 2.4em;
   }
+}
+
+.scroll-y {
+  overflow-y: auto;
 }
 
 .toolbar {
