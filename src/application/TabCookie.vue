@@ -3,7 +3,12 @@
     <div class="tab-cookie__head toolbar">
       <VIcon name="refresh" class="toolbar__button" @click="onRefresh" />
       <VIcon name="ban" class="toolbar__button" @click="onClearAll" />
-      <VIcon name="close" class="toolbar__button" @click="onClearSelected" />
+      <VIcon name="close" :disable="!select" class="toolbar__button" @click="onClearSelected" />
+
+      <VIcon v-if="isEditting" name="save" class="toolbar__button" @click="onClickSave" />
+      <VIcon v-else name="edit" :disable="!select" class="toolbar__button" @click="onClickEdit" />
+
+      <VIcon name="add" :disable="select && isEditting" class="toolbar__button" @click="onClickAdd" />
       <input class="toolbar__input" type="text" placeholder="Filter" v-model="filter" />
     </div>
     <div class="table">
@@ -20,8 +25,18 @@
             :class="{'table__row--selected': select === name}"
             @click="select = name"
           >
-          <div class="table__cell">{{name}}</div>
-          <div class="table__cell">{{value}}</div>
+          <template v-if="isEditting && select === name">
+            <div class="table__cell table__cell--edit">
+              <input v-model="edittingName" ref="activeInput" />
+            </div>
+            <div class="table__cell table__cell--edit">
+              <input v-model="edittingValue" />
+            </div>
+          </template>
+          <template v-else>
+            <div class="table__cell">{{name}}</div>
+            <div class="table__cell">{{value}}</div>
+          </template>
         </div>
       </div>
     </div>
@@ -32,14 +47,31 @@
 import { cookie } from "cookie_js";
 import { VIcon } from "@/components";
 import { _console } from "@/utils";
+
+/**
+ * Cookie 视图
+ *
+ * 操作按钮状态：
+ *            refresh clear-all clear-select edit/save  add
+ * 未选中      yes     yes       no           no         yes
+ * 选中未编辑   yes     yes       yes          yes        yes
+ * 选中编辑中   yes     yes       yes          false/true false
+ */
 export default {
   components: {
     VIcon
   },
   data() {
     return {
+      // 过滤关键字
       filter: "",
+      // 当前选中 cookie 的名称
       select: "",
+      // 是否处于编辑状态
+      isEditting: false,
+      // 当前编辑键值对
+      edittingName: "",
+      edittingValue: "",
       // 数据结构 [{name: String, value: String}]
       cookieList: []
     };
@@ -67,14 +99,40 @@ export default {
     this.onRefresh();
   },
   methods: {
+    /**
+     * 进入编辑状态
+     * @param {String} name 初始值
+     * @param {String} value 初始值
+     */
+    startEdit(name, value) {
+      this.isEditting = true;
+      this.edittingName = name;
+      this.edittingValue = value;
+    },
+    /**
+     * 结束编辑状态
+     * @returns 最后一次编辑的 name/value
+     */
+    endEdit() {
+      const data = {
+        name: this.edittingName,
+        value: this.edittingValue
+      };
+      this.isEditting = false;
+      this.edittingName = "";
+      this.edittingValue = "";
+      return data;
+    },
     onRefresh() {
       const cookies = cookie.all();
       this.cookieList = Object.keys(cookies).map(name => ({ name, value: cookies[name] }));
+      this.endEdit();
     },
     onClearAll() {
       this.cookieList = [];
       this.select = "";
       cookie.empty();
+      this.endEdit();
     },
     onClearSelected() {
       const select = this.select;
@@ -87,6 +145,57 @@ export default {
       }
       // 选中下一个
       this.select = this.cookieList[foundIndex] ? this.cookieList[foundIndex].name : "";
+      this.endEdit();
+    },
+    /**
+     * 编辑 cookie 事件处理
+     */
+    onClickEdit() {
+      if (!this.select) return;
+
+      const name = this.select;
+      this.startEdit(name, cookie.get(name));
+
+      // auto focus the <input> in selected row
+      this.$nextTick(() => {
+        const arr = this.$refs.activeInput;
+        if (arr && arr.length > 0) {
+          const el = arr[0];
+          el.focus({ preventScroll: false });
+        }
+      });
+    },
+    /**
+     * 更新 cookie 事件处理
+     */
+    onClickSave() {
+      if (!this.isEditting) return;
+
+      const { name, value } = this.endEdit();
+      const oldName = this.select;
+      // 选中新值
+      this.select = name;
+
+      // 移除旧值，添加新值
+      cookie.remove(oldName);
+      cookie.set(name, value);
+      // 更新视图层
+      const item = this.cookieList.find(v => v.name === oldName);
+      if (item) {
+        item.name = name;
+        item.value = value;
+      }
+    },
+    /**
+     * 新增 cookie 事件处理
+     */
+    onClickAdd() {
+      const item = {
+        name: "",
+        value: ""
+      };
+      this.cookieList.unshift(item);
+      this.startEdit(item.name, item.value);
     }
   }
 };
@@ -172,6 +281,14 @@ export default {
       max-width: 30%;
     }
     &--head {
+    }
+    &--edit {
+      padding: 0;
+      input {
+        outline: none;
+        height: 100%;
+        width: 100%;
+      }
     }
     &::-webkit-scrollbar {
       display: none;
