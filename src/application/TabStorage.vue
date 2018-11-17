@@ -22,7 +22,8 @@
           v-for="(value, key) in filteredKeyValueMap"
           :key="key"
           :class="{'table__row--selected': select === key}"
-          @click="select = key"
+          :ref="key"
+          @click="onClickRow(key)"
           >
           <template v-if="select === key && isEditting">
             <div class="table__cell table__cell--edit">
@@ -187,6 +188,11 @@ export default {
       const name = this.select;
       this.startEdit(name, this.keyValueMap[name]);
     },
+    onClickRow(name) {
+      if (!this.isEditting) {
+        this.select = name;
+      }
+    },
     onClickSave() {
       if (!this.isEditting) return;
 
@@ -201,7 +207,13 @@ export default {
        */
 
       const oldName = this.select;
+      const oldValue = this.keyValueMap[oldName];
       const { name, value } = this.endEdit();
+      if (name === oldName && value === oldValue) {
+        logger.log("onClickSave no change");
+        return;
+      }
+
       // 选中新值
       this.select = name;
 
@@ -223,6 +235,9 @@ export default {
       }
       if (name) {
         keyValueMap[name] = value;
+        // 将新增项滚动到可见区域
+        const el = this.$refs[name][0];
+        if (el) el.scrollIntoView();
       }
     },
     onClickAdd() {

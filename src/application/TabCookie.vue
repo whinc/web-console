@@ -45,7 +45,9 @@
 <script>
 import { cookie } from "cookie_js";
 import { VIcon } from "@/components";
-import { _console } from "@/utils";
+import { Logger } from "@/utils";
+
+const logger = new Logger("[TabStorage]");
 
 /**
  * Cookie 视图
@@ -189,7 +191,13 @@ export default {
        */
 
       const oldName = this.select;
+      const oldValue = cookie.get(oldName);
       const { name, value } = this.endEdit();
+      if (name === oldName && value === oldValue) {
+        logger.log("onClickSave no change");
+        return;
+      }
+
       // 选中新值
       this.select = name;
 
