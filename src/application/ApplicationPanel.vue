@@ -6,6 +6,7 @@
       <VTabBarItem id="sessionStorage">Session Storage</VTabBarItem>
     </VTabBar>
     <TabCookie v-if="activeTab === 'cookie'" />
+    <!-- 使用同一个组件是为了共享部分视图状态 -->
     <TabStorage v-else-if="activeTab === 'localStorage' || activeTab === 'sessionStorage'" :storageType="activeTab" />
   </div>
 </template>

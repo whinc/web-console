@@ -3,13 +3,17 @@
     <div class="tab-storage__head toolbar">
       <VIcon name="refresh" class="toolbar__button" @click="onRefresh" />
       <VIcon name="ban" class="toolbar__button" @click="onClearAll" />
-      <VIcon name="close" class="toolbar__button" @click="onClearSelected" />
+      <VIcon name="close" :disable="!select" class="toolbar__button" @click="onClearSelected" />
+
+      <VIcon v-if="isEditting" name="save" class="toolbar__button" @click="onClickSave" />
+      <VIcon v-else name="edit" :disable="!select" class="toolbar__button" @click="onClickEdit" />
+      <VIcon name="add" :disable="isEditting" class="toolbar__button" @click="onClickAdd" />
       <input class="toolbar__input" type="text" placeholder="Filter" v-model="filter" />
     </div>
     <div class="table">
       <div class="table__head">
         <div class="table__row table__row--head">
-          <div class="table__cell table__cell--head">Key</div>
+          <div class="table__cell table__cell--head">Key({{storage.length}})</div>
           <div class="table__cell table__cell--head">Value</div>
         </div>
       </div>
@@ -20,8 +24,18 @@
           :class="{'table__row--selected': select === key}"
           @click="select = key"
           >
-          <div class="table__cell">{{key}}</div>
-          <div class="table__cell">{{value}}</div>
+          <template v-if="select === key && isEditting">
+            <div class="table__cell table__cell--edit">
+              <input v-model="edittingName" ref="activeInput" />
+            </div>
+            <div class="table__cell table__cell--edit">
+              <input v-model="edittingValue" />
+            </div>
+          </template>
+          <template v-else>
+            <div class="table__cell">{{key}}</div>
+            <div class="table__cell">{{value}}</div>
+          </template>
         </div>
       </div>
     </div>
@@ -29,7 +43,6 @@
 </template>
 
 <script>
-import { cookie } from "cookie_js";
 import { VIcon } from "@/components";
 import { Logger } from "@/utils";
 
@@ -50,8 +63,15 @@ export default {
   },
   data() {
     return {
+      // 过滤关键字
       filter: "",
+      // 当前选项的名称
       select: "",
+      // 是否处于编辑状态
+      isEditting: false,
+      // 当前编辑键值对
+      edittingName: "",
+      edittingValue: "",
       /**
        * storage 数据结构
        * {
@@ -100,17 +120,54 @@ export default {
     });
   },
   methods: {
+    /**
+     * 进入编辑状态
+     * @param {String} name 初始值
+     * @param {String} value 初始值
+     */
+    startEdit(name, value) {
+      this.select = name;
+      this.isEditting = true;
+      this.edittingName = name;
+      this.edittingValue = value;
+
+      // 自动聚焦编辑输入框
+      this.$nextTick(() => {
+        const arr = this.$refs.activeInput;
+        if (arr && arr.length > 0) {
+          const el = arr[0];
+          el.focus({ preventScroll: false });
+        }
+      });
+    },
+    /**
+     * 结束编辑状态
+     * @returns 最后一次编辑的 name/value
+     */
+    endEdit() {
+      const data = {
+        name: this.edittingName,
+        value: this.edittingValue
+      };
+      this.isEditting = false;
+      this.edittingName = "";
+      this.edittingValue = "";
+      return data;
+    },
     onRefresh() {
       const storage = this.storage;
       const length = this.storage.length;
       let key = "";
       let value = "";
       let keyValueMap = {};
+      // let start = performance.now()
       for (let i = 0; i < length; ++i) {
         key = storage.key(i);
         value = storage.getItem(key);
         keyValueMap[key] = value;
       }
+      // let end = performance.now()
+      // console.log('read storage: %sms', (end - start))
       this.keyValueMap = keyValueMap;
     },
     onClearAll() {
@@ -123,6 +180,58 @@ export default {
 
       this.storage.removeItem(key);
       this.$delete(this.keyValueMap, key);
+    },
+    onClickEdit() {
+      if (!this.select) return;
+
+      const name = this.select;
+      this.startEdit(name, this.keyValueMap[name]);
+    },
+    onClickSave() {
+      if (!this.isEditting) return;
+
+      /**
+       * 编辑从 <keyA, valueA> 修改为 <keyB, valueB>，点击保存时处理
+       * 1.更新选中项为 keyB
+       * 2.移除 keyA 和 keyB
+       * 3.新增 KeyB
+       * 4. 如果 keyB 为空
+       *  4.1 如果 keyA 为空，则移除 keyA 和 keyB
+       *  4.2 否则，移除 keyA
+       */
+
+      const oldName = this.select;
+      const { name, value } = this.endEdit();
+      // 选中新值
+      this.select = name;
+
+      // storage：移除旧值，添加新值
+      const storage = this.storage;
+      storage.removeItem(oldName);
+      storage.removeItem(name);
+      if (name) {
+        storage.setItem(name, value);
+      }
+
+      // 视图层：移除旧值，添加新增
+      const keyValueMap = this.keyValueMap;
+      if (oldName in keyValueMap) {
+        delete keyValueMap[oldName];
+      }
+      if (name in keyValueMap) {
+        delete keyValueMap[name];
+      }
+      if (name) {
+        keyValueMap[name] = value;
+      }
+    },
+    onClickAdd() {
+      const item = {
+        name: "",
+        value: ""
+      };
+      this.keyValueMap[item.name] = item.value;
+      this.startEdit(item.name, item.value);
     }
   }
 };
@@ -156,7 +265,6 @@ export default {
     flex: 1 1 auto;
     color: #5a5a5a;
     border: 1px solid transparent;
-    outline: none;
     height: 80%;
     margin: 0 4px;
     padding: 0 4px;
@@ -208,6 +316,14 @@ export default {
       max-width: 30%;
     }
     &--head {
+    }
+    &--edit {
+      padding: 0;
+      input {
+        outline: none;
+        height: 100%;
+        width: 100%;
+      }
     }
     &::-webkit-scrollbar {
       display: none;
