@@ -159,6 +159,19 @@ export default {
 
   * {
     box-sizing: border-box;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font-size: $primary-font-size;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   pre {

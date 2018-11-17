@@ -7,14 +7,13 @@
 
       <VIcon v-if="isEditting" name="save" class="toolbar__button" @click="onClickSave" />
       <VIcon v-else name="edit" :disable="!select" class="toolbar__button" @click="onClickEdit" />
-
-      <VIcon name="add" :disable="select && isEditting" class="toolbar__button" @click="onClickAdd" />
+      <VIcon name="add" :disable="isEditting" class="toolbar__button" @click="onClickAdd" />
       <input class="toolbar__input" type="text" placeholder="Filter" v-model="filter" />
     </div>
     <div class="table">
       <div class="table__head">
         <div class="table__row table__row--head">
-          <div class="table__cell table__cell--head">Name</div>
+          <div class="table__cell table__cell--head">Name({{cookieList.length}})</div>
           <div class="table__cell table__cell--head">Value</div>
         </div>
       </div>
@@ -23,9 +22,9 @@
             v-for="{name, value} in filteredCookieList"
             :key="name"
             :class="{'table__row--selected': select === name}"
-            @click="select = name"
+            @click="onClickRow(name)"
           >
-          <template v-if="isEditting && select === name">
+          <template v-if="select === name && isEditting">
             <div class="table__cell table__cell--edit">
               <input v-model="edittingName" ref="activeInput" />
             </div>
@@ -51,11 +50,13 @@ import { _console } from "@/utils";
 /**
  * Cookie 视图
  *
- * 操作按钮状态：
+ * 操作按钮禁用状态：
  *            refresh clear-all clear-select edit/save  add
  * 未选中      yes     yes       no           no         yes
- * 选中未编辑   yes     yes       yes          yes        yes
- * 选中编辑中   yes     yes       yes          false/true false
+ * 选中且编辑   yes     yes       yes          yes        yes
+ * 编辑中      yes     yes       yes          no/yes     no
+ *
+ * 编辑状态下无法修改选中行
  */
 export default {
   components: {
@@ -105,9 +106,19 @@ export default {
      * @param {String} value 初始值
      */
     startEdit(name, value) {
+      this.select = name;
       this.isEditting = true;
       this.edittingName = name;
       this.edittingValue = value;
+
+      // 自动聚焦编辑输入框
+      this.$nextTick(() => {
+        const arr = this.$refs.activeInput;
+        if (arr && arr.length > 0) {
+          const el = arr[0];
+          el.focus({ preventScroll: false });
+        }
+      });
     },
     /**
      * 结束编辑状态
@@ -122,6 +133,11 @@ export default {
       this.edittingName = "";
       this.edittingValue = "";
       return data;
+    },
+    onClickRow(name) {
+      if (!this.isEditting) {
+        this.select = name;
+      }
     },
     onRefresh() {
       const cookies = cookie.all();
@@ -155,15 +171,6 @@ export default {
 
       const name = this.select;
       this.startEdit(name, cookie.get(name));
-
-      // auto focus the <input> in selected row
-      this.$nextTick(() => {
-        const arr = this.$refs.activeInput;
-        if (arr && arr.length > 0) {
-          const el = arr[0];
-          el.focus({ preventScroll: false });
-        }
-      });
     },
     /**
      * 更新 cookie 事件处理
@@ -171,19 +178,40 @@ export default {
     onClickSave() {
       if (!this.isEditting) return;
 
-      const { name, value } = this.endEdit();
+      /**
+       * 编辑 cookie 从 <keyA, valueA> 修改为 <keyB, valueB>，点击保存时处理
+       * 1.更新选中项为 keyB
+       * 2.移除 keyA 和 keyB
+       * 3.新增 KeyB
+       * 4. 如果 keyB 为空
+       *  4.1 如果 keyA 为空，则移除 keyA 和 keyB
+       *  4.2 否则，移除 keyA
+       */
+
       const oldName = this.select;
+      const { name, value } = this.endEdit();
       // 选中新值
       this.select = name;
 
-      // 移除旧值，添加新值
+      // document.cookie：移除旧值，添加新值
       cookie.remove(oldName);
-      cookie.set(name, value);
-      // 更新视图层
-      const item = this.cookieList.find(v => v.name === oldName);
-      if (item) {
-        item.name = name;
-        item.value = value;
+      cookie.remove(name);
+      if (name) {
+        cookie.set(name, value);
+      }
+
+      // 视图层：移除旧值，添加新增
+      const cookieList = this.cookieList;
+      const oldIndex = cookieList.findIndex(v => v.name === oldName);
+      if (oldIndex >= 0) {
+        cookieList.splice(oldIndex, 1);
+      }
+      const index = this.cookieList.findIndex(v => v.name === name);
+      if (index >= 0) {
+        cookieList.splice(oldIndex, 1);
+      }
+      if (name) {
+        cookieList.push({ name, value });
       }
     },
     /**
@@ -229,7 +257,6 @@ export default {
     flex: 1 1 auto;
     color: #5a5a5a;
     border: 1px solid transparent;
-    outline: none;
     height: 80%;
     margin: 0 4px;
     padding: 0 4px;
