@@ -252,8 +252,10 @@ export default {
       if (name) {
         keyValueMap[name] = value;
         // 将新增项滚动到可见区域
-        const el = this.$refs[name][0];
-        if (el) el.scrollIntoView();
+        if (this.$refs[name]) {
+          const el = this.$refs[name][0];
+          if (el) el.scrollIntoView();
+        }
       }
     },
     onClickAdd() {
