@@ -45,7 +45,7 @@
 
 <script>
 import { VIcon } from "@/components";
-import { Logger } from "@/utils";
+import { Logger, TaskScheduler } from "@/utils";
 
 const logger = new Logger("[TabStorage]");
 
@@ -84,6 +84,9 @@ export default {
     };
   },
   computed: {
+    // length () {
+    //   return Object.keys(this.keyValueMap).length
+    // },
     storage() {
       return window[this.storageType];
     },
@@ -108,6 +111,8 @@ export default {
     }
   },
   mounted() {
+    // 任务调度器
+    this._scheduler = new TaskScheduler(150);
     // TODO: 优化点：可见时才刷新
     this.onRefresh();
     // 监听 storage 变化事件
@@ -156,20 +161,31 @@ export default {
       return data;
     },
     onRefresh() {
+      this.keyValueMap = {};
       const storage = this.storage;
-      const length = this.storage.length;
-      let key = "";
-      let value = "";
-      let keyValueMap = {};
-      // let start = performance.now()
-      for (let i = 0; i < length; ++i) {
-        key = storage.key(i);
-        value = storage.getItem(key);
-        keyValueMap[key] = value;
+
+      /* 分片展示数据，避免阻塞交互 */
+      const scheduler = this._scheduler;
+      if (scheduler) {
+        scheduler.stop();
       }
-      // let end = performance.now()
-      // console.log('read storage: %sms', (end - start))
-      this.keyValueMap = keyValueMap;
+      const step = 200;
+      for (let i = 0; i < storage.length / step; ++i) {
+        scheduler.add(() => {
+          const temp = {};
+          const start = i * step;
+          const end = Math.min((i + 1) * step, storage.length);
+          let key = "";
+          let value = "";
+          for (let j = start; j < end; ++j) {
+            key = storage.key(j);
+            value = storage.getItem(key);
+            temp[key] = value;
+          }
+          this.keyValueMap = Object.assign({}, this.keyValueMap, temp);
+        });
+      }
+      scheduler.start();
     },
     onClearAll() {
       this.keyValueMap = {};

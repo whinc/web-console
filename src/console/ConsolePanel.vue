@@ -83,7 +83,7 @@ export default {
       const el = this.$refs.container;
       if (this.isBottom && el) {
         // 在合适的时机滚动至底部，避免阻塞交互
-        TaskScheduler.default.add(() => {
+        TaskScheduler.default.addAndStart(() => {
           el.scrollTo(0, el.scrollHeight - el.clientHeight);
         });
       }
@@ -119,7 +119,7 @@ export default {
           // 1. 性能优化：短时间内批量打印日志时，将打印操作放入队列，之后按顺序依次打印
           // 2. 修复异常：渲染模板中抛出异常时，打印错误消息，走到这里会再次出发渲染，导致死循环，
           //             采用任务队列后，相邻两次打印不在同一个执行堆栈中，可以避免这种情况
-          taskScheduler.add(() => {
+          taskScheduler.addAndStart(() => {
             // 移除超出的消息
             while (vm.msgList.length >= vm.maxMsgCount) vm.msgList.shift();
 
