@@ -287,6 +287,7 @@ export default {
 .toolbar {
   display: flex;
   align-items: center;
+  background-color: rgb(243, 243, 243);
   &__button {
     padding: 0.6em;
     width: 2.4em;
@@ -297,6 +298,7 @@ export default {
   &__input {
     flex: 1 1 auto;
     color: #5a5a5a;
+    background-color: white;
     border: 1px solid transparent;
     height: 80%;
     margin: 0 4px;
@@ -331,6 +333,9 @@ export default {
     &--selected {
       color: white;
       background-color: #2196f3;
+    }
+    &:nth-child(even) {
+      background-color: rgb(242, 247, 253);
     }
   }
   &__cell {
