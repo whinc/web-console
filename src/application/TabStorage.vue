@@ -112,7 +112,7 @@ export default {
   },
   mounted() {
     // 任务调度器
-    this._scheduler = new TaskScheduler(150);
+    this._scheduler = new TaskScheduler(100);
     // TODO: 优化点：可见时才刷新
     this.onRefresh();
     // 监听 storage 变化事件
@@ -169,7 +169,7 @@ export default {
       if (scheduler) {
         scheduler.stop();
       }
-      const step = 200;
+      const step = 50;
       for (let i = 0; i < storage.length / step; ++i) {
         scheduler.add(() => {
           const temp = {};

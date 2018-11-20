@@ -1,13 +1,13 @@
 <template>
   <div class="application-panel">
     <VTabBar v-model="activeTab" :equalWidth="true">
-      <VTabBarItem id="cookie">Cookies</VTabBarItem>
       <VTabBarItem id="localStorage">Local Storage</VTabBarItem>
       <VTabBarItem id="sessionStorage">Session Storage</VTabBarItem>
+      <VTabBarItem id="cookie">Cookies</VTabBarItem>
     </VTabBar>
-    <TabCookie v-if="activeTab === 'cookie'" />
     <!-- 使用同一个组件是为了共享部分视图状态 -->
-    <TabStorage v-else-if="activeTab === 'localStorage' || activeTab === 'sessionStorage'" :storageType="activeTab" />
+    <TabStorage v-if="activeTab === 'localStorage' || activeTab === 'sessionStorage'" :storageType="activeTab" />
+    <TabCookie v-else-if="activeTab === 'cookie'" />
   </div>
 </template>
 
@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      activeTab: "cookie"
+      activeTab: "localStorage"
     };
   }
 };
