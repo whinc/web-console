@@ -1,0 +1,88 @@
+.scroll-y {
+  overflow-y: auto;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  background-color: rgb(243, 243, 243);
+  &__button {
+    padding: 0.6em;
+    width: 2.4em;
+    &:active {
+      background-color: #eaeaea;
+    }
+  }
+  &__input {
+    flex: 1 1 auto;
+    color: #5a5a5a;
+    background-color: white;
+    border: 1px solid transparent;
+    height: 80%;
+    margin: 0 4px;
+    padding: 0 4px;
+    &::placeholder {
+      color: rgb(128, 128, 128);
+    }
+    &:focus {
+      border: 1px solid #2196f3;
+    }
+  }
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  &__head {
+    flex: 0 0 30px;
+  }
+  &__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+  &__row {
+    height: 30px;
+    display: flex;
+    &--head {
+      border-top: 1px solid rgb(205, 205, 205);
+      border-bottom: 1px solid #aaa;
+    }
+    &--selected {
+      color: white;
+      background-color: #2196f3;
+    }
+    &:nth-child(even) {
+      background-color: rgb(242, 247, 253);
+    }
+  }
+  &__cell {
+    height: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+
+    // 超出时可滚动
+    border-right: 1px solid #aaa;
+    white-space: nowrap;
+    overflow-x: auto;
+    &:first-child {
+      flex: 0 0 30%;
+      max-width: 30%;
+    }
+    &--head {
+    }
+    &--edit {
+      padding: 0;
+      input {
+        outline: none;
+        height: 100%;
+        width: 100%;
+      }
+    }
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
