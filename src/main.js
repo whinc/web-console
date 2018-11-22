@@ -2,6 +2,9 @@ import Vue from "vue";
 import App from "./App.vue";
 import consoleHooks from "./consoleHooks";
 import { Logger } from "@/utils";
+import infiniteScroll from "vue-infinite-scroll";
+
+Vue.use(infiniteScroll);
 
 const logger = new Logger("[main.js]");
 
@@ -37,6 +40,8 @@ Vue.directive("prevent-bkg-scroll", {
     });
   }
 });
+
+Vue.directive("");
 
 Vue.config.productionTip = false;
 

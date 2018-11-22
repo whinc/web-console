@@ -1,32 +1,42 @@
 <template>
   <div class="application-panel">
     <VTabBar v-model="activeTab" :equalWidth="true">
-      <VTabBarItem id="localStorage">Local Storage</VTabBarItem>
-      <VTabBarItem id="sessionStorage">Session Storage</VTabBarItem>
-      <VTabBarItem id="cookie">Cookies</VTabBarItem>
+      <VTabBarItem v-for="{type, desc} in storageTypes" :key="type"
+        :id="type">
+        {{desc}}
+      </VTabBarItem>
     </VTabBar>
-    <!-- 使用同一个组件是为了共享部分视图状态 -->
-    <TabStorage v-if="activeTab === 'localStorage' || activeTab === 'sessionStorage'" :storageType="activeTab" />
-    <TabCookie v-else-if="activeTab === 'cookie'" />
+    <TabStorage v-for="{type} in storageTypes" :key="type"
+      v-show="activeTab === type"
+      :class="type"
+      :storageType="type"
+    />
   </div>
 </template>
 
 <script>
 import { VTabBar, VTabBarItem } from "@/components";
-import TabCookie from "./TabCookie";
 import TabStorage from "./TabStorage";
 
 export default {
   components: {
     VTabBar,
     VTabBarItem,
-    TabCookie,
     TabStorage
   },
   data() {
     return {
       activeTab: "localStorage"
     };
+  },
+  computed: {
+    storageTypes() {
+      return [
+        { type: "localStorage", desc: "Local Storage" },
+        { type: "sessionStorage", desc: "Session Storage" },
+        { type: "cookieStorage", desc: "Cookie" }
+      ];
+    }
   }
 };
 </script>

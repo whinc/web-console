@@ -13,13 +13,18 @@
     <div class="table">
       <div class="table__head">
         <div class="table__row table__row--head">
-          <div class="table__cell table__cell--head">Key({{storage.length}})</div>
+          <div class="table__cell table__cell--head">Key({{storageLength}})[{{kvList.length}}]</div>
           <div class="table__cell table__cell--head">Value</div>
         </div>
       </div>
-      <div class="table__body" v-prevent-bkg-scroll>
+      <div class="table__body"
+        v-prevent-bkg-scroll
+        v-infinite-scroll="loadMore"
+        infinite-scroll-immediate-check="false"
+        infinite-scroll-distance="120"
+      >
         <div class="table__row"
-          v-for="(value, key) in filteredKeyValueMap"
+          v-for="({value, key}) in kvList"
           :key="key"
           :class="{'table__row--selected': select === key}"
           :ref="key"
@@ -27,10 +32,10 @@
           >
           <template v-if="select === key && isEditting">
             <div class="table__cell table__cell--edit">
-              <input v-model="edittingName" ref="activeInput" />
+              <input v-model="editingKey" ref="activeInput" />
             </div>
             <div class="table__cell table__cell--edit">
-              <input v-model="edittingValue" />
+              <input v-model="editingValue" />
             </div>
           </template>
           <template v-else>
@@ -46,6 +51,7 @@
 <script>
 import { VIcon } from "@/components";
 import { Logger, TaskScheduler } from "@/utils";
+import XStorage from "./XStorage";
 
 const logger = new Logger("[TabStorage]");
 
@@ -58,7 +64,7 @@ export default {
       type: String,
       required: true,
       validator(val) {
-        return val === "localStorage" || val === "sessionStorage";
+        return ["localStorage", "sessionStorage", "cookieStorage"].indexOf(val) !== -1;
       }
     }
   },
@@ -71,71 +77,52 @@ export default {
       // 是否处于编辑状态
       isEditting: false,
       // 当前编辑键值对
-      edittingName: "",
-      edittingValue: "",
+      editingKey: "",
+      editingValue: "",
+      storageLength: 0,
       /**
-       * storage 数据结构
-       * {
-       *  key: String,
-       *  value: String
-       * }
+       * storage 的 key/value 列表
+       * @type {Array<{key: String, value: String}>}
        */
-      keyValueMap: {}
+      kvList: []
     };
   },
-  computed: {
-    // length () {
-    //   return Object.keys(this.keyValueMap).length
-    // },
-    storage() {
-      return window[this.storageType];
-    },
-    filteredKeyValueMap() {
-      const keyValueMap = this.keyValueMap;
-      const filter = this.filter;
-      if (filter) {
-        return Object.keys(keyValueMap)
-          .filter(key => key.indexOf(filter) >= 0 || keyValueMap[key].indexOf(filter) >= 0)
-          .reduce((r, key) => {
-            r[key] = keyValueMap[key];
-            return r;
-          }, {});
-      } else {
-        return keyValueMap;
-      }
-    }
-  },
+  computed: {},
   watch: {
-    storageType() {
+    filter(val) {
+      this._xStorage.setFilter(val);
       this.onRefresh();
     }
   },
   mounted() {
-    // 任务调度器
-    this._scheduler = new TaskScheduler(100);
-    // TODO: 优化点：可见时才刷新
+    this._xStorage = new XStorage(this.storageType);
     this.onRefresh();
-    // 监听 storage 变化事件
-    // 只有在其他页面修改 localStorage 才会触发，并且要求其他页面与当前页面同域名，sessionStorage 修改不会触发改事件
-    window.addEventListener("storage", e => {
-      if (e.key in this.keyValueMap) {
-        this.keyValueMap[e.key] = e.newValue;
-      } else {
-        this.$set(this.keyValueMap, e.key, e.newValue);
-      }
-    });
   },
   methods: {
+    onRefresh() {
+      logger.log("onRefresh");
+      // 最后一条数据的下一条的索引
+      this.kvList = [];
+      this.storageLength = this._xStorage.length;
+      this._xStorage.refresh();
+      this.kvList.push(...this._xStorage.loadMoreItems());
+    },
+    loadMore() {
+      // no more data
+      if (!this._xStorage.hasMore()) return;
+
+      this.kvList.push(...this._xStorage.loadMoreItems());
+    },
     /**
      * 进入编辑状态
-     * @param {String} name 初始值
+     * @param {String} key 初始值
      * @param {String} value 初始值
      */
-    startEdit(name, value) {
-      this.select = name;
+    startEdit(key, value) {
+      this.select = key;
       this.isEditting = true;
-      this.edittingName = name;
-      this.edittingValue = value;
+      this.editingKey = key;
+      this.editingValue = value;
 
       // 自动聚焦编辑输入框
       this.$nextTick(() => {
@@ -148,131 +135,83 @@ export default {
     },
     /**
      * 结束编辑状态
-     * @returns 最后一次编辑的 name/value
+     * @returns 最后一次编辑的 key/value
      */
     endEdit() {
       const data = {
-        name: this.edittingName,
-        value: this.edittingValue
+        key: this.editingKey,
+        value: this.editingValue
       };
       this.isEditting = false;
-      this.edittingName = "";
-      this.edittingValue = "";
+      this.editingKey = "";
+      this.editingValue = "";
       return data;
     },
-    onRefresh() {
-      this.keyValueMap = {};
-      const storage = this.storage;
-
-      /* 分片展示数据，避免阻塞交互 */
-      const scheduler = this._scheduler;
-      if (scheduler) {
-        scheduler.stop();
-      }
-      const step = 50;
-      for (let i = 0; i < storage.length / step; ++i) {
-        scheduler.add(() => {
-          const temp = {};
-          const start = i * step;
-          const end = Math.min((i + 1) * step, storage.length);
-          let key = "";
-          let value = "";
-          for (let j = start; j < end; ++j) {
-            key = storage.key(j);
-            value = storage.getItem(key);
-            temp[key] = value;
-          }
-          this.keyValueMap = Object.assign({}, this.keyValueMap, temp);
-        });
-      }
-      scheduler.start();
-    },
     onClearAll() {
-      this.keyValueMap = {};
-      this.storage.clear();
+      this._xStorage.clear();
+      this.kvList = [];
+      this.storageLength = 0;
     },
     onClearSelected() {
       const key = this.select;
       if (!key) return;
 
-      this.storage.removeItem(key);
-      this.$delete(this.keyValueMap, key);
+      this._xStorage.removeItem(key);
+      this.onRefresh();
     },
     onClickEdit() {
       if (!this.select) return;
 
-      const name = this.select;
-      this.startEdit(name, this.keyValueMap[name]);
+      const key = this.select;
+      const value = this._xStorage.getItem(key);
+      this.startEdit(key, value);
     },
-    onClickRow(name) {
+    onClickRow(key) {
       if (!this.isEditting) {
-        this.select = name;
+        this.select = key;
       }
     },
     onClickSave() {
       if (!this.isEditting) return;
 
-      /**
-       * 编辑从 <keyA, valueA> 修改为 <keyB, valueB>，点击保存时处理
-       * 1.更新选中项为 keyB
-       * 2.移除 keyA 和 keyB
-       * 3.新增 KeyB
-       * 4. 如果 keyB 为空
-       *  4.1 如果 keyA 为空，则移除 keyA 和 keyB
-       *  4.2 否则，移除 keyA
-       */
-
-      const oldName = this.select;
-      const oldValue = this.keyValueMap[oldName];
-      const { name, value } = this.endEdit();
-      if (name === oldName && value === oldValue) {
+      const oldKey = this.select;
+      const oldValue = this._xStorage.getItem(oldKey);
+      const { key, value } = this.endEdit();
+      if (key === oldKey && value === oldValue && key !== "") {
         logger.log("onClickSave no change");
         return;
       }
-
-      // 选中新值
-      this.select = name;
-
       // storage：移除旧值，添加新值
-      const storage = this.storage;
-      storage.removeItem(oldName);
-      storage.removeItem(name);
-      if (name) {
-        storage.setItem(name, value);
+      this._xStorage.removeItem(oldKey);
+      // 避免新增项为空的情况
+      this._xStorage.removeItem(key);
+      if (key) {
+        this._xStorage.setItem(key, value);
       }
+      this.onRefresh();
 
-      // 视图层：移除旧值，添加新增
-      const keyValueMap = this.keyValueMap;
-      if (oldName in keyValueMap) {
-        delete keyValueMap[oldName];
-      }
-      if (name in keyValueMap) {
-        delete keyValueMap[name];
-      }
-      if (name) {
-        keyValueMap[name] = value;
-        // 将新增项滚动到可见区域
-        if (this.$refs[name]) {
-          const el = this.$refs[name][0];
-          if (el) el.scrollIntoView();
-        }
-      }
+      // if (name) {
+      //   keyValueMap[name] = value;
+      //   // 将新增项滚动到可见区域
+      //   if (this.$refs[name]) {
+      //     const el = this.$refs[name][0];
+      //     if (el) el.scrollIntoView();
+      //   }
+      // }
     },
     onClickAdd() {
       const item = {
-        name: "",
+        key: "",
         value: ""
       };
-      this.keyValueMap[item.name] = item.value;
-      this.startEdit(item.name, item.value);
+      this.kvList.unshift(item);
+      this.startEdit(item.key, item.value);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-@import "./share.scss";
-
 .tab-storage {
   height: 100%;
   display: flex;
@@ -280,5 +219,101 @@ export default {
   &__head {
     flex: 0 0 2.4em;
   }
+}
+
+.scroll-y {
+  overflow-y: auto;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  background-color: rgb(243, 243, 243);
+  &__button {
+    padding: 0.6em;
+    width: 2.4em;
+    &:active {
+      background-color: #eaeaea;
+    }
+  }
+  &__input {
+    flex: 1 1 auto;
+    color: #5a5a5a;
+    background-color: white;
+    border: 1px solid transparent;
+    height: 80%;
+    margin: 0 4px;
+    padding: 0 4px;
+    &::placeholder {
+      color: rgb(128, 128, 128);
+    }
+    &:focus {
+      border: 1px solid #2196f3;
+    }
+  }
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  &__head {
+    flex: 0 0 30px;
+  }
+  &__body {
+    flex: 1 1 auto;
+    overflow-y: auto;
+  }
+  &__row {
+    height: 30px;
+    display: flex;
+    &--head {
+      border-top: 1px solid rgb(205, 205, 205);
+      border-bottom: 1px solid #aaa;
+    }
+    &:nth-child(even) {
+      background-color: rgb(242, 247, 253);
+    }
+    // 覆盖 nth-child 的背景色
+    &--selected.table__row {
+      color: white;
+      background-color: #2196f3;
+    }
+  }
+  &__cell {
+    height: 100%;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+
+    // 超出时可滚动
+    border-right: 1px solid #aaa;
+    white-space: nowrap;
+    overflow-x: auto;
+    &:first-child {
+      flex: 0 0 30%;
+      max-width: 30%;
+    }
+    &--head {
+    }
+    &--edit {
+      padding: 0;
+      color: black;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+      background-color: white;
+      input {
+        outline: none;
+        height: 100%;
+        width: 100%;
+      }
+    }
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.editing {
 }
 </style>
