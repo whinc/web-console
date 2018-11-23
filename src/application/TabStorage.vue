@@ -102,6 +102,8 @@ export default {
     onRefresh() {
       logger.log("onRefresh");
       // 最后一条数据的下一条的索引
+      this.select = "";
+      this.endEdit();
       this.kvList = [];
       this.storageLength = this._xStorage.length;
       this._xStorage.refresh();
@@ -154,6 +156,7 @@ export default {
       if (foundIndex !== -1) {
         this.kvList.splice(foundIndex, 1);
       }
+      this.storageLength = this._xStorage.length;
     },
     getItem(key) {
       return this._xStorage.getItem(key);
@@ -172,9 +175,7 @@ export default {
     // 清除数据源以及视图数据
     clear() {
       this._xStorage.clear();
-      this.kvList = [];
-      this.isEditting = false;
-      this.storageLength = this._xStorage.length;
+      this.onRefresh();
     },
     onClearAll() {
       this.clear();
@@ -183,7 +184,11 @@ export default {
       const key = this.select;
       if (!key) return;
 
+      const selectIndex = this.kvList.findIndex(item => item.key === key);
       this.removeItem(key);
+      // 选中下一项
+      this.select = this.kvList[selectIndex] ? this.kvList[selectIndex].key : "";
+      this.endEdit();
     },
     onClickEdit() {
       if (!this.select) return;

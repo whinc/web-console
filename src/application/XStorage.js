@@ -13,7 +13,6 @@ class CookieStorage {
   refresh() {
     const cookies = cookie.all();
     this._keys = Object.keys(cookies);
-    // this._cookies = cookies
   }
 
   get length() {
@@ -117,7 +116,7 @@ class XStorage {
   }
 
   get length() {
-    return this._storage.length;
+    return this._fds.length;
   }
 
   getItem(key) {
