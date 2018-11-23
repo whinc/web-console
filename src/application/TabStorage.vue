@@ -147,23 +147,49 @@ export default {
       this.editingValue = "";
       return data;
     },
-    onClearAll() {
+    // 移除数据源以及视图数据中指定项
+    removeItem(key) {
+      this._xStorage.removeItem(key);
+      const foundIndex = this.kvList.findIndex(item => item.key === key);
+      if (foundIndex !== -1) {
+        this.kvList.splice(foundIndex, 1);
+      }
+    },
+    getItem(key) {
+      return this._xStorage.getItem(key);
+    },
+    // 更新数据源以及视图数据中指定项
+    setItem(key, value) {
+      this._xStorage.setItem(key, value);
+      const item = this.kvList.find(item => item.key === key);
+      // 如果存在则更新，否则需要刷新数据源以保证正确的展示顺序和分页加载顺序
+      if (item) {
+        item.value = value;
+      } else {
+        this.onRefresh();
+      }
+    },
+    // 清除数据源以及视图数据
+    clear() {
       this._xStorage.clear();
       this.kvList = [];
-      this.storageLength = 0;
+      this.isEditting = false;
+      this.storageLength = this._xStorage.length;
+    },
+    onClearAll() {
+      this.clear();
     },
     onClearSelected() {
       const key = this.select;
       if (!key) return;
 
-      this._xStorage.removeItem(key);
-      this.onRefresh();
+      this.removeItem(key);
     },
     onClickEdit() {
       if (!this.select) return;
 
       const key = this.select;
-      const value = this._xStorage.getItem(key);
+      const value = this.getItem(key);
       this.startEdit(key, value);
     },
     onClickRow(key) {
@@ -177,18 +203,25 @@ export default {
       const oldKey = this.select;
       const oldValue = this._xStorage.getItem(oldKey);
       const { key, value } = this.endEdit();
-      if (key === oldKey && value === oldValue && key !== "") {
-        logger.log("onClickSave no change");
-        return;
+
+      /* storage：移除旧值，更新新值 */
+      if (key === "") {
+        this.removeItem(oldKey);
+        this.removeItem(key);
+      } else if (key && oldKey === "") {
+        this.removeItem(oldKey);
+        this.setItem(key, value);
+      } else {
+        // key and oldKey are not empty
+        if (key === oldKey) {
+          if (value !== oldValue) {
+            this.setItem(key, value);
+          }
+        } else {
+          this.removeItem(oldKey);
+          this.setItem(key, value);
+        }
       }
-      // storage：移除旧值，添加新值
-      this._xStorage.removeItem(oldKey);
-      // 避免新增项为空的情况
-      this._xStorage.removeItem(key);
-      if (key) {
-        this._xStorage.setItem(key, value);
-      }
-      this.onRefresh();
 
       // if (name) {
       //   keyValueMap[name] = value;
