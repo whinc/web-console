@@ -54,7 +54,10 @@ import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";
 import { ApplicationPanel } from "./application";
 import { SettingsPanel } from "./settings";
-import { eventBus } from "@/utils";
+import { eventBus, Logger } from "@/utils";
+
+const logger = new Logger("[App]");
+
 export default {
   name: "app",
   components: {
@@ -89,15 +92,20 @@ export default {
       this.$nextTick(() => {
         eventBus.emit(eventBus.POPUP_VISIBILITY_CHANGE, value);
       });
+      value ? this.scaleManager.preventScale() : this.scaleManager.recoverScale();
     }
+  },
+  beforeMount() {
+    // 非 reactivity 数据
+    this.scaleManager = createScaleManager();
+    this.isTouched = false;
   },
   mounted() {
     // 设置初始值
     this.panelVisible = this.initPanelVisible;
+    this.initPanelVisible ? this.scaleManager.preventScale() : this.scaleManager.recoverScale();
     this.activeTab = this.initActiveTab;
     this.entryStyle = this.initEntryStyle;
-
-    this.isTouched = false;
 
     // 监听来自子元素的事件：请求隐藏弹窗
     eventBus.on(eventBus.POPUP_HIDE, () => this.hidePanel());
@@ -133,13 +141,40 @@ export default {
       this.isTouched = false;
     },
     onClickSetting() {
-      //       alert(`package name: ${process.env.VUE_APP_NAME}
-      // version: ${process.env.VUE_APP_VERSION}
-      // date: ${process.env.VUE_APP_DATE}`);
       this.isSettingPanelVisible = true;
     }
   }
 };
+
+// 管理页面缩放行为
+function createScaleManager() {
+  let onTouchStart = function(e) {
+    if (e.touches.length > 1) {
+      e.preventDefault();
+    }
+  };
+  let lastTouchEnd = 0;
+  let onTouchEnd = function(event) {
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  };
+  // 由于 IOS 10 以后通过 <meta> 标签无法禁止 safari 页面缩放，解决办法是通过 JS 判断缩放和双击事件来阻止页面缩放行为
+  return {
+    preventScale: () => {
+      logger.log("preventScale");
+      document.documentElement.addEventListener("touchstart", onTouchStart, true);
+      document.documentElement.addEventListener("touchend", onTouchEnd, true);
+    },
+    recoverScale: () => {
+      logger.log("recoverScale");
+      document.documentElement.removeEventListener("touchstart", onTouchStart, true);
+      document.documentElement.removeEventListener("touchend", onTouchEnd, true);
+    }
+  };
+}
 </script>
 
 <style lang="scss">
@@ -172,6 +207,9 @@ export default {
     font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    appearance: none;
+    border: none;
+    outline: none;
   }
 
   pre {

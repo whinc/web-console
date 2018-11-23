@@ -105,8 +105,10 @@ export default {
       this.select = "";
       this.endEdit();
       this.kvList = [];
-      this.storageLength = this._xStorage.length;
+
       this._xStorage.refresh();
+      // 刷新后重新获取数据项数量
+      this.storageLength = this._xStorage.length;
       this.kvList.push(...this._xStorage.loadMoreItems());
     },
     loadMore() {

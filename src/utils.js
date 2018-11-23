@@ -138,20 +138,24 @@ export class Logger {
     this._prefix = prefix ? prefix + " " : "";
   }
   error(...args) {
+    if (!isDev) return;
+
     if (isString(args[0])) {
       args[0] = this._prefix + args[0];
     } else {
       args.unshift(this._prefix);
     }
-    isDev && error.apply(this, args);
+    error.apply(this, args);
   }
   log(...args) {
+    if (!isDev) return;
+
     if (isString(args[0])) {
       args[0] = this._prefix + args[0];
     } else {
       args.unshift(this._prefix);
     }
-    isDev && log.apply(this, args);
+    log.apply(this, args);
   }
 }
 
