@@ -1,97 +1,55 @@
-<a name="0.3.0-beta.0"></a>
+<a name="0.3.0-beta.1"></a>
 
-# [0.3.0-beta.0](https://github.com/whinc/web-console/compare/v0.2.0-rc.15...v0.3.0-beta.0) (2018-11-20)
+# [0.3.0-beta.1](https://github.com/whinc/web-console/compare/v0.2.0-rc.9...v0.3.0-beta.1) (2018-11-24)
 
 ### Bug Fixes
 
 - **application:** cookie 操作 ([01dc531](https://github.com/whinc/web-console/commit/01dc531))
+- **application:** 分页加载边界条件判断错误 ([0f18ca1](https://github.com/whinc/web-console/commit/0f18ca1))
+- **application:** 删除后自动选中下一项 ([3007755](https://github.com/whinc/web-console/commit/3007755))
+- **application:** 删除并重新写入 cookie 不更新 ([477c0fa](https://github.com/whinc/web-console/commit/477c0fa))
 - **application:** 异常 ([bf80d3b](https://github.com/whinc/web-console/commit/bf80d3b))
 - **application:** 样式问题 ([c41b07c](https://github.com/whinc/web-console/commit/c41b07c))
+- **application:** 移除 IOS 输入框边框；弹窗可见时阻止 IOS 上缩放行为 ([31c50ec](https://github.com/whinc/web-console/commit/31c50ec))
+- **console:** ios 上滚动失效 ([c282ad5](https://github.com/whinc/web-console/commit/c282ad5))
+- **console:** 保留消息换行符 ([2d75a7c](https://github.com/whinc/web-console/commit/2d75a7c))
+- **console:** 循环打印错误日志 ([a570170](https://github.com/whinc/web-console/commit/a570170))
+- **console:** 数组展示 ([8b8faa0](https://github.com/whinc/web-console/commit/8b8faa0))
+- **console:** 美化 safari 上输出的错误堆栈信息 ([4634cfa](https://github.com/whinc/web-console/commit/4634cfa))
 - **network:** 解决 ios 上网络面板无法滚动问题 ([a3d39a6](https://github.com/whinc/web-console/commit/a3d39a6))
+- **settings:** ios 上图标展示过大 ([66f7beb](https://github.com/whinc/web-console/commit/66f7beb))
 
 ### Features
 
 - **application:** localStorage 和 sessionStorage 支持编辑、新增 ([3cef20c](https://github.com/whinc/web-console/commit/3cef20c))
 - **application:** 优化编辑状态样式 ([10e7727](https://github.com/whinc/web-console/commit/10e7727))
 - **application:** 固定表头滚动表内容 ([9624ea3](https://github.com/whinc/web-console/commit/9624ea3))
+- **application:** 增加 cookie 展示 ([4df4f8c](https://github.com/whinc/web-console/commit/4df4f8c))
 - **application:** 增加 value 的过滤 ([84eddef](https://github.com/whinc/web-console/commit/84eddef))
 - **application:** 增加对 cookie 的编辑和新增操作 ([273af90](https://github.com/whinc/web-console/commit/273af90))
+- **application:** 实现 cookie 的展示、删除、过滤、刷新 ([0a26517](https://github.com/whinc/web-console/commit/0a26517))
+- **application:** 新增 Application 面板 ([91daa76](https://github.com/whinc/web-console/commit/91daa76))
+- **application:** 新增 cookie/localStorage/sessionStorage 的 UI ([aac507d](https://github.com/whinc/web-console/commit/aac507d))
 - **application:** 新增 localStorage 和 sessionStorage ([292f863](https://github.com/whinc/web-console/commit/292f863))
 - **application:** 美化 cookie 面板 ([4deefb9](https://github.com/whinc/web-console/commit/4deefb9))
 - **application:** 表格增加奇偶行色差 ([e8996e8](https://github.com/whinc/web-console/commit/e8996e8))
+- 增加设置(展示版本信息) ([6ab8caa](https://github.com/whinc/web-console/commit/6ab8caa))
 - **console:** 增加最大消息数量限制 ([d69e15c](https://github.com/whinc/web-console/commit/d69e15c))
+- **console:** 增加时间戳 ([ec6752c](https://github.com/whinc/web-console/commit/ec6752c))
+- **console:** 打印 Error 对象堆栈信息 ([599206b](https://github.com/whinc/web-console/commit/599206b))
+- **console:** 缩略展示长字符串 ([a7af920](https://github.com/whinc/web-console/commit/a7af920))
+- **console:** 输出日志时可自动定位到最新位置 ([2509392](https://github.com/whinc/web-console/commit/2509392))
+- **settings:** 增加设置面板 ([89c4492](https://github.com/whinc/web-console/commit/89c4492))
+- **settings:** 增加设置项持久化 ([1f542bc](https://github.com/whinc/web-console/commit/1f542bc))
 
 ### Performance Improvements
 
 - 用 v-if 替换部分 v-show 提高性能 ([1ec40f2](https://github.com/whinc/web-console/commit/1ec40f2))
 - **application:** 优化保存性能 ([802c87f](https://github.com/whinc/web-console/commit/802c87f))
+- **application:** 优化修改和删除操作的性能 ([c376187](https://github.com/whinc/web-console/commit/c376187))
+- **application:** 大幅提升展示大量(1W+)storage 和 cookie 的性能 ([66b8c45](https://github.com/whinc/web-console/commit/66b8c45))
 - **application:** 提高巨量(1w+)storage 条目的展示性能 ([258568d](https://github.com/whinc/web-console/commit/258568d))
 - **console:** 优化短期内批量打印日志造成的 UI 假死现象 ([53be149](https://github.com/whinc/web-console/commit/53be149))
-
-<a name="0.2.0-rc.15"></a>
-
-# [0.2.0-rc.15](https://github.com/whinc/web-console/compare/v0.2.0-rc.14...v0.2.0-rc.15) (2018-11-08)
-
-<a name="0.2.0-rc.14"></a>
-
-# [0.2.0-rc.14](https://github.com/whinc/web-console/compare/v0.2.0-rc.13...v0.2.0-rc.14) (2018-11-08)
-
-### Bug Fixes
-
-- **console:** ios 上滚动失效 ([c282ad5](https://github.com/whinc/web-console/commit/c282ad5))
-- **console:** 美化 safari 上输出的错误堆栈信息 ([4634cfa](https://github.com/whinc/web-console/commit/4634cfa))
-- **settings:** ios 上图标展示过大 ([66f7beb](https://github.com/whinc/web-console/commit/66f7beb))
-
-### Features
-
-- **console:** 增加时间戳 ([ec6752c](https://github.com/whinc/web-console/commit/ec6752c))
-- **settings:** 增加设置面板 ([89c4492](https://github.com/whinc/web-console/commit/89c4492))
-- **settings:** 增加设置项持久化 ([1f542bc](https://github.com/whinc/web-console/commit/1f542bc))
-
-<a name="0.2.0-rc.13"></a>
-
-# [0.2.0-rc.13](https://github.com/whinc/web-console/compare/v0.2.0-rc.12...v0.2.0-rc.13) (2018-11-06)
-
-### Bug Fixes
-
-- **console:** 循环打印错误日志 ([a570170](https://github.com/whinc/web-console/commit/a570170))
-
-### Features
-
-- **console:** 缩略展示长字符串 ([a7af920](https://github.com/whinc/web-console/commit/a7af920))
-
-<a name="0.2.0-rc.12"></a>
-
-# [0.2.0-rc.12](https://github.com/whinc/web-console/compare/v0.2.0-rc.11...v0.2.0-rc.12) (2018-11-05)
-
-### Features
-
-- **application:** 实现 cookie 的展示、删除、过滤、刷新 ([0a26517](https://github.com/whinc/web-console/commit/0a26517))
-
-<a name="0.2.0-rc.11"></a>
-
-# [0.2.0-rc.11](https://github.com/whinc/web-console/compare/v0.2.0-rc.10...v0.2.0-rc.11) (2018-10-31)
-
-### Features
-
-- 增加设置(展示版本信息) ([6ab8caa](https://github.com/whinc/web-console/commit/6ab8caa))
-
-<a name="0.2.0-rc.10"></a>
-
-# [0.2.0-rc.10](https://github.com/whinc/web-console/compare/v0.2.0-rc.9...v0.2.0-rc.10) (2018-10-30)
-
-### Bug Fixes
-
-- **console:** 保留消息换行符 ([2d75a7c](https://github.com/whinc/web-console/commit/2d75a7c))
-- **console:** 数组展示 ([8b8faa0](https://github.com/whinc/web-console/commit/8b8faa0))
-
-### Features
-
-- **application:** 增加 cookie 展示 ([4df4f8c](https://github.com/whinc/web-console/commit/4df4f8c))
-- **application:** 新增 Application 面板 ([91daa76](https://github.com/whinc/web-console/commit/91daa76))
-- **application:** 新增 cookie/localStorage/sessionStorage 的 UI ([aac507d](https://github.com/whinc/web-console/commit/aac507d))
-- **console:** 打印 Error 对象堆栈信息 ([599206b](https://github.com/whinc/web-console/commit/599206b))
-- **console:** 输出日志时可自动定位到最新位置 ([2509392](https://github.com/whinc/web-console/commit/2509392))
 
 <a name="0.2.0-rc.9"></a>
 
@@ -147,7 +105,7 @@
 
 <a name="0.2.0-rc.1"></a>
 
-# [0.2.0-rc.1](https://github.com/whinc/web-console/compare/v0.1.2...v0.2.0-rc.1) (2018-09-08)
+# [0.2.0-rc.1](https://github.com/whinc/web-console/compare/v0.1.5...v0.2.0-rc.1) (2018-09-08)
 
 ### Bug Fixes
 
@@ -178,6 +136,18 @@
 - **network:** 请求头信息分类展示 ([6fdb205](https://github.com/whinc/web-console/commit/6fdb205))
 - **network:** 错误状态码高亮展示 ([78e78ac](https://github.com/whinc/web-console/commit/78e78ac))
 - 入口浮标支持滑动、图标样式 ([01bee17](https://github.com/whinc/web-console/commit/01bee17))
+
+<a name="0.1.5"></a>
+
+## [0.1.5](https://github.com/whinc/web-console/compare/v0.1.4...v0.1.5) (2018-06-20)
+
+<a name="0.1.4"></a>
+
+## [0.1.4](https://github.com/whinc/web-console/compare/v0.1.3...v0.1.4) (2018-06-20)
+
+<a name="0.1.3"></a>
+
+## [0.1.3](https://github.com/whinc/web-console/compare/v0.1.2...v0.1.3) (2018-06-20)
 
 <a name="0.1.2"></a>
 
