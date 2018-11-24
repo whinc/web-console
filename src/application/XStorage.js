@@ -73,7 +73,7 @@ class XStorage {
     this._fds = [];
     // filter keyword
     this._filter = "";
-    // 当前分页加载的索引
+    // 下次加载的开始位置
     this._cursor = 0;
 
     this.refresh();
@@ -112,7 +112,7 @@ class XStorage {
   }
 
   hasMore() {
-    return this._cursor < this._fds.length - 1;
+    return this._cursor < this._fds.length;
   }
 
   get length() {
