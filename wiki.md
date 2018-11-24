@@ -11,3 +11,9 @@ npm run depoly
 ```bash
 npm version <new_version>
 ```
+
+生成 changelog：
+
+```bash
+npm run changelog-all
+```
