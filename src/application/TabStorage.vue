@@ -13,7 +13,7 @@
     <div class="table">
       <div class="table__head">
         <div class="table__row table__row--head">
-          <div class="table__cell table__cell--head">Key({{storageLength}})[{{kvList.length}}]</div>
+          <div class="table__cell table__cell--head">Key({{storageLength}})<!--[{{kvList.length}}]--></div>
           <div class="table__cell table__cell--head">Value</div>
         </div>
       </div>

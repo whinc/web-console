@@ -6,7 +6,6 @@ const logger = new Logger("XStorage");
 class CookieStorage {
   constructor() {
     this._keys = [];
-    this._cookies = {};
     this.refresh();
   }
 
@@ -46,11 +45,23 @@ class CookieStorage {
 /**
  * 统一 localStorage/sessionStorage/cookie 三种存储器接口
  *
- * ------------------
- * | localStorage   |
- * | sessionStorage | <-->  Data Srouce  <--> Filtered Data Srouce  <--> XStorage
- * | cookie         |
- * ------------------
+ *                    XStorage
+ *                       |
+ *                       | <- XStorage.refresh()
+ *                       |
+ *                    Filtered Data Source
+ *                       |
+ *                       | <- XStorage._refreshFilteredDataSource()
+ *                       |
+ *                    Data Source
+ *                       |
+ *                       | <- XStorage._refreshDataSource()
+ *                       |
+ * CookieStorage | SessionStorage | LocalStorage
+ *    |
+ *    | <- CookieStorage.refresh()
+ *    |
+ * cookie
  */
 class XStorage {
   // 分页大小
@@ -94,6 +105,12 @@ class XStorage {
   }
 
   refresh() {
+    // 在 XStorage 和 cookie 之间增加了一层 CookieStorage
+    // 当 cookie 发生变化后需要手动刷新 CookieStorage
+    if (this._storage instanceof CookieStorage) {
+      this._storage.refresh();
+    }
+
     this._cursor = 0;
     this._refreshDataSource();
   }
