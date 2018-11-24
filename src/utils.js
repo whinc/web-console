@@ -23,6 +23,22 @@ export const nextTick = cb => {
   }
 };
 
+// 将 HTTP content-type 类型转换成 highlight.js 所支持的语法高亮类型
+export const mimeType2Language = mimeType => {
+  switch (true) {
+    case /javascript/.test(mimeType):
+      return "javascript";
+    case /json/.test(mimeType):
+      return "json";
+    case /html/.test(mimeType):
+      return "html";
+    case /css/.test(mimeType):
+      return "css";
+    default:
+      return "";
+  }
+};
+
 /**
  * 任务调度器
  * 用途：按任意速率添加任务，之后这些任务按指定速率按序执行，避免阻塞交互

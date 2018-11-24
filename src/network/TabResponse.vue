@@ -1,8 +1,11 @@
 <template>
   <div class="tab-response">
-    <div v-if="isTextData" class="data">
-      <pre><code ref="code" class="source-code hljs" :class="language">{{content}}</code></pre>
-    </div>
+    <VHighlightView
+      v-if="isTextData"
+      class="data"
+      :language="language"
+      :code="content"
+    />
     <div v-else class="no-data">
       <h2>This request has no response data available.</h2>
     </div>
@@ -11,21 +14,13 @@
 
 
 <script>
-import hljs from "highlight.js/lib/highlight";
-import javascript from "highlight.js/lib/languages/javascript";
-import css from "highlight.js/lib/languages/css";
-import htmlbars from "highlight.js/lib/languages/htmlbars";
-import xml from "highlight.js/lib/languages/xml";
-import json from "highlight.js/lib/languages/json";
-// import 'highlight.js/styles/default.css'
-import "./chrome.scss";
-hljs.registerLanguage("javascript", javascript);
-hljs.registerLanguage("css", css);
-hljs.registerLanguage("htmlbars", htmlbars);
-hljs.registerLanguage("xml", xml);
-hljs.registerLanguage("json", json);
+import { VHighlightView } from "@/components";
+import { mimeType2Language } from "@/utils";
 
 export default {
+  components: {
+    VHighlightView
+  },
   props: {
     requestInfo: {
       type: Object,
@@ -40,20 +35,7 @@ export default {
       return this.requestInfo.responseHeaders["content-type"];
     },
     language() {
-      const contentType = this.contentType;
-      // 将 HTTP content-type 类型转换成 highlight.js 所支持的语法高亮类型
-      switch (true) {
-        case /javascript/.test(contentType):
-          return "javascript";
-        case /json/.test(contentType):
-          return "json";
-        case /html/.test(contentType):
-          return "html";
-        case /css/.test(contentType):
-          return "css";
-        default:
-          return "";
-      }
+      return mimeType2Language(this.contentType);
     },
     isTextData() {
       const contentType = this.contentType;
@@ -63,24 +45,6 @@ export default {
         default:
           return true;
       }
-    }
-  },
-  watch: {
-    // 内容变化时重新计算高亮
-    content(newValue) {
-      if (!this.$refs.code) return;
-      // 解析并高亮比较耗时，放在异步函数中处理
-      setTimeout(() => {
-        let result;
-        // console.log("contentType", this.contentType, "language:", this.language);
-
-        if (this.language) {
-          result = hljs.highlight(this.language, this.content, true);
-        } else {
-          result = hljs.highlightAuto(this.content);
-        }
-        this.$refs.code.innerHTML = result.value;
-      });
     }
   }
 };

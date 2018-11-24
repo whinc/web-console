@@ -177,48 +177,6 @@ function createScaleManager() {
 }
 </script>
 
-<style lang="scss">
-@import "./base.scss";
-
-// 全局样式
-.web-console {
-  font-size: $primary-font-size;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: rgb(48, 57, 66);
-  .source-code {
-    font-size: $source-code-font-size !important;
-    font-family: Menlo, Consolas, monospace;
-  }
-
-  * {
-    box-sizing: border-box;
-    &:focus {
-      outline: none;
-    }
-  }
-
-  input,
-  select,
-  textarea,
-  button {
-    font-size: $primary-font-size;
-    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    appearance: none;
-    border: none;
-    outline: none;
-  }
-
-  pre {
-    margin: 0;
-  }
-}
-</style>
-
-
 <style scoped lang="scss">
 @import "./base.scss";
 .entry {

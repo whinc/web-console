@@ -7,7 +7,7 @@ function sayHello(params) {
     3: null,
     4: undefined,
     5: [100, 200],
-    6: "string",
+    6: "stringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstringstring",
     7: {
       a: 1
     },

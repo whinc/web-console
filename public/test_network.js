@@ -80,9 +80,9 @@ window.$network = (function() {
     const mimeTypeList = [
       "application/json",
       "application/javascript",
+      "text/css",
       "text/plain",
       "text/html",
-      "text/css",
       "image/jpeg",
       "image/png",
       "image/gif",

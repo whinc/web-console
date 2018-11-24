@@ -3,6 +3,7 @@ import App from "./App.vue";
 import consoleHooks from "./consoleHooks";
 // import { Logger } from "@/utils";
 import infiniteScroll from "vue-infinite-scroll";
+import "./global.scss";
 
 Vue.use(infiniteScroll);
 
