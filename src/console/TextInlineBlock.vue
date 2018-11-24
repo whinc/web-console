@@ -130,19 +130,7 @@
  *  c: ƒ say()
  * }
  */
-import {
-  isNull,
-  isBoolean,
-  isString,
-  isNumber,
-  isObject,
-  isSymbol,
-  isUndefined,
-  flatMap,
-  _console,
-  isArray,
-  isFunction
-} from "@/utils";
+import { isNull, isBoolean, isString, isNumber, isObject, isSymbol, isUndefined, isArray, isFunction } from "@/utils";
 
 export default {
   name: "text-inline-block",

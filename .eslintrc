@@ -3,5 +3,15 @@
   "extends": [
     "plugin:vue/essential",
     "eslint:recommended"
-  ]
+  ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "console": true
+  },
+  "rules": {
+    "no-case-declarations": "off"
+  }
 }

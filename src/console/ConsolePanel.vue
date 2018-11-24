@@ -61,6 +61,7 @@ export default {
     };
   },
   computed: {
+    /* eslint-disable */
     footBarButtons() {
       return [
         {
@@ -77,9 +78,10 @@ export default {
         }
       ];
     }
+    /* eslint-enable */
   },
   watch: {
-    msgList(val) {
+    msgList() {
       const el = this.$refs.container;
       if (this.isBottom && el) {
         // 在合适的时机滚动至底部，避免阻塞交互
@@ -136,7 +138,7 @@ export default {
 
     // 弹窗不可见时，新增数据不会滚动，当弹窗变为可见时，需要执行一次滚动至底部来修正滚动位置
     // TODO: 不是监听弹窗可见，而是监听当前面板可见
-    eventBus.on(eventBus.POPUP_VISIBILITY_CHANGE, visible => {
+    eventBus.on(eventBus.POPUP_VISIBILITY_CHANGE, () => {
       const el = this.$refs.container;
       if (this.isBottom && el) {
         // 待新增的消息渲染完成后，滚动至底部

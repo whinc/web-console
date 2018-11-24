@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { isString, isNumber, isObject, isArray, cloneDeep, _console } from "@/utils";
+import { isString, isObject, isArray, _console } from "@/utils";
 import TextBlock from "./TextBlock";
 
 export default {

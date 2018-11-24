@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { Popup, TabContainer, TabContainerItem } from "mint-ui";
+import { Popup } from "mint-ui";
 import { VTabBar, VTabBarItem, VIcon } from "./components";
 import { ConsolePanel } from "./console";
 import { NetworkPanel } from "./network";

@@ -99,7 +99,7 @@ export default {
   },
   computed: {
     isRoot() {
-      return !Boolean(this.name);
+      return !this.name;
     },
     hasName() {
       return !!this.name;

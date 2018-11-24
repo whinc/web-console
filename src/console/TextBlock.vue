@@ -28,7 +28,7 @@
       <!-- a)如果是根元素，则由 showRootValueDetail 决定是否显示详情 -->
       <!-- b)否则，如果是非'__proto__'属性且处于折叠态时，也显示详情 -->
       <!-- c)其他情形不展示详情 -->
-      <!-- 如果是根元素，并且是对象类型，则展示详情页时以斜体展示 -->
+      <!-- 如果是根元素, 并且是对象类型, 则展示详情页时以斜体展示 -->
       <text-inline-block
         v-else
         :name="name"
@@ -73,18 +73,7 @@
  * // 展示键和值
  * <text-block :name="age" :descriptor="{value: 1}" />
  */
-import {
-  isNull,
-  isBoolean,
-  isString,
-  isNumber,
-  isObject,
-  isSymbol,
-  isUndefined,
-  flatMap,
-  _console,
-  isFunction
-} from "@/utils";
+import { isString, isObject, flatMap, _console, isFunction } from "@/utils";
 import TextInlineBlock from "./TextInlineBlock";
 
 export default {
@@ -143,7 +132,7 @@ export default {
   },
   computed: {
     isRoot() {
-      return !Boolean(this.name);
+      return !this.name;
     },
     hasName() {
       return !!this.name;

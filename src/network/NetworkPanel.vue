@@ -28,6 +28,14 @@ import { VFootBar, VJSONViewer } from "@/components";
 import { nextTick, _console } from "@/utils";
 import NetworkRequest from "./NetworkRequest";
 
+const ReadyState = Object.freeze({
+  UNSENT: 0,
+  OPENED: 1,
+  HEADERS_RECEIVED: 2,
+  LOADING: 3,
+  DONE: 4
+});
+
 export default {
   components: {
     VFootBar,
@@ -63,6 +71,7 @@ export default {
     requestList() {
       return Object.keys(this.requestMap).map(key => this.requestMap[key]);
     },
+    /* eslint-disable */
     footBarButtons() {
       return [
         {
@@ -79,6 +88,7 @@ export default {
         }
       ];
     }
+    /* eslint-enable */
   },
   mounted() {
     this.hookXMLHttpRequest();
@@ -137,13 +147,13 @@ export default {
             item.readyState = xhr.readyState;
             item.responseType = xhr.responseType;
             switch (xhr.readyState) {
-              case 0: // UNSENT
+              case ReadyState.UNSENT:
                 item.statusText = "(pending)";
                 break;
-              case 1: // OPENED
+              case ReadyState.OPENED:
                 item.statusText = "(pending)";
                 break;
-              case 2: // HEADERS_RECEIVED
+              case ReadyState.HEADERS_RECEIVED:
                 item.status = xhr.status;
                 item.statusText = "(loading)";
                 const headers = xhr.getAllResponseHeaders();
@@ -158,11 +168,11 @@ export default {
                 });
                 item.responseHeaders = responseHeaders;
                 break;
-              case 3: // LOADING
+              case ReadyState.LOADING:
                 item.status = xhr.status;
                 item.statusText = "(loading)";
                 break;
-              case 4: // DONE
+              case ReadyState.DONE:
                 item.status = xhr.status;
                 item.statusText = xhr.status;
                 item.response = xhr.response;
@@ -211,7 +221,7 @@ export default {
 
       XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
         const xhr = this;
-        const id = this.$id;
+        const id = xhr.$id;
         const item = vm.requestMap[id] || {};
         item.requestHeaders = { ...item.requestHeaders, [header]: value };
         vm.updateRequest(id, item);

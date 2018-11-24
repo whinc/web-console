@@ -1,18 +1,18 @@
 import Vue from "vue";
 import App from "./App.vue";
 import consoleHooks from "./consoleHooks";
-import { Logger } from "@/utils";
+// import { Logger } from "@/utils";
 import infiniteScroll from "vue-infinite-scroll";
 
 Vue.use(infiniteScroll);
 
-const logger = new Logger("[main.js]");
+// const logger = new Logger("[main.js]");
 
 // 放在可滚动容器上，在滚动触顶或触底时，可以阻止背景层滚动
 Vue.directive("prevent-bkg-scroll", {
   bind(el) {
     let preventMove = false;
-    el.addEventListener("touchstart", function(e) {
+    el.addEventListener("touchstart", function() {
       // logger.log('touchstart scrollTop: %s, clientHeight: %s, scrollHeight: %s', el.scrollTop, el.clientHeight, el.scrollHeight)
       if (el.scrollTop <= 0) {
         // 滚动到顶部时将其设置为 1，避免触顶后不能向下滚动(IOS 上 scrollTop 会出现负数)
@@ -35,7 +35,7 @@ Vue.directive("prevent-bkg-scroll", {
         e.preventDefault();
       }
     });
-    el.addEventListener("touchend", function(e) {
+    el.addEventListener("touchend", function() {
       preventMove = false;
     });
   }

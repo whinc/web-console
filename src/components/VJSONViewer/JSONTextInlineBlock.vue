@@ -52,18 +52,7 @@
 /**
  * 以一行内展示传入的 JSON 对象
  */
-import {
-  isNull,
-  isBoolean,
-  isString,
-  isNumber,
-  isObject,
-  isSymbol,
-  isUndefined,
-  flatMap,
-  _console,
-  isArray
-} from "@/utils";
+import { isNull, isBoolean, isString, isNumber, isObject, isSymbol, isUndefined, isArray } from "@/utils";
 
 export default {
   name: "JSONTextInlineBlock",

@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export const isNull = v => v === null;
 export const isUndefined = v => v === undefined;
 export const isString = v => typeof v === "string";

@@ -50,7 +50,7 @@
 
 <script>
 import { VIcon } from "@/components";
-import { Logger, TaskScheduler } from "@/utils";
+import { Logger } from "@/utils";
 import XStorage from "./XStorage";
 
 const logger = new Logger("[TabStorage]");

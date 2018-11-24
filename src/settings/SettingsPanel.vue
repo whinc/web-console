@@ -136,15 +136,14 @@ export default {
   computed: {
     activedConfig() {
       return this.configs[this.activedIndex];
-    },
-    settings() {}
-  },
-  watch: {
-    value(val) {
-      if (val) {
-      }
     }
   },
+  // watch: {
+  //   value(val) {
+  //     if (val) {
+  //     }
+  //   }
+  // },
   mounted() {
     // 加载配置
     this.loadSettings();
@@ -202,7 +201,7 @@ export default {
      */
     configs2Settings(configs) {
       const settings = {};
-      this.configs.forEach(item => {
+      configs.forEach(item => {
         if (!item.name) return;
         const name1 = item.name;
         settings[name1] = {};
