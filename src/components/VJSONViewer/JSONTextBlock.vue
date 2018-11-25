@@ -51,9 +51,10 @@
  * // 展示键和值
  * <text-block :name="age" :descriptor="{value: 1}" />
  */
-import { isObject, flatMap, _console, isFunction } from "@/utils";
+import { isObject, flatMap, Logger, isFunction } from "@/utils";
 import JSONTextInlineBlock from "./JSONTextInlineBlock";
 
+const logger = new Logger("[JSONTextBlock]");
 export default {
   name: "JSONTextBlock",
   components: {
@@ -68,7 +69,7 @@ export default {
         try {
           Object.defineProperty({}, "key", descriptor);
         } catch (error) {
-          _console.error(error.message, "descriptor:", descriptor);
+          logger.error(error.message, "descriptor:", descriptor);
         }
         // ConsolePanel 内部组件不能再次抛出错误，否则会造成循环错误
         return true;

@@ -73,9 +73,10 @@
  * // 展示键和值
  * <text-block :name="age" :descriptor="{value: 1}" />
  */
-import { isString, isObject, flatMap, _console, isFunction } from "@/utils";
+import { isString, isObject, flatMap, Logger, isFunction } from "@/utils";
 import TextInlineBlock from "./TextInlineBlock";
 
+const logger = new Logger("[TextBlock]");
 export default {
   name: "text-block",
   components: {
@@ -90,7 +91,7 @@ export default {
         try {
           Object.defineProperty({}, "key", descriptor);
         } catch (error) {
-          _console.error(error.message, "descriptor:", descriptor);
+          logger.error(error.message, "descriptor:", descriptor);
         }
         // ConsolePanel 内部组件不能再次抛出错误，否则会造成循环错误
         return true;
@@ -240,7 +241,7 @@ export default {
           return [{ name, descriptor }];
         }
 
-        // _console.log(name, ':', descriptor)
+        // logger.log(name, ':', descriptor)
       });
       // TODO: JSON.stringify 不能用于将循环引用的结构 JSON 化，需要进行特殊处理，暂且过滤掉存在循环引用的属性
       // 参考 https://stackoverflow.com/questions/4816099/chrome-sendrequest-error-typeerror-converting-circular-structure-to-json#
@@ -316,7 +317,7 @@ export default {
           // 冻结计算结果，避免 Vue 添加额外属性
           this.computedValue = Object.freeze(this.descriptor.get());
         } catch (error) {
-          _console.error(error);
+          logger.error(error);
           this.computedValue = "(error: " + error.message + ")";
         }
       }
@@ -392,7 +393,7 @@ function getPropDisplayPriority(prop) {
 function propCompareFn(propA, propB) {
   let priorityA = getPropDisplayPriority(propA);
   let priorityB = getPropDisplayPriority(propB);
-  // _console.log(propA.name, propB.name, priorityA, priorityB)
+  // logger.log(propA.name, propB.name, priorityA, priorityB)
   if (priorityA === priorityB) {
     // 优先级相同时按字母的 ASCII 码排序，码值越小越靠上
     // 默认比较字母的 ASCII

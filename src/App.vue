@@ -49,7 +49,7 @@
 
 <script>
 import { Popup } from "mint-ui";
-import { VTabBar, VTabBarItem, VIcon } from "./components";
+import { VTabBar, VTabBarItem, VIcon } from "@/components";
 import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel } from "@/panels";
 import { eventBus, Logger } from "@/utils";
 

@@ -16,9 +16,10 @@
 </template>
 
 <script>
-import { isString, isObject, isArray, _console } from "@/utils";
+import { isString, isObject, isArray, Logger } from "@/utils";
 import TextBlock from "./TextBlock";
 
+const logger = new Logger("[Message]");
 export default {
   components: {
     TextBlock
@@ -99,7 +100,7 @@ export default {
     argInfoList() {
       // 对 log 参数进行格式化，将占位符替换成对应值
       let argInfoList = format(this.message.logArgs);
-      // _console.log('formattedLogArgs', formattedLogArgs)
+      // logger.log('formattedLogArgs', formattedLogArgs)
 
       // 将参数信息对象进一步处理，得到一些与 UI 展示相关的信息
       // 返回数据格式为
@@ -151,7 +152,7 @@ export default {
 
         return argInfo;
       });
-      // _console.log('argInfoList2', cloneDeep(argInfoList2))
+      // logger.log('argInfoList2', cloneDeep(argInfoList2))
 
       // 合并相邻字符串，减少文本块的数量，避免文本块之间的默认空白符
       // {displayValue: 'a'} 和 {displayValue: 'b'} 将合并成一个 {displayValue: 'ab'}
@@ -170,14 +171,14 @@ export default {
           }
         }
       }
-      // _console.log('argInfoList3', argInfoList3)
+      // logger.log('argInfoList3', argInfoList3)
       return argInfoList3;
     }
   },
   // 捕获 console API 引发的错误，避免陷入循环渲染
   errorCaptured(error) {
     // 在浏览器控制台输出错误原因
-    _console.error(error);
+    logger.error(error);
     // UI 上展示出错提示
     this.isErrorCaptured = true;
     return false;

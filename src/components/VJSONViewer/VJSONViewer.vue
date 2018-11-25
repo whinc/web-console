@@ -6,8 +6,9 @@
 
 <script>
 import JSONTextBlock from "./JSONTextBlock.vue";
-import { _console } from "@/utils";
+import { Logger } from "@/utils";
 
+const logger = new Logger("[VJSONViewer]");
 export default {
   components: {
     JSONTextBlock
@@ -24,7 +25,7 @@ export default {
       try {
         v = JSON.parse(JSON.stringify(this.value));
       } catch (err) {
-        _console.error(err);
+        logger.error(err);
       }
       return { value: v };
     }

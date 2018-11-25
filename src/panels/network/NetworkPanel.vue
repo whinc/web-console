@@ -25,9 +25,10 @@
 
 <script>
 import { VFootBar, VJSONViewer } from "@/components";
-import { nextTick, _console } from "@/utils";
+import { nextTick, Logger } from "@/utils";
 import NetworkRequest from "./NetworkRequest";
 
+const logger = new Logger("[NetworkPanel]");
 const ReadyState = Object.freeze({
   UNSENT: 0,
   OPENED: 1,
@@ -96,7 +97,7 @@ export default {
   },
   errorCaptured(error) {
     // 在浏览器控制台输出错误原因
-    _console.error(error);
+    logger.error(error);
     return false;
   },
   methods: {
