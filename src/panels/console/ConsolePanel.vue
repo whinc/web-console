@@ -1,6 +1,6 @@
 <template>
   <div class="console-panel">
-    <VTabBar v-model="activeType">
+    <VTabBar v-model="activeType" :equalWidth="true">
       <VTabBarItem id="all">All</VTabBarItem>
       <VTabBarItem id="log">Log</VTabBarItem>
       <VTabBarItem id="info">Info</VTabBarItem>
