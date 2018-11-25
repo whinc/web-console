@@ -50,10 +50,7 @@
 <script>
 import { Popup } from "mint-ui";
 import { VTabBar, VTabBarItem, VIcon } from "./components";
-import { ConsolePanel } from "./console";
-import { NetworkPanel } from "./network";
-import { ApplicationPanel } from "./application";
-import { SettingsPanel } from "./settings";
+import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel } from "@/panels";
 import { eventBus, Logger } from "@/utils";
 
 const logger = new Logger("[App]");

@@ -71,7 +71,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base.scss";
+@import "../../base.scss";
 
 $status-error-color: rgb(230, 0, 0);
 .request {

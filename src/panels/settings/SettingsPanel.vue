@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { VIcon } from "../components";
+import { VIcon } from "@/components";
 import { eventBus, Logger, cloneDeep } from "@/utils";
 
 const logger = new Logger("[SettingsPanel]");
@@ -232,7 +232,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base.scss";
+@import "../../base.scss";
 $primary-text-color: rgb(48, 57, 66);
 $second-text-color: #777;
 .settings-panel {

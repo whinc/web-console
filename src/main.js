@@ -1,6 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-import consoleHooks from "./consoleHooks";
+import { consoleHooks } from "@/utils";
 // import { Logger } from "@/utils";
 import infiniteScroll from "vue-infinite-scroll";
 import "./global.scss";

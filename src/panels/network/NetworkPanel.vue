@@ -37,6 +37,7 @@ const ReadyState = Object.freeze({
 });
 
 export default {
+  name: "NetworkPanel",
   components: {
     VFootBar,
     VJSONViewer,
@@ -258,7 +259,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base.scss";
+@import "../../base.scss";
 
 .network-panel {
   height: $panel-height;

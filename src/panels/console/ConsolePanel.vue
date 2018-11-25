@@ -22,14 +22,14 @@
 </template>
 
 <script>
-import Message from "./Message";
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
-import { uuid, createStack, eventBus, TaskScheduler, Logger } from "@/utils";
-import consoleHooks from "../consoleHooks";
+import { uuid, createStack, eventBus, TaskScheduler, Logger, consoleHooks } from "@/utils";
+import Message from "./Message";
 
 const logger = new Logger("[ConsolePanel]");
 
 export default {
+  name: "ConsolePanel",
   components: {
     Message,
     VFootBar,
@@ -189,7 +189,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base.scss";
+@import "../../base.scss";
 
 .console-panel {
   height: $panel-height;

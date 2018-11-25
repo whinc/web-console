@@ -66,8 +66,8 @@
 </template>
 
 <script>
-import { HttpStatus } from "@/constants";
 import URLSearchParams from "url-search-params";
+import HttpStatus from "./HttpStatus";
 
 export default {
   props: {
@@ -173,7 +173,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base";
+@import "../../base.scss";
 
 .tab-headers {
   margin: 0 5px;

@@ -19,6 +19,7 @@ import { VTabBar, VTabBarItem } from "@/components";
 import TabStorage from "./TabStorage";
 
 export default {
+  name: "ApplicationPanel",
   components: {
     VTabBar,
     VTabBarItem,
@@ -42,7 +43,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base.scss";
+@import "../../base.scss";
 
 .application-panel {
   height: $panel-height;

@@ -84,7 +84,7 @@ export default {
     text-align: center;
     img {
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
-      background: url("../assets/icons/transparent_bg.png");
+      background: url("../../assets/icons/transparent_bg.png");
       background-repeat: repeat;
     }
   }
