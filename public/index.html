@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- <!DOCTYPE html> -->
 <html>
   <head>
     <meta charset="utf-8">
@@ -20,6 +21,23 @@
     </style>
   </head>
   <body>
+    <!-- 测试 element 面板 -->
+    <div id="element"
+      class="a"
+      style="display: none"
+      data-a="a"
+      >
+      <div> 
+        <!-- 测试不同类型节点 -->
+          hello 
+          world
+        <span>b</span>
+      </div>
+      <div>
+        <div>B</div>
+      </div>
+    </div>
+
     <!-- import Vue before Mint UI -->
     <script src="./vue.js"></script>
     <div id="app">
@@ -109,7 +127,7 @@
               // new Array(11).fill(0).forEach((v, i) => console.log(i))
 
               window.webConsole = new window.WebConsole({
-                activeTab: 'network',
+                activeTab: 'element',
                 panelVisible: true,
                 entryStyle: 'icon'
               });
