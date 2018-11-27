@@ -1,7 +1,8 @@
 <template>
-  <span v-if="type === 'start'" class="tag tag--start">{{startTag}}</span>  
+  <!-- 不要换行，否则内容前后多出空白符 -->
+  <span v-if="type === 'start'" class="tag tag--start" @click="$emit('click')">{{startTag}}</span>  
   <span v-else-if="type === 'end'" class="tag tag--end">{{endTag}}</span>  
-  <span v-else-if="type === 'inline'" class="tag tag--inline">{{startTag}}<slot></slot>{{endTag}}</span>  
+  <span v-else-if="type === 'inline'" class="tag tag--inline" @click="$emit('click')">{{startTag}}<slot></slot>{{endTag}}</span>  
   <span v-else></span>  
 </template>
 
@@ -48,6 +49,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../base.scss";
 .tag {
   &--start,
   &--end,

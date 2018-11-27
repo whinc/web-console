@@ -1,18 +1,19 @@
 <template>
-  <div v-if="el && el.nodeType === Node.ELEMENT_NODE" class="node element" @click.stop="toggleFold">
+  <div v-if="el && el.nodeType === Node.ELEMENT_NODE" class="node element">
     <template v-if="childNodes.length > 1 || (childNodes.length === 1 && childNodes[0].nodeType !== Node.TEXT_NODE)">
-      <!-- 展开 -->
+      <!-- 展开态 -->
       <template v-if="!isFold">
-        <Tag :el="el" type="start" :style="indentStyle" />
+        <!-- 只有标签可点击 -->
+        <Tag :el="el" type="start" :class="{unfold: deepth > 0}" :style="indentStyle" @click="toggleFold" />
         <NodeView v-for="(node, index) in childNodes" :key="deepth + '-' + index"
           :el="node"
           :deepth="deepth + 1"
         />
         <Tag :el="el" type="end" :style="indentStyle" />
       </template>
-      <!-- 折叠 -->
+      <!-- 折叠态-->
       <template v-else>
-        <Tag :el="el" type="inline" :style="indentStyle">...</Tag>
+        <Tag :el="el" type="inline" :class="{fold: deepth > 0}" :style="indentStyle" @click="toggleFold">...</Tag>
       </template>
     </template>
     <template v-else>
@@ -127,6 +128,30 @@ export default {
   }
   .comment {
     display: flex;
+  }
+  .fold::before {
+    display: inline-block;
+    content: "";
+    width: 0;
+    height: 0;
+    margin-right: 2px;
+    $border-width: 5px;
+    /* 等边三角形，tan(30) 约为 0.5773502691896257 */
+    border-left: $border-width solid #727272;
+    border-top: $border-width * 0.8 solid transparent;
+    border-bottom: $border-width * 0.8 solid transparent;
+  }
+  .unfold::before {
+    display: inline-block;
+    content: "";
+    width: 0;
+    height: 0;
+    margin-right: 2px;
+    margin-bottom: 1px;
+    $border-width: 5px;
+    border-top: $border-width solid #727272;
+    border-left: $border-width * 0.8 solid transparent;
+    border-right: $border-width * 0.8 solid transparent;
   }
 }
 </style>
