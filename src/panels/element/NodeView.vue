@@ -8,9 +8,9 @@
         <!-- 只有标签可点击 -->
         <Tag type="start"
           :el="el"
-          :class="{'unfold': deepth > 0, 'select': isSelected}"
+          :class="{'unfold': deepth > 0, 'select': isSelected && selectTagType === 'start'}"
           :style="indentStyle"
-          @click="onClickTag"
+          @click="onClickTag('start')"
         />
         <!-- 子节点 -->
         <NodeView v-for="(node, index) in childNodes" :key="deepth + '-' + index"
@@ -22,8 +22,8 @@
         <Tag type="end"
           :el="el"
           :style="indentStyle"
-          :class="{'select': isSelected}"
-          @click="onClickTag"
+          :class="{'select': isSelected && selectTagType === 'end'}"
+          @click="onClickTag('end')"
         />
       </template>
       <!-- 折叠态-->
@@ -32,7 +32,7 @@
           :el="el"
           :class="{'fold': deepth > 0, 'select': isSelected}"
           :style="indentStyle"
-          @click="onClickTag"
+          @click="onClickTag('start')"
           >...</Tag>
       </template>
     </template>
@@ -129,7 +129,9 @@ export default {
   data() {
     return {
       // 是否折叠
-      isExpand: false
+      isExpand: false,
+      // 选中的标签类型，用于区分开始标签和结束标签的选中态，其他类型默认选中整个标签
+      selectTagType: ""
     };
   },
   computed: {
@@ -171,16 +173,20 @@ export default {
     this.isExpand = this.expandDeepth > 0;
   },
   methods: {
-    onClickTag() {
+    onClickTag(selectTagType) {
+      const preSelectTagType = this.selectTagType;
       const el = this.el;
       const selectedEl = this.getSelectedElement();
       if (selectedEl !== el) {
+        // 如果未选中则设未选中元素
         this.setSelectedElement(el);
       } else {
-        if (this.isExpandable) {
+        // 如果已选中，且元素可展开，且点击的是开始标签，则切换折叠/展开
+        if (this.isExpandable && preSelectTagType === selectTagType && selectTagType === "start") {
           this.isExpand = !this.isExpand;
         }
       }
+      this.selectTagType = selectTagType;
     }
   }
 };

@@ -1,6 +1,6 @@
 <template>
   <div class="element-panel">
-    <NodeView :el="el" class="source-code" :expandDeepth="5" />
+    <NodeView :el="el" class="source-code" :expandDeepth="1" />
   </div>
 </template>
 
@@ -24,8 +24,8 @@ export default {
   },
   data() {
     return {
-      el: document.querySelector("#element"),
-      // el: document.documentElement,
+      // el: document.querySelector("#element"),
+      el: document.documentElement,
       selectedEl: null
     };
   }
