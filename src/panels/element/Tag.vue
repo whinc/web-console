@@ -1,13 +1,33 @@
 <template>
   <!-- 不要换行，否则内容前后多出空白符 -->
-  <span v-if="type === 'start'" class="tag tag--start" @click="$emit('click')">{{startTag}}</span>  
-  <span v-else-if="type === 'end'" class="tag tag--end">{{endTag}}</span>  
-  <span v-else-if="type === 'inline'" class="tag tag--inline" @click="$emit('click')">{{startTag}}<slot></slot>{{endTag}}</span>  
+  <span v-if="type === 'start'" class="tag tag--start" @click="$emit('click')">
+    <span>&lt;</span>
+    <span class="tag__tag-name">{{tagName}}</span>
+    <span v-for="[name, value] in attrs" :key="name">
+      <span>&nbsp;</span>
+      <span class="tag__attr-name">{{name}}</span>
+      <span>="</span>
+      <span class="tag__attr-value">{{value}}</span>
+      <span>"</span>
+    </span>
+    <span>&gt;</span>
+  </span>  
+  <span v-else-if="type === 'end'" class="tag tag--end" @click="$emit('click')">
+    <span>&lt;</span>
+    <span class="tag__tag-name">{{tagName}}</span>
+    <span>&gt;</span>
+  </span>  
+  <span v-else-if="type === 'inline'" class="tag tag--inline" @click="$emit('click')">
+    <Tag :el="el" type="start"/>
+    <span class="tag__text"><slot></slot></span>
+    <Tag :el="el" type="end"/>
+  </span>  
   <span v-else></span>  
 </template>
 
 <script>
 export default {
+  name: "Tag",
   props: {
     el: {
       type: Element,
@@ -22,6 +42,13 @@ export default {
     }
   },
   computed: {
+    tagName() {
+      return this.el.tagName.toLowerCase();
+    },
+    attrs() {
+      const el = this.el;
+      return el.getAttributeNames().map(name => [name, el.getAttribute(name)]);
+    },
     startTag() {
       const el = this.el;
       if (el instanceof HTMLElement) {
@@ -50,11 +77,28 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../base.scss";
+$dom-tag-name-color: rgb(136, 18, 128);
+$dom-attribute-name-color: rgb(153, 69, 0);
+$dom-attribute-value-color: rgb(26, 26, 166);
+$dom-link-color: rgb(17, 85, 204);
 .tag {
+  color: rgb(168, 148, 166);
   &--start,
   &--end,
   &--inline {
-    white-space: nowrap;
+  }
+  &__tag-name {
+    color: $dom-tag-name-color;
+  }
+  &__attr-name {
+    color: $dom-attribute-name-color;
+  }
+  &__attr-value {
+    color: $dom-attribute-value-color;
+  }
+  &__text {
+    color: rgb(48, 57, 66);
+    white-space: pre;
   }
 }
 </style>
