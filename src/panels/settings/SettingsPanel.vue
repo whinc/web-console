@@ -91,6 +91,7 @@ const defaultConfigs = [
         value: 400,
         desc: "Max message count: ",
         options: [
+          { text: "200", value: 200 },
           { text: "400", value: 400 },
           { text: "800", value: 800 },
           { text: "1600", value: 1600 },
