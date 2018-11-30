@@ -19,19 +19,17 @@
       </div>
       <!-- 设置选项 -->
       <div class="content">
+        <div class="title">
+          <span>{{activedConfig.desc}}</span>
+        </div>
         <div
-          v-for="(setting, index) in activedConfig.settings || []"
+          v-for="(setting, index) in activedConfig.items || []"
           :key="index"
+          class="setting"
           :class="setting.type"
         >
           <template v-if="setting.type === 'section'">
             <div class="section">{{setting.desc}}</div>
-          </template>
-          <template v-else-if="setting.type === 'title'">
-            <span>{{setting.desc}}</span>
-          </template>
-          <template v-else-if="setting.type === 'separator'">
-            <!-- empty div with height -->
           </template>
           <template v-else-if="setting.type === 'text'">
             <div class="text">{{setting.desc}}</div>
@@ -43,7 +41,7 @@
           <template v-else-if="setting.type === 'select'">
             <span>{{setting.desc}}</span>
             <select v-model="setting.value" @change="onSettingsChanged">
-              <option disabled value="">请选择</option>
+              <option disabled value="">Select</option>
               <option
                 v-for="option in setting.options"
                 :key="option.name"
@@ -74,17 +72,16 @@ const KEY_SETTINGS = "web-console:settings";
  */
 const defaultConfigs = [
   {
-    name: "console",
-    desc: "Console",
-    settings: [
-      { type: "title", desc: "Console" },
+    name: "preferences",
+    desc: "Preferences",
+    items: [
+      { type: "section", desc: "Console" },
       {
         type: "checkbox",
         name: "showTimestamps",
         value: false,
         desc: "Show timestamps"
       },
-      { type: "separator" },
       {
         type: "select",
         name: "maxMsgCount",
@@ -102,14 +99,12 @@ const defaultConfigs = [
   },
   {
     desc: "About",
-    settings: [
+    items: [
       { type: "title", desc: "About" },
       { type: "section", desc: "Package name" },
       { type: "text", desc: process.env.VUE_APP_NAME },
-      { type: "separator" },
       { type: "section", desc: "Version" },
       { type: "text", desc: process.env.VUE_APP_VERSION },
-      { type: "separator" },
       { type: "section", desc: "Build date" },
       { type: "text", desc: process.env.VUE_APP_DATE }
     ]
@@ -122,7 +117,7 @@ export default {
     VIcon
   },
   props: {
-    // v-model
+    // 是否可见，支持 v-model
     value: Boolean
   },
   data() {
@@ -139,12 +134,6 @@ export default {
       return this.configs[this.activedIndex];
     }
   },
-  // watch: {
-  //   value(val) {
-  //     if (val) {
-  //     }
-  //   }
-  // },
   mounted() {
     // 加载配置
     this.loadSettings();
@@ -154,19 +143,19 @@ export default {
   methods: {
     // 通知配置更新
     onSettingsChanged() {
-      const settings = this.configs2Settings(this.configs);
+      const settings = this.extractSettings();
       eventBus.emit(eventBus.SETTINGS_CHANGE, settings);
-      // logger.log('%o --extract--> %o --expand--> %o', this.configs, settings, this.settings2Configs(settings))
-      // logger.log("configs2Settings:", settings);
+      // logger.log('%o --extract--> %o --expand--> %o', this.configs, settings, this.recoverSettings(settings))
+      // logger.log("extractSettings:", settings);
     },
     onClickClose() {
-      // v-model
+      // 是否可见，支持 v-model
       this.$emit("input", false);
 
       this.saveSettings();
     },
     saveSettings() {
-      const settings = this.configs2Settings(this.configs);
+      const settings = this.extractSettings();
       window.localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
     },
     loadSettings() {
@@ -174,20 +163,23 @@ export default {
       if (!content) return;
       try {
         const settings = JSON.parse(content);
-        this.settings2Configs(settings);
+        this.recoverSettings(settings);
       } catch (err) {
         logger.error(err);
       }
     },
     /**
-     * 将配置项转为设置项，前者除了包含设置项还包含与 UI 相关的数据，后者指
+     * 从 UI 配置项中提取设置项
      * [
      *  {
-     *    name: 'aa',
      *    setting: [
      *      {
-     *        name: 'bb',
-     *        value: 'cc'
+     *        name: 'a1',
+     *        value: 'v1'
+     *      },
+     *      {
+     *        name: 'b1',
+     *        value: 'v2'
      *      }
      *    ]
      *  }
@@ -195,38 +187,30 @@ export default {
      *
      * 提取设置：
      * {
-     *  'aa': {
-     *    'bb': 'cc'
-     *  }
+     *  a1: v1,
+     *  b1: v2
      * }
      */
-    configs2Settings(configs) {
+    extractSettings() {
       const settings = {};
-      configs.forEach(item => {
-        if (!item.name) return;
-        const name1 = item.name;
-        settings[name1] = {};
-        item.settings.forEach(item2 => {
-          if (!item2.name) return;
-          const name2 = item2.name;
-          settings[name1][name2] = item2.value;
+      this.configs.forEach(config => {
+        config.items.forEach(item => {
+          if (item.name) {
+            settings[item.name] = item.value;
+          }
         });
       });
       return settings;
     },
-    // configs2Settings 的逆过程：将设置项恢复到配置项中
-    settings2Configs(settings) {
-      const configs = this.configs;
-      Object.keys(settings).forEach(name1 => {
-        const config = configs.find(item => item.name === name1);
-        if (!config) return;
-        Object.keys(settings[name1]).forEach(name2 => {
-          const config2 = config.settings.find(item2 => item2.name === name2);
-          if (!config2) return;
-          config2.value = settings[name1][name2];
+    // extractSettings 的逆过程：将设置项恢复到 UI 配置项中
+    recoverSettings(settings) {
+      this.configs.forEach(config => {
+        config.items.forEach(item => {
+          if (item.name in settings) {
+            item.value = settings[item.name];
+          }
         });
       });
-      return configs;
     }
   }
 };
@@ -251,6 +235,7 @@ $second-text-color: #777;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    min-height: 30px;
     padding: 5px;
   }
   .main {
@@ -286,6 +271,7 @@ $second-text-color: #777;
       display: flex;
       flex-direction: column;
       $margin-left: 15px;
+      overflow-y: auto;
       .title {
         font-size: $primary-font-size * 1.5;
         color: $primary-text-color;
@@ -294,36 +280,38 @@ $second-text-color: #777;
         margin-bottom: 10px;
         border-bottom: 1px solid #eeeeee;
       }
-      .separator {
-        height: 12px;
-      }
-      .section {
-        font-size: 110%;
-        color: #222;
-      }
-      .text {
-        padding-left: $margin-left;
-      }
-      .checkbox {
-        padding-left: $margin-left;
-        display: flex;
-        align-items: center;
-        input {
-          width: $primary-font-size;
-          height: $primary-font-size;
+      .setting {
+        margin-bottom: 12px;
+        &.section {
+          font-size: 110%;
+          color: #222;
         }
-      }
-      .select {
-        padding-left: $margin-left;
-        display: flex;
-        align-items: center;
-        select {
-          background-color: transparent;
-          border: 1px solid rgba(0, 0, 0, 0.2);
-          color: #333;
-          border-radius: 2px;
-          padding: 0 5px;
-          margin: 0 0 0 10px;
+        &.text {
+          padding-left: $margin-left;
+        }
+        &.checkbox {
+          flex: 0 0 auto;
+          padding-left: $margin-left;
+          display: flex;
+          align-items: center;
+          input {
+            width: $primary-font-size;
+            height: $primary-font-size;
+          }
+        }
+        &.select {
+          flex: 0 0 auto;
+          padding-left: $margin-left;
+          display: flex;
+          align-items: center;
+          select {
+            background-color: transparent;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: #333;
+            border-radius: 2px;
+            padding: 0 5px;
+            margin: 0 0 0 10px;
+          }
         }
       }
     }
