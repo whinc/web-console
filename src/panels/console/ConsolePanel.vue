@@ -181,8 +181,8 @@ export default {
       // logger.log('scrollTop + clientHeight: %s, scrollHeight: %s, isBottom: %s', el.scrollTop + el.clientHeight, el.scrollHeight, this.isBottom)
     },
     onSettingsChanged(settings) {
-      this.showTimestamps = !!settings.console.showTimestamps;
-      this.maxMsgCount = settings.console.maxMsgCount;
+      this.showTimestamps = !!settings.showTimestamps;
+      this.maxMsgCount = settings.maxMsgCount;
     }
   }
 };

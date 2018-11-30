@@ -10,7 +10,7 @@
       <VIcon name="add" :disable="isEditting" class="toolbar__button" @click="onClickAdd" />
       <input class="toolbar__input" type="text" placeholder="Filter" v-model="filter" />
     </div>
-    <div class="table">
+    <div class="tag-storage__body table">
       <div class="table__head">
         <div class="table__row table__row--head">
           <div class="table__cell table__cell--head">Key({{storageLength}})<!--[{{kvList.length}}]--></div>
@@ -258,6 +258,9 @@ export default {
   flex-direction: column;
   &__head {
     flex: 0 0 2.4em;
+  }
+  &__body {
+    flex: 1 1 auto;
   }
 }
 
