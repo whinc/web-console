@@ -11,18 +11,19 @@
       <span>"</span>
     </span>
     <span>&gt;</span>
-  </span>  
-  <span v-else-if="type === 'end'" class="tag tag--end" @click="$emit('click')">
-    <span>&lt;</span>
+  </span>
+  <span v-else-if="type === 'end' && !isVoidElement" class="tag tag--end" @click="$emit('click')">
+    <span>&lt;/</span>
     <span class="tag__tag-name">{{tagName}}</span>
     <span>&gt;</span>
-  </span>  
+  </span>
   <span v-else-if="type === 'inline'" class="tag tag--inline" @click="$emit('click')">
     <Tag :el="el" type="start"/>
-    <span class="tag__text"><slot></slot></span>
+    <span class="tag__text" v-if="hasDefaultSlot">
+      <slot></slot>
+    </span>
     <Tag :el="el" type="end"/>
-  </span>  
-  <span v-else></span>  
+  </span>
 </template>
 
 <script>
@@ -49,27 +50,30 @@ export default {
       const el = this.el;
       return el.getAttributeNames().map(name => [name, el.getAttribute(name)]);
     },
-    startTag() {
-      const el = this.el;
-      if (el instanceof HTMLElement) {
-        let attrList = [];
-        attrList = el.getAttributeNames().map(name => `${name}="${el.getAttribute(name)}"`);
-        return "<" + el.tagName.toLowerCase() + (attrList.length > 0 ? " " : "") + attrList.join(" ") + ">";
-      } else if (el instanceof Comment) {
-        return `<--`;
-      } else {
-        return "";
-      }
+    hasDefaultSlot() {
+      return Boolean(this.$slots.default.text);
     },
-    endTag() {
-      const el = this.el;
-      if (el instanceof HTMLElement) {
-        return "</" + el.tagName.toLowerCase() + ">";
-      } else if (el instanceof Comment) {
-        return `-->`;
-      } else {
-        return "";
-      }
+    // 是否是无内容标签
+    // 无内容标签不能有结束标签，HTML5 中定义的无内容标签见<https://html.spec.whatwg.org/multipage/syntax.html#void-elements>
+    isVoidElement() {
+      return (
+        [
+          "area",
+          "base",
+          "br",
+          "col",
+          "embed",
+          "hr",
+          "img",
+          "input",
+          "link",
+          "meta",
+          "param",
+          "source",
+          "track",
+          "wbr"
+        ].indexOf(this.tagName) !== -1
+      );
     }
   }
 };
@@ -83,7 +87,7 @@ $dom-attribute-value-color: rgb(26, 26, 166);
 $dom-link-color: rgb(17, 85, 204);
 .tag {
   white-space: pre-wrap;
-  word-wrap: break-word;
+  word-break: break-all;
   color: rgb(168, 148, 166);
   &--start,
   &--end,

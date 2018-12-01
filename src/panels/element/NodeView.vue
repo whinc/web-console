@@ -251,7 +251,7 @@ $selection-active-fg-color: white;
   .text {
     color: rgb(48, 57, 66);
     white-space: pre-wrap;
-    word-wrap: break-word;
+    word-break: break-all;
   }
   .document-type {
     color: rgb(192, 192, 192);
