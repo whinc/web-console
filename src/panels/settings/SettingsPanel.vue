@@ -100,7 +100,6 @@ const defaultConfigs = [
   {
     desc: "About",
     items: [
-      { type: "title", desc: "About" },
       { type: "section", desc: "Package name" },
       { type: "text", desc: process.env.VUE_APP_NAME },
       { type: "section", desc: "Version" },
