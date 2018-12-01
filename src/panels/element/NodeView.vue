@@ -1,5 +1,5 @@
 <template>
-  <!-- <div v-if="el"> -->
+  <!-- 为了尽量减少标签的使用，会有重复属性分散在多个同级标签中 -->
   <div v-if="el && el.nodeType === Node.ELEMENT_NODE" class="node element">
     <template v-if="isExpandable">
       <!-- 展开态 -->
@@ -41,7 +41,6 @@
       <Tag type="inline"
         :el="el"
         :style="indentStyle"
-        key="hello"
         :class="{'select': isSelected}"
         @click="onClickTag"
         >{{el.textContent}}</Tag>
@@ -53,7 +52,8 @@
     :style="indentStyle"
     @click="onClickTag"
     >
-    <span>"{{el.data}}"</span>
+    <span v-if="el.parentNode.nodeName === 'STYLE' || el.parentNode.nodeName === 'SCRIPT'">{{el.data}}</span>
+    <span v-else>"{{el.data}}"</span>
   </div>
   <div v-else-if="el && el.nodeType === Node.COMMENT_NODE"
     class="node comment"
@@ -140,7 +140,20 @@ export default {
     },
     isExpandable() {
       const childNodes = this.childNodes;
-      return childNodes.length > 1 || (childNodes.length === 1 && childNodes[0].nodeType !== Node.TEXT_NODE);
+      if (childNodes.length > 1) return true;
+
+      if (childNodes.length === 0) return false;
+
+      // <style></style> 只有一个节点时折叠
+      const tagName = this.el.nodeName.toLowerCase();
+      if (childNodes.length === 1 && ["style", "script"].findIndex(v => v === tagName) !== -1) return true;
+
+      // 子节点非 TEXT 类型节点时折叠
+      const child = childNodes[0];
+      if (child.nodeType !== Node.TEXT_NODE) return true;
+
+      // 其他情况不可折叠，即直接展示内容
+      return false;
     },
     isSelected() {
       return this.getSelectedElement() === this.el;
@@ -237,7 +250,8 @@ $selection-active-fg-color: white;
   }
   .text {
     color: rgb(48, 57, 66);
-    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
   .document-type {
     color: rgb(192, 192, 192);

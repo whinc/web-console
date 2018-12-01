@@ -1,6 +1,8 @@
 <template>
   <div class="element-panel">
-    <NodeView :el="el" class="source-code" :expandDeepth="1" />
+    <div class="dom-tree" v-prevent-bkg-scroll>
+      <NodeView :el="el" class="source-code" :expandDeepth="1" />
+    </div>
   </div>
 </template>
 
@@ -37,6 +39,12 @@ export default {
 
 .element-panel {
   height: $panel-height;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  .dom-tree {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 5px;
+  }
 }
 </style>

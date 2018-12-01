@@ -82,6 +82,8 @@ $dom-attribute-name-color: rgb(153, 69, 0);
 $dom-attribute-value-color: rgb(26, 26, 166);
 $dom-link-color: rgb(17, 85, 204);
 .tag {
+  white-space: pre-wrap;
+  word-wrap: break-word;
   color: rgb(168, 148, 166);
   &--start,
   &--end,
