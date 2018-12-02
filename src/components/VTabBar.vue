@@ -10,6 +10,15 @@
 </template>
 
 <script>
+/**
+ * Tab 栏
+ *
+ * 使用示例：
+ * <VTabBar v-model="activedTab">
+ *  <VTabBarItem id="tab1">Tab1</VTabBarItem>
+ *  <VTabBarItem id="tab2">Tab2</VTabBarItem>
+ * </VTabBar>
+ */
 export default {
   name: "v-tab-bar",
   props: {
