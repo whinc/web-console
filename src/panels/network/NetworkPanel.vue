@@ -1,6 +1,5 @@
 <template>
   <div class="network-panel">
-    <!-- <VJSONViewer :value="value" /> -->
     <div class="head">
       <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">
         Name {{requestList.length > 0 ? `(${requestList.length})` : ''}}
@@ -25,7 +24,7 @@
 
 <script>
 import { VFootBar, VJSONViewer } from "@/components";
-import { nextTick, Logger } from "@/utils";
+import { nextTick, Logger, eventBus } from "@/utils";
 import NetworkRequest from "./NetworkRequest";
 
 const logger = new Logger("[NetworkPanel]");
@@ -46,22 +45,6 @@ export default {
   },
   data() {
     return {
-      value: {
-        a: 1,
-        b: true,
-        c: "c",
-        d: [1.23, true, "c", { a: 1, b: 2 }],
-        e: {
-          a: 1,
-          b: true,
-          c: "c",
-          d: null,
-          e1: 1,
-          e2: 1,
-          e3: 1,
-          e4: "a"
-        }
-      },
       // 请求列表
       requestMap: {},
       // 选中请求的编号
@@ -85,7 +68,7 @@ export default {
         {
           text: "Hide",
           click: () => {
-            this.$root.$emit("hide");
+            eventBus.emit(eventBus.POPUP_HIDE);
           }
         }
       ];
