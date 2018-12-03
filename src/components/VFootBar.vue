@@ -2,7 +2,8 @@
   <div class="foot-bar">
     <template v-for="(btn, index) in buttons">
       <button :key="index + btn.text" @click="btn.click.call(null)">{{btn.text}}</button>
-      <div :key="index" class="separator" />
+      <!-- 最后一个不显示分隔符 -->
+      <div v-if="index < buttons.length - 1" :key="index" class="separator" />
     </template>
   </div>  
 </template>

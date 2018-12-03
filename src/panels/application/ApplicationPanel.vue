@@ -1,6 +1,6 @@
 <template>
   <div class="application-panel">
-    <VTabBar v-model="activeTab" :equalWidth="true">
+    <VTabBar class="head" v-model="activeTab" :equalWidth="true">
       <VTabBarItem v-for="{type, desc} in storageTypes" :key="type"
         :id="type">
         {{desc}}
@@ -8,14 +8,17 @@
     </VTabBar>
     <TabStorage v-for="{type} in storageTypes" :key="type"
       v-show="activeTab === type"
+      class="body"
       :class="type"
       :storageType="type"
     />
+    <VFootBar class="foot" :buttons="buttons" />
   </div>
 </template>
 
 <script>
-import { VTabBar, VTabBarItem } from "@/components";
+import { VTabBar, VTabBarItem, VFootBar } from "@/components";
+import { eventBus } from "@/utils";
 import TabStorage from "./TabStorage";
 
 export default {
@@ -23,7 +26,8 @@ export default {
   components: {
     VTabBar,
     VTabBarItem,
-    TabStorage
+    TabStorage,
+    VFootBar
   },
   data() {
     return {
@@ -31,6 +35,16 @@ export default {
     };
   },
   computed: {
+    buttons() {
+      return [
+        {
+          text: "Hide",
+          click: () => {
+            eventBus.emit(eventBus.POPUP_HIDE);
+          }
+        }
+      ];
+    },
     storageTypes() {
       return [
         { type: "localStorage", desc: "Local Storage" },
@@ -49,5 +63,14 @@ export default {
   height: $panel-height;
   display: flex;
   flex-direction: column;
+  .head {
+    flex: 0 0 auto;
+  }
+  .body {
+    flex: 1 1 auto;
+  }
+  .foot {
+    flex: 0 0 auto;
+  }
 }
 </style>
