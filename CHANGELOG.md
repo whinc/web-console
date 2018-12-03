@@ -1,3 +1,15 @@
+<a name="0.3.0-beta.3"></a>
+
+# [0.3.0-beta.3](https://github.com/whinc/web-console/compare/v0.3.0-beta.2...v0.3.0-beta.3) (2018-12-03)
+
+### Bug Fixes
+
+- **settings:** 移除 About 页标题地下多出的横线 ([14e8cde](https://github.com/whinc/web-console/commit/14e8cde))
+
+### Features
+
+- **application:** 增加底部隐藏按钮 ([5eb10fe](https://github.com/whinc/web-console/commit/5eb10fe))
+
 <a name="0.3.0-beta.2"></a>
 
 # [0.3.0-beta.2](https://github.com/whinc/web-console/compare/0.3.0-beta.1...v0.3.0-beta.2) (2018-11-29)
