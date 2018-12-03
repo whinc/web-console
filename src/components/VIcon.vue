@@ -20,6 +20,8 @@
       <img v-else src="@/assets/icons/add.png"/>
     </template>
     <img v-else-if="name === 'cancel'" src="@/assets/icons/close.png"/>
+    <img v-else-if="name === 'expand'" src="@/assets/icons/expand.png"/>
+    <img v-else-if="name === 'collapse'" src="@/assets/icons/collapse.png"/>
   </span>
 </template>
 

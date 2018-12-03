@@ -94,6 +94,13 @@ const defaultConfigs = [
           { text: "1600", value: 1600 },
           { text: "Infinity", value: Number.MAX_VALUE }
         ]
+      },
+      { type: "section", desc: "Application" },
+      {
+        type: "checkbox",
+        name: "showApplicationToolbar",
+        value: false,
+        desc: "Show Toolbar"
       }
     ]
   },

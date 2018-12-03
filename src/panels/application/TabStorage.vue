@@ -1,6 +1,6 @@
 <template>
   <div class="tab-storage">
-    <div class="tab-storage__head toolbar">
+    <div v-show="isToolbarExpanded" class="tab-storage__head toolbar">
       <VIcon name="refresh" class="toolbar__button" @click="onRefresh" />
       <VIcon name="ban" class="toolbar__button" @click="onClearAll" />
       <VIcon name="close" :disable="!select" class="toolbar__button" @click="onClearSelected" />
@@ -60,12 +60,18 @@ export default {
     VIcon
   },
   props: {
+    // 存储类型
     storageType: {
       type: String,
       required: true,
       validator(val) {
         return ["localStorage", "sessionStorage", "cookieStorage"].indexOf(val) !== -1;
       }
+    },
+    // 工具栏是否处于展开态
+    isToolbarExpanded: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -272,6 +278,7 @@ export default {
   display: flex;
   align-items: center;
   background-color: rgb(243, 243, 243);
+  border-bottom: 1px solid rgb(205, 205, 205);
   &__button {
     padding: 0.6em;
     width: 2.4em;
@@ -310,8 +317,8 @@ export default {
   &__row {
     height: 30px;
     display: flex;
+    border-bottom: 1px solid transparent;
     &--head {
-      border-top: 1px solid rgb(205, 205, 205);
       border-bottom: 1px solid #aaa;
     }
     &:nth-child(even) {
@@ -355,8 +362,5 @@ export default {
       display: none;
     }
   }
-}
-
-.editing {
 }
 </style>
