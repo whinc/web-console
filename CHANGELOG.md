@@ -1,3 +1,16 @@
+<a name="0.3.0-beta.4"></a>
+
+# [0.3.0-beta.4](https://github.com/whinc/web-console/compare/v0.3.0-beta.3...v0.3.0-beta.4) (2018-12-03)
+
+### Bug Fixes
+
+- **network:** 修复底部隐藏按钮失效问题 ([a0d2269](https://github.com/whinc/web-console/commit/a0d2269))
+
+### Features
+
+- **application:** 支持折叠工具栏 ([ca20bfd](https://github.com/whinc/web-console/commit/ca20bfd))
+- **application:** 新增刷新全部和清除全部快捷按钮 ([fd4e4b4](https://github.com/whinc/web-console/commit/fd4e4b4))
+
 <a name="0.3.0-beta.3"></a>
 
 # [0.3.0-beta.3](https://github.com/whinc/web-console/compare/v0.3.0-beta.2...v0.3.0-beta.3) (2018-12-03)
