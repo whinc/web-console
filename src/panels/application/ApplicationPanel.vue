@@ -6,11 +6,13 @@
           :id="type">
           {{desc}}
         </VTabBarItem>
+        <VIcon slot="icons" :name="isToolbarExpanded ? 'collapse' : 'expand'" class="head__icon" @click="isToolbarExpanded = !isToolbarExpanded" />
       </VTabBar>
-      <VIcon :name="isToolbarExpanded ? 'collapse' : 'expand'" class="head__icon" @click="isToolbarExpanded = !isToolbarExpanded" />
+      <!-- <div class="head__separator" /> -->
     </div>
     <TabStorage v-for="{type} in storageTypes" :key="type"
       v-show="activeTab === type"
+      ref="tabStorage"
       class="body"
       :class="type"
       :storageType="type"
@@ -44,6 +46,26 @@ export default {
   computed: {
     buttons() {
       return [
+        {
+          text: "Clear All",
+          click: () => {
+            // 清除所有 storage 类型数据
+            const tabStorageList = this.$refs.tabStorage;
+            if (Array.isArray(tabStorageList)) {
+              tabStorageList.forEach(tabStorage => tabStorage.onClearAll());
+            }
+          }
+        },
+        {
+          text: "Refresh All",
+          click: () => {
+            // 刷新所有 storage 类型数据
+            const tabStorageList = this.$refs.tabStorage;
+            if (Array.isArray(tabStorageList)) {
+              tabStorageList.forEach(tabStorage => tabStorage.onRefresh());
+            }
+          }
+        },
         {
           text: "Hide",
           click: () => {
@@ -88,10 +110,6 @@ export default {
     &__icon {
       padding: 0.6em;
       width: 2.4em;
-      border-bottom: 1px solid #cdcdcd;
-      &:active {
-        background-color: #eaeaea;
-      }
     }
   }
   .body {
