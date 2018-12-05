@@ -1,5 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
+import "./polyfill";
 import { consoleHooks, filters } from "@/utils";
 // import { Logger } from "@/utils";
 import infiniteScroll from "vue-infinite-scroll";

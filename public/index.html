@@ -6,6 +6,43 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="shortcut icon" href="<%= webpackConfig.output.publicPath %>favicon.ico">
     <title>web-console</title>
+    <style>
+      /* CSSImportRule */
+      @import url('style_import.css');
+
+      /* CSSStyleRule */
+      #element {
+        color: red;
+        animation: out; 
+      }
+      .xyz {
+        border: 1px solid red;
+      }
+      div {
+        color: black;
+      }
+
+      /* CSSKeyframesRule */
+      @keyframes out {
+        0% { }
+        100% { opacity: 0; }
+      }
+
+      /* parent element style */
+      #parent {
+        /* 可继承 */
+        color: gold;
+        /* 不可继承 */
+        border-right-width: 1px;
+      }
+
+      #parent2 {
+        color: brown;
+        /* 不可继承 */
+        border-right-width: 2px;
+      }
+    </style>
+    <link rel="stylesheet" href="style_link.css">
     <link rel="stylesheet" href="./mint-ui.min.css">
     <style>
       #app {
@@ -21,32 +58,36 @@
   </head>
   <body>
     <!-- 测试 element 面板 -->
-    <div id="element"
-      class="a"
-      style="display: none"
-      data-a="a"
-      >
-      <div> 
-        <!-- 测试不同类型节点 -->
-          hello 
-          world
-        <span>b</span>
-        <!-- 无内容标签测试 -->
-        <input>
-        <input/>
-        <input></input>
-      </div>
-      1
-      <div>
-        2
-        <div>
-          3
+    <div id="parent" style="color: red">
+      <div id="parent2" style="color: red">
+        <div id="element"
+          class="xyz"
+          style="display: none"
+          data-a="a"
+          >
+          <div> 
+            <!-- 测试不同类型节点 -->
+              hello 
+              world
+            <span>b</span>
+            <!-- 无内容标签测试 -->
+            <input>
+            <input/>
+            <input></input>
+          </div>
+          1
           <div>
-            4
+            2
             <div>
-              5
+              3
               <div>
-                6
+                4
+                <div>
+                  5
+                  <div>
+                    6
+                  </div>
+                </div>
               </div>
             </div>
           </div>

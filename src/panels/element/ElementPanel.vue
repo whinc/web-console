@@ -1,15 +1,15 @@
 <template>
   <div class="element-panel">
     <div v-show="!isStylePanelVisible" class="dom-tree" v-prevent-bkg-scroll>
-      <NodeView :el="el" class="source-code" :expandDeepth="1" />
+      <NodeView :el="rootEl" class="source-code" :expandDeepth="1" />
     </div>
-    <div v-show="isStylePanelVisible" class="style-panel">
+    <div v-if="isStylePanelVisible" class="style-panel">
       <VTabBar v-model="activedTab">
         <VTabBarItem id="styles">Styles</VTabBarItem>
         <VTabBarItem id="computed">Computed</VTabBarItem>
       </VTabBar>
-      <TabStyles v-if="activedTab === 'styles'" />
-      <TabComputed v-if="activedTab === 'computed'" />
+      <TabStyles v-show="activedTab === 'styles'" :el="selectedEl" />
+      <TabComputed v-show="activedTab === 'computed'" :el="selectedEl" />
     </div>
     <VFootBar class="foot" :buttons="footBarButtons" />
   </div>
@@ -44,8 +44,8 @@ export default {
   },
   data() {
     return {
-      // el: document.querySelector("#element"),
-      el: document.documentElement,
+      // rootEl: document.querySelector("#element"),
+      rootEl: document.documentElement,
       isStylePanelVisible: false,
       // 当前选中元素，如果没有值为 null
       selectedEl: null,
@@ -57,7 +57,7 @@ export default {
     footBarButtons() {
       return [
         {
-          text: "Styles",
+          text: this.isStylePanelVisible ? "Back" : "Inspect",
           disable: !this.selectedEl,
           click: () => {
             const el = this.selectedEl;
@@ -74,6 +74,11 @@ export default {
       ];
     }
     /* eslint-enable */
+  },
+  mounted() {
+    // FIXME: test
+    this.selectedEl = document.querySelector("#element");
+    this.isStylePanelVisible = true;
   }
 };
 </script>
@@ -92,6 +97,8 @@ export default {
   }
   .style-panel {
     flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
   }
   .foot {
     flex: 0 0 auto;

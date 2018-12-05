@@ -51,7 +51,12 @@ export default {
       return el.getAttributeNames().map(name => [name, el.getAttribute(name)]);
     },
     hasDefaultSlot() {
-      return Boolean(this.$slots.default.text);
+      const arr = this.$slots.default;
+      if (Array.isArray(arr) && arr.length > 0) {
+        return Boolean(arr[0].text);
+      } else {
+        return false;
+      }
     },
     // 是否是无内容标签
     // 无内容标签不能有结束标签，HTML5 中定义的无内容标签见<https://html.spec.whatwg.org/multipage/syntax.html#void-elements>

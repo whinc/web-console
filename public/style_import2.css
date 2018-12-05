@@ -1,0 +1,8 @@
+/* 测试元素审查 */
+#element {
+  border-color: yellow;
+}
+.xyz {
+  border: 3px dotted yellow;
+  padding: 3px;
+}
