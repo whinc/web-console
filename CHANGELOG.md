@@ -1,3 +1,16 @@
+<a name="0.3.0-beta.5"></a>
+
+# [0.3.0-beta.5](https://github.com/whinc/web-console/compare/v0.3.0-beta.4...v0.3.0-beta.5) (2018-12-06)
+
+### Features
+
+- **application:** 调整底部清除和刷新范围；删除存储数据增加二次确认弹窗 ([1953419](https://github.com/whinc/web-console/commit/1953419))
+- **settings:** 增加 CHANGELOG ([7e92468](https://github.com/whinc/web-console/commit/7e92468))
+
+### Performance Improvements
+
+- **console:** 提升批量打印日志时的显示性能 ([776891e](https://github.com/whinc/web-console/commit/776891e))
+
 <a name="0.3.0-beta.4"></a>
 
 # [0.3.0-beta.4](https://github.com/whinc/web-console/compare/v0.3.0-beta.3...v0.3.0-beta.4) (2018-12-03)
