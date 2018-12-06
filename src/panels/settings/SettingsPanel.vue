@@ -36,7 +36,7 @@
           </template>
           <template v-else-if="setting.type === 'checkbox'">
             <input type="checkbox" v-model="setting.value" :id="index" @change="onSettingsChanged" />
-            <label :for="index">{{setting.desc}}</label>
+            <label :for="index">&nbsp;{{setting.desc}}</label>
           </template>
           <template v-else-if="setting.type === 'select'">
             <span>{{setting.desc}}</span>
@@ -49,6 +49,9 @@
                 {{option.text}}
               </option>
             </select>
+          </template>
+          <template v-else-if="setting.type === 'link'">
+            <a :href="setting.src" alt="" target="_bank">{{setting.desc}}</a>
           </template>
         </div>
       </div>
@@ -112,7 +115,9 @@ const defaultConfigs = [
       { type: "section", desc: "Version" },
       { type: "text", desc: process.env.VUE_APP_VERSION },
       { type: "section", desc: "Build date" },
-      { type: "text", desc: process.env.VUE_APP_DATE }
+      { type: "text", desc: process.env.VUE_APP_DATE },
+      { type: "section", desc: "CHANGELOG" },
+      { type: "link", desc: "CHANGELOG", src: "https://github.com/whinc/web-console/blob/master/CHANGELOG.md" }
     ]
   }
 ];
@@ -318,6 +323,9 @@ $second-text-color: #777;
             padding: 0 5px;
             margin: 0 0 0 10px;
           }
+        }
+        &.link {
+          padding-left: $margin-left;
         }
       }
     }
