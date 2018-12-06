@@ -186,7 +186,8 @@ export default {
       this.onRefresh();
     },
     onClearAll() {
-      this.clear();
+      const msg = `Are you sure clear all ${this.storageType === "cookieStorage" ? "cookie" : this.storageType}?`;
+      window.confirm(msg) && this.clear();
     },
     onClearSelected() {
       const key = this.select;

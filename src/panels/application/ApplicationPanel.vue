@@ -47,22 +47,22 @@ export default {
     buttons() {
       return [
         {
-          text: "Clear All",
+          text: "Refresh",
           click: () => {
-            // 清除所有 storage 类型数据
-            const tabStorageList = this.$refs.tabStorage;
-            if (Array.isArray(tabStorageList)) {
-              tabStorageList.forEach(tabStorage => tabStorage.onClearAll());
+            // 刷新当前激活的 Stroage 数据
+            const tabStorage = this.getActiveTabStorage();
+            if (tabStorage) {
+              tabStorage.onRefresh();
             }
           }
         },
         {
-          text: "Refresh All",
+          text: "Clear",
           click: () => {
-            // 刷新所有 storage 类型数据
-            const tabStorageList = this.$refs.tabStorage;
-            if (Array.isArray(tabStorageList)) {
-              tabStorageList.forEach(tabStorage => tabStorage.onRefresh());
+            // 清除当前激活的 Stroage 数据
+            const tabStorage = this.getActiveTabStorage();
+            if (tabStorage) {
+              tabStorage.onClearAll();
             }
           }
         },
@@ -89,6 +89,17 @@ export default {
   methods: {
     onSettingsChanged(settings) {
       this.isToolbarExpanded = settings.showApplicationToolbar;
+    },
+    // 获取当前激活的 TabStroage 组件实例
+    getActiveTabStorage() {
+      const tabStorageList = this.$refs.tabStorage;
+      if (Array.isArray(tabStorageList)) {
+        const foundIndex = tabStorageList.findIndex(v => v.storageType === this.activeTab);
+        if (foundIndex !== -1) {
+          return tabStorageList[foundIndex];
+        }
+      }
+      return null;
     }
   }
 };
