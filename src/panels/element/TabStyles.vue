@@ -1,31 +1,35 @@
 <template>
-  <div class="tab-style">
-    <div v-for="(styleSheet, i) in displayStyleSheets" :key="i">
-      <div>{{styleSheet.type}}</div>
+  <div class="tab-style source-code">
+    <div v-for="(styleSheet, i) in displayStyleSheets" :key="i" class="style-sheet">
       <template v-if="styleSheet.type === 'element'">
-        <div v-for="(rule, j) in styleSheet.displayRules" :key="i + '-' + j">
-          <template v-if="rule.from === 'styleAttribute'">
-            <pre>{{styleSheet.el === el ? 'element.style' : 'Style Attribute'}}     {{rule.href}}{
-              <span v-for="(decl, index2) in rule.properties" :key="index2">{{decl.name}}:{{decl.value}}</span>
-            </pre>
-          </template>
-          <template v-else-if="rule.from === 'styleSheet'">
-            <pre>{{rule.selector}}     {{rule.href}}{
-              <span v-for="(decl, index2) in rule.properties" :key="index2">{{decl.name}}:{{decl.value}}</span>
-            </pre>
-          </template>
+        <!-- 当前元素不显示头部 -->
+        <div v-if="styleSheet.el !== el" class="style-sheet__head">
+          Inherited from
+          <span class="style-sheet__monospace node-link">
+            <span class="node-link__name">{{getTagName(styleSheet.el)}}</span>
+            <span v-if="el.id" class="node-link__id">{{getId(styleSheet.el)}}</span>
+            <span v-if="el.classList.length > 0" class="node-link__class">{{getClass(styleSheet.el)}}</span>
+          </span>
         </div>
+        <StyleRule v-for="(rule, j) in styleSheet.displayRules"
+          :key="i + '-' + j"
+          :rule="rule"
+        />
       </template>
     </div>
   </div>
 </template>
 
 <script>
-import { Logger } from "@/utils";
+import { Logger, getURLFileName } from "@/utils";
 import { calculate, compare } from "specificity";
+import StyleRule from "./StyleRule";
 
 const logger = new Logger("[TabStyles]");
 export default {
+  components: {
+    StyleRule
+  },
   props: {
     el: {
       type: Element,
@@ -48,6 +52,8 @@ export default {
        *        from: String
        *        // 选择器
        *        selector: String,
+       *        // 是否是继承的
+       *        inherit: Boolean,
        *        // 声明块属性列表
        *        properties: [{
        *          name: String,
@@ -69,7 +75,17 @@ export default {
   mounted() {
     this.displayStyleSheets = getDisplayStyleSheets(this.el);
   },
-  methods: {}
+  methods: {
+    getTagName(el) {
+      return el.tagName.toLowerCase();
+    },
+    getId(el) {
+      return el.id ? "#" + el.id : "";
+    },
+    getClass(el) {
+      return el.classList.length > 0 ? "." + [].slice.call(el.classList).join(".") : "";
+    }
+  }
 };
 
 /**
@@ -79,22 +95,30 @@ function getDisplayStyleSheets(_el) {
   const displayStyleSheets = [];
   let el = _el;
   while (el !== document.documentElement) {
+    const inherit = el !== _el;
     const cssRules = getMatchCSSRules([].slice.call(document.styleSheets), el);
     const displayRules = cssRules
-      .map(rule => {
+      .map((rule, index) => {
         return {
           from: "styleSheet",
+          inherit,
+          // 出现顺序（越小越靠前）
+          order: index,
           selector: rule.selectorText,
           properties: getDeclarationProperties(rule.style),
-          href: (rule.parentStyleSheet && rule.parentStyleSheet.href) || ""
+          href: (rule.parentStyleSheet && getURLFileName(rule.parentStyleSheet.href)) || "<style>...</style>"
         };
       })
-      .sort((a, b) => compare(b.selector, a.selector));
+      .sort((a, b) => {
+        const c = compare(b.selector, a.selector);
+        return c === 0 ? b.order - a.order : c;
+      });
 
     // 元素 style 属性的 specifity 最大，应排在最前面
     if (el.style.length > 0) {
       displayRules.unshift({
         from: "styleAttribute",
+        inherit,
         properties: getDeclarationProperties(el.style)
       });
     }
@@ -113,26 +137,66 @@ function getDisplayStyleSheets(_el) {
 /**
  * 获取与指定元素匹配的所有样式规则
  * document.styleSheets 返回的列表是按声明顺序排序，如果有 @import 则是递归嵌套
+ *
+ * index.html
+ * <style>
+ * @import stylesheet_import1.css
+ *
+ * #id {
+ *
+ * }
+ * </style>
+ * <link rel="stylesheet" href="stylesheet_link.css" />
+ * <div id="id"></div>
+ *
+ * stylesheet_import1.css
+ * @import stylesheet_import2.css
+ * #id {
+ *
+ * }
+ *
+ * stylesheet_import2.css
+ * #id {
+ *
+ * }
+ *
+ * stylesheet_link.css
+ * #id {
+ *
+ * }
+ *
+ * Chrome DevTools 审查元素 div#id 的样式规则优先级从高到低为：
+ * #id stylesheet_link.css
+ * #id <style>...</style>
+ * #id stylesheet_import1.css
+ * #id stylesheet_import2.css
+ *
+ * 相同 specificity 的选择器按照出现的先后顺序层叠，后面的元素覆盖前面元素
+ * 通过 import 导入的元素视作原地展开后按出现顺序层叠。
+ *
  * @param {Array<StyleSheet>} styleSheets
  * @param {Element} el
- * @returns {Array<CSSRule>}
+ * @returns {Array<CSSRule>} 匹配的规则列表，按出现先后顺序排列
  */
 function getMatchCSSRules(styleSheets, el) {
   const rules = [];
+  // 深度优先遍历
   while (styleSheets.length > 0) {
     const styleSheet = styleSheets.shift();
     try {
-      for (let j = 0; j < styleSheet.cssRules.length; ++j) {
-        const rule = styleSheet.cssRules[j];
+      const cssRuleArr = [].slice.call(styleSheet.cssRules);
+      while (cssRuleArr.length > 0) {
+        const rule = cssRuleArr.shift();
         switch (rule.type) {
+          case CSSRule.IMPORT_RULE:
+            // 根据层叠规则，导入样式视作在当前样式表所有规则之前
+            cssRuleArr.unshift(...getMatchCSSRules([rule.styleSheet], el));
+            break;
           case CSSRule.STYLE_RULE:
             if (el.matches(rule.selectorText)) {
               rules.push(rule);
               // logger.log(rule.type, rule)
             }
-            break;
-          case CSSRule.IMPORT_RULE:
-            styleSheets.unshift(rule.styleSheet);
             break;
           default:
             // TODO: 处理其他类型的 CSSRule
@@ -171,8 +235,37 @@ function getDeclarationProperties(declaration) {
 
 
 <style lang="scss" scoped>
+@import "../../base.scss";
+
 .tab-style {
   height: 100%;
   overflow-y: auto;
+}
+
+.style-sheet {
+  &__head {
+    height: $source-code-font-size * 2;
+    line-height: $source-code-font-size * 2;
+    padding-right: 2px;
+    padding-left: 4px;
+    background-color: $tabbar-bg-color;
+    border-bottom: 1px solid $divider-color;
+  }
+  &__monospace {
+    background: rgb(255, 255, 255);
+    padding: 1px 3px;
+    border: 1px solid $divider-color;
+  }
+}
+
+.node-link {
+  &__name {
+    color: rgb(136, 18, 128);
+  }
+  &__id {
+  }
+  &__class {
+    color: rgb(153, 69, 0);
+  }
 }
 </style>

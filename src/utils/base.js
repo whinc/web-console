@@ -74,3 +74,11 @@ export const createStack = (targetObject, constructorOpt) => {
     targetObject.stack = targetObject.stack.replace(/https?:\/\/.*\/(.*)/g, "$1");
   }
 };
+
+// 获取 URL 中的文件名(含扩展名)
+export const getURLFileName = url => {
+  if (typeof url !== "string") return "";
+
+  const index = url.lastIndexOf("/");
+  return url.slice(index + 1);
+};
