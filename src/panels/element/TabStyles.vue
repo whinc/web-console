@@ -54,12 +54,8 @@ export default {
        *        selector: String,
        *        // 是否是继承的
        *        inherit: Boolean,
-       *        // 声明块属性列表
-       *        properties: [{
-       *          name: String,
-       *          value: String,
-       *          important: Boolean
-       *        }, ...],
+       *        // 样式声明
+       *        style: CSSStyleDeclaration,
        *        // 如果是导入或链入的样式表，该字段表示地址
        *        href: String
        *       },
@@ -105,7 +101,7 @@ function getDisplayStyleSheets(_el) {
           // 出现顺序（越小越靠前）
           order: index,
           selector: rule.selectorText,
-          properties: getDeclarationProperties(rule.style),
+          style: rule.style,
           href: (rule.parentStyleSheet && getURLFileName(rule.parentStyleSheet.href)) || "<style>...</style>"
         };
       })
@@ -119,7 +115,7 @@ function getDisplayStyleSheets(_el) {
       displayRules.unshift({
         from: "styleAttribute",
         inherit,
-        properties: getDeclarationProperties(el.style)
+        style: el.style
       });
     }
     if (displayRules.length > 0) {
@@ -210,26 +206,6 @@ function getMatchCSSRules(styleSheets, el) {
     }
   }
   return rules;
-}
-
-/**
- * 获取 CSSStyleDeclaration 的属性列表
- * @param {CSSStyleDeclaration}
- * @returns {Array}
- */
-function getDeclarationProperties(declaration) {
-  const properties = [];
-  for (let i = 0; i < declaration.length; ++i) {
-    const name = declaration.item(i);
-    const value = declaration.getPropertyValue(name);
-    const priority = declaration.getPropertyPriority(name);
-    properties.push({
-      name,
-      value,
-      important: priority === "important"
-    });
-  }
-  return properties;
 }
 </script>
 

@@ -128,7 +128,7 @@ export default {
   },
   data() {
     return {
-      // 是否折叠
+      // 是否展开
       isExpand: false,
       // 选中的标签类型，用于区分开始标签和结束标签的选中态，其他类型默认选中整个标签
       selectTagType: ""

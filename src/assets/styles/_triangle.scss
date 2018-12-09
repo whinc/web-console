@@ -1,0 +1,21 @@
+@mixin triangle-collapse($border-width: 4px, $color: black) {
+  display: inline-block;
+  content: "";
+  width: 0;
+  height: 0;
+  /* 等边三角形，tan(30) 约为 0.5773502691896257 */
+  border-left: $border-width solid $color;
+  border-top: $border-width * 0.8 solid transparent;
+  border-bottom: $border-width * 0.8 solid transparent;
+}
+
+@mixin triangle-expand($border-width: 4px, $color: black) {
+  display: inline-block;
+  content: "";
+  width: 0;
+  height: 0;
+  /* 等边三角形，tan(30) 约为 0.5773502691896257 */
+  border-top: $border-width solid $color;
+  border-left: $border-width * 0.8 solid transparent;
+  border-right: $border-width * 0.8 solid transparent;
+}
