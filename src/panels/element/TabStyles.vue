@@ -5,11 +5,7 @@
         <!-- 当前元素不显示头部 -->
         <div v-if="styleSheet.el !== el" class="style-sheet__head">
           Inherited from
-          <span class="style-sheet__monospace node-link">
-            <span class="node-link__name">{{getTagName(styleSheet.el)}}</span>
-            <span v-if="el.id" class="node-link__id">{{getId(styleSheet.el)}}</span>
-            <span v-if="el.classList.length > 0" class="node-link__class">{{getClass(styleSheet.el)}}</span>
-          </span>
+          <NodeLink class="style-sheet__monospace" :el="styleSheet.el" />
         </div>
         <StyleRule v-for="(rule, j) in styleSheet.displayRules"
           :key="i + '-' + j"
@@ -24,11 +20,13 @@
 import { Logger, getURLFileName } from "@/utils";
 import { calculate, compare } from "specificity";
 import StyleRule from "./StyleRule";
+import NodeLink from "./NodeLink";
 
 const logger = new Logger("[TabStyles]");
 export default {
   components: {
-    StyleRule
+    StyleRule,
+    NodeLink
   },
   props: {
     el: {
@@ -231,17 +229,6 @@ function getMatchCSSRules(styleSheets, el) {
     background: rgb(255, 255, 255);
     padding: 1px 3px;
     border: 1px solid $divider-color;
-  }
-}
-
-.node-link {
-  &__name {
-    color: rgb(136, 18, 128);
-  }
-  &__id {
-  }
-  &__class {
-    color: rgb(153, 69, 0);
   }
 }
 </style>

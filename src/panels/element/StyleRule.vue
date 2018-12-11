@@ -175,12 +175,14 @@ export default {
 
   &__start {
     display: flex;
+    line-height: 1.5em;
   }
   &__content {
     display: flex;
     flex-direction: column;
   }
   &__end {
+    line-height: 1.5em;
   }
   &__selector {
     flex: 0 0 auto;

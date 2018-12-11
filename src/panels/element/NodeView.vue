@@ -8,7 +8,7 @@
         <!-- 只有标签可点击 -->
         <Tag type="start"
           :el="el"
-          :class="{'unfold': deepth > 0, 'select': isSelected && selectTagType === 'start'}"
+          :class="{'unfold': deepth > 0, 'select': isSelected && selectTagType !== 'end'}"
           :style="indentStyle"
           @click="onClickTag('start')"
         />
@@ -187,19 +187,22 @@ export default {
   },
   methods: {
     onClickTag(selectTagType) {
-      const preSelectTagType = this.selectTagType;
       const el = this.el;
       const selectedEl = this.getSelectedElement();
       if (selectedEl !== el) {
         // 如果未选中则设未选中元素
         this.setSelectedElement(el);
       } else {
+        const preSelectTagType = this.selectTagType;
         // 如果已选中，且元素可展开，且点击的是开始标签，则切换折叠/展开
-        if (this.isExpandable && preSelectTagType === selectTagType && selectTagType === "start") {
+        if (this.isExpandable && preSelectTagType === selectTagType && selectTagType !== "end") {
           this.isExpand = !this.isExpand;
         }
       }
-      this.selectTagType = selectTagType;
+      // 只有 Element 类型才有开始和结束标签
+      if (this.el.nodeType === Node.ELEMENT_NODE) {
+        this.selectTagType = selectTagType;
+      }
     }
   }
 };

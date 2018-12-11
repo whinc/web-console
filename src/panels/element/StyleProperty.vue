@@ -292,7 +292,7 @@ function getColorIndex(name) {
   color: rgb(48, 57, 66);
   &__item {
     padding-left: 1.5em;
-    line-height: 1.3em;
+    line-height: 1.4em;
   }
   &__children {
     padding-left: 1em;
