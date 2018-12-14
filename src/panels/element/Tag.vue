@@ -86,10 +86,6 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../base.scss";
-$dom-tag-name-color: rgb(136, 18, 128);
-$dom-attribute-name-color: rgb(153, 69, 0);
-$dom-attribute-value-color: rgb(26, 26, 166);
-$dom-link-color: rgb(17, 85, 204);
 .tag {
   white-space: pre-wrap;
   word-break: break-all;

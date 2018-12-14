@@ -191,7 +191,7 @@ export default {
       const selectedEl = this.getSelectedElement();
       if (selectedEl !== el) {
         // 如果未选中则设未选中元素
-        this.setSelectedElement(el);
+        this.setSelectedElement(el, this.$el);
       } else {
         const preSelectTagType = this.selectTagType;
         // 如果已选中，且元素可展开，且点击的是开始标签，则切换折叠/展开
@@ -218,6 +218,7 @@ $selection-active-fg-color: white;
   display: flex;
   flex-direction: column;
   margin-top: 1px;
+  line-height: 1.4em;
   .select {
     /deep/ span {
       color: white;

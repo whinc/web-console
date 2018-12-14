@@ -2,8 +2,10 @@
   <span class="node-link" :class="{'selected': selected}" @click="$emit('click')">
     <template v-if="el.nodeType === Node.ELEMENT_NODE">
       <span class="node-link__tag-name">{{tagName}}</span>
-      <span v-if="el.id" class="node-link__id">{{id}}</span>
-      <span v-if="el.classList.length > 0" class="node-link__class-name">{{className}}</span>
+      <template v-if="!compacted">
+        <span v-if="el.id" class="node-link__id">{{id}}</span>
+        <span v-if="el.classList.length > 0" class="node-link__class-name">{{className}}</span>
+      </template>
     </template>
     <template v-else-if="el.nodeType === Node.TEXT_NODE">
       <span>(text)</span>
@@ -30,6 +32,10 @@ export default {
     selected: {
       type: Boolean,
       default: false
+    },
+    compacted: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -50,21 +56,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../base.scss";
 .node-link {
+  height: 100%;
+  line-height: 30px;
   white-space: nowrap;
+  padding: 0 7px;
   // overflow: hidden;
   // text-overflow: ellipsis;
   // max-width: 20vw;
   &.selected {
-    background-color: red;
+    background-color: $toolbar-bg-color;
+    span {
+      color: $default-color !important;
+    }
   }
   &__tag-name {
-    color: rgb(136, 18, 128);
+    color: $dom-tag-name-color;
   }
   &__id {
   }
   &__class-name {
-    color: rgb(153, 69, 0);
+    color: $dom-attribute-name-color;
   }
 }
 </style>
