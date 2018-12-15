@@ -23,7 +23,7 @@
             <br>
             <span class="box__label-left">{{computedStyle.paddingLeft | format}}</span>
             <div class="box box--content">
-              {{computedStyle.width | format}} x {{computedStyle.height | format}}
+              {{computedStyle.width | format('content')}} x {{computedStyle.height | format('content')}}
             </div>
             <span class="box__label-right">{{computedStyle.paddingRight | format}}</span>
             <br>
@@ -63,12 +63,19 @@ export default {
     }
   },
   filters: {
+    /**
+     * 格式化在盒模型中显式的单位值
+     * @param {String} value
+     * @param {String=} box 有效值 'position', 'margin', 'border', 'padding', content'
+     */
     format(value, box) {
       if (value === "auto") {
         if (box === "position") return "-";
         else return value;
-      } else if (value === "0px") return "-";
-      else return parseFloat(value);
+      } else if (value === "0px") {
+        if (box === "content") return parseFloat(value);
+        else return "-";
+      } else return parseFloat(value);
     }
   }
 };
@@ -83,7 +90,8 @@ export default {
   // 不换行
   white-space: nowrap;
   min-height: 190px;
-  font-size: $secondary-font-size;
+  font-family: $font-family;
+  font-size: $primary-font-size;
 }
 
 // 矩形盒子样式

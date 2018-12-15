@@ -3,7 +3,7 @@
 // 全局样式
 .web-console {
   font-size: $primary-font-size;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: $font-family;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: rgb(48, 57, 66);

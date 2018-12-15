@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-style source-code">
+  <div class="tab-style source-code" v-prevent-bkg-scroll>
     <div v-for="(styleSheet, i) in displayStyleSheets" :key="i" class="style-sheet">
       <template v-if="styleSheet.type === 'element'">
         <!-- 当前元素不显示头部 -->
@@ -13,6 +13,9 @@
         />
       </template>
     </div>
+    <div class="box-model-container">
+      <BoxModel v-if="el" :el="el" />
+    </div>
   </div>
 </template>
 
@@ -21,11 +24,13 @@ import { Logger, getURLFileName } from "@/utils";
 import { calculate, compare } from "specificity";
 import StyleRule from "./StyleRule";
 import NodeLink from "./NodeLink";
+import BoxModel from "./BoxModel";
 
 const logger = new Logger("[TabStyles]");
 export default {
   components: {
     StyleRule,
+    BoxModel,
     NodeLink
   },
   props: {
@@ -112,8 +117,12 @@ function getDisplayStyleSheets(_el) {
         return c === 0 ? b.order - a.order : -c;
       });
 
-    // 元素 style 属性的 specifity 最大，应排在最前面
-    if (el.style.length > 0) {
+    /**
+     * 添加内联样式到样式规则列表
+     * a. 如果是当前元素，无论是否有 CSS 规则都添加一个规则项
+     * b. 如果是祖先元素，则只有存在 CSS 规则时才添加规则项
+     */
+    if (!inherit || el.style.length > 0) {
       displayRules.unshift({
         from: "styleAttribute",
         inherit,
@@ -258,5 +267,13 @@ function findMaxSpecificity(selector) {
     padding: 1px 3px;
     border: 1px solid $divider-color;
   }
+}
+
+.box-model-container {
+  flex: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
 }
 </style>

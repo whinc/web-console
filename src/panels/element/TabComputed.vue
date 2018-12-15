@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-computed">
+  <div class="tab-computed" v-prevent-bkg-scroll>
     <div class="box-model-container">
       <BoxModel v-if="el" :el="el" />
     </div>
@@ -38,6 +38,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 8px;
+  overflow: scroll;
 }
 
 .computed-style {
