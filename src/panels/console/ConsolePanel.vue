@@ -189,7 +189,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variable";
 
 .console-panel {
   height: $panel-height;

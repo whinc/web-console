@@ -321,6 +321,9 @@ export default {
     &--selected.table__row {
       color: white;
       background-color: #2196f3;
+      * {
+        color: white;
+      }
     }
   }
   &__cell {

@@ -284,7 +284,7 @@ function getColorIndex(name) {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/styles/triangle";
+@import "../../styles/triangle";
 
 .style-property {
   display: flex;

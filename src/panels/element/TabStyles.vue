@@ -209,7 +209,7 @@ function getMatchCSSRules(styleSheets, el) {
 
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variable";
 
 .tab-style {
   height: 100%;

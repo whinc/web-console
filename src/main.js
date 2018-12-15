@@ -4,7 +4,7 @@ import "./polyfill";
 import { consoleHooks, filters } from "@/utils";
 // import { Logger } from "@/utils";
 import infiniteScroll from "vue-infinite-scroll";
-import "./global.scss";
+import "./styles/_global.scss";
 
 // register filters
 Object.keys(filters).forEach(name => {

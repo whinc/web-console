@@ -178,7 +178,6 @@ function createScaleManager() {
 </script>
 
 <style scoped lang="scss">
-@import "./base.scss";
 .entry {
   position: fixed;
   right: 20px;

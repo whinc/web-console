@@ -59,7 +59,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variable";
 .node-link {
   height: 100%;
   line-height: 30px;

@@ -85,7 +85,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variable";
 .tag {
   white-space: pre-wrap;
   word-break: break-all;

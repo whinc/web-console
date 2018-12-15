@@ -165,7 +165,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variable";
 
 .css-rule {
   display: flex;

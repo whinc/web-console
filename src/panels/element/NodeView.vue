@@ -217,11 +217,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/triangle";
 $triangle-border-width: 6px;
 $selection-bg-color: #2196f3;
-$selection-inactive-bg-color: #dadada;
-$selection-hovered-bg-color: rgba(56, 121, 217, 0.1);
-$selection-active-fg-color: white;
 .node {
   display: flex;
   flex-direction: column;
@@ -233,26 +231,13 @@ $selection-active-fg-color: white;
     }
     background-color: $selection-bg-color;
     &.fold::before {
-      display: inline-block;
-      content: "";
-      width: 0;
-      height: 0;
+      @include triangle-collapse($triangle-border-width, #fff);
       margin-right: 2px;
-      /* 等边三角形，tan(30) 约为 0.5773502691896257 */
-      border-left: $triangle-border-width solid $selection-active-fg-color;
-      border-top: $triangle-border-width * 0.8 solid transparent;
-      border-bottom: $triangle-border-width * 0.8 solid transparent;
     }
     &.unfold::before {
-      display: inline-block;
-      content: "";
-      width: 0;
-      height: 0;
+      @include triangle-expand($triangle-border-width, #fff);
       margin-right: 2px;
       margin-bottom: 1px;
-      border-top: $triangle-border-width solid $selection-active-fg-color;
-      border-left: $triangle-border-width * 0.8 solid transparent;
-      border-right: $triangle-border-width * 0.8 solid transparent;
     }
   }
   &__indent {
@@ -278,26 +263,13 @@ $selection-active-fg-color: white;
     }
   }
   .fold::before {
-    display: inline-block;
-    content: "";
-    width: 0;
-    height: 0;
+    @include triangle-collapse($triangle-border-width, #727272);
     margin-right: 2px;
-    /* 等边三角形，tan(30) 约为 0.5773502691896257 */
-    border-left: $triangle-border-width solid #727272;
-    border-top: $triangle-border-width * 0.8 solid transparent;
-    border-bottom: $triangle-border-width * 0.8 solid transparent;
   }
   .unfold::before {
-    display: inline-block;
-    content: "";
-    width: 0;
-    height: 0;
+    @include triangle-expand($triangle-border-width, #727272);
     margin-right: 2px;
     margin-bottom: 1px;
-    border-top: $triangle-border-width solid #727272;
-    border-left: $triangle-border-width * 0.8 solid transparent;
-    border-right: $triangle-border-width * 0.8 solid transparent;
   }
 }
 </style>

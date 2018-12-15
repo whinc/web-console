@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base.scss";
+@import "../styles/variable";
 .v-tab-bar {
   height: $tabbar-height;
   background-color: $tabbar-bg-color;
