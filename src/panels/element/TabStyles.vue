@@ -93,10 +93,11 @@ function getDisplayStyleSheets(_el) {
     const cssRules = getMatchCSSRules([].slice.call(document.styleSheets), el);
     const displayRules = cssRules
       .map((rule, index) => {
+        // 映射 CSSRule 到视图所需数据结构
         return {
           from: "styleSheet",
           inherit,
-          // 出现顺序（越小越靠前）
+          // 出现顺序，值越小表示越先出现
           order: index,
           selector: rule.selectorText,
           style: rule.style,
@@ -104,8 +105,11 @@ function getDisplayStyleSheets(_el) {
         };
       })
       .sort((a, b) => {
-        const c = compare(b.selector, a.selector);
-        return c === 0 ? b.order - a.order : c;
+        // 根据特殊性排序，如果特殊性相同则按出现顺序排序，排在数组越前的特殊性越高
+        const selectorA = findMaxSpecificity(a.selector);
+        const selectorB = findMaxSpecificity(b.selector);
+        const c = compare(selectorA, selectorB);
+        return c === 0 ? b.order - a.order : -c;
       });
 
     // 元素 style 属性的 specifity 最大，应排在最前面
@@ -132,7 +136,7 @@ function getDisplayStyleSheets(_el) {
  * 获取与指定元素匹配的所有样式规则
  * document.styleSheets 返回的列表是按声明顺序排序，如果有 @import 则是递归嵌套
  *
- * index.html
+ * ----- index.html
  * <style>
  * @import stylesheet_import1.css
  *
@@ -143,18 +147,18 @@ function getDisplayStyleSheets(_el) {
  * <link rel="stylesheet" href="stylesheet_link.css" />
  * <div id="id"></div>
  *
- * stylesheet_import1.css
+ * ----- stylesheet_import1.css
  * @import stylesheet_import2.css
  * #id {
  *
  * }
  *
- * stylesheet_import2.css
+ * ----- stylesheet_import2.css
  * #id {
  *
  * }
  *
- * stylesheet_link.css
+ * ----- stylesheet_link.css
  * #id {
  *
  * }
@@ -204,6 +208,30 @@ function getMatchCSSRules(styleSheets, el) {
     }
   }
   return rules;
+}
+
+/**
+ * 找出择器中特殊性最高的选择器
+ *
+ * 例如：
+ * findMaxSpecificity('.a')  // '.a'
+ * findMaxSpecificity('.a, #b')  // '#b'
+ * findMaxSpecificity('.a, #b, #b.a')  // '#b.a'
+ */
+function findMaxSpecificity(selector) {
+  let _selector;
+  if (selector.indexOf(",") !== -1) {
+    const selectorArr = selector.split(",");
+    _selector = selectorArr[0];
+    selectorArr.forEach(v => {
+      if (compare(v, _selector) === 1) {
+        _selector = v;
+      }
+    });
+  } else {
+    _selector = selector;
+  }
+  return _selector;
 }
 </script>
 
