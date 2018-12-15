@@ -40,10 +40,12 @@
         color: darkmagenta
 ;
       }
-      .xyz {
+      /* 测试分组选择器 */
+      .xyz, .zyx {
         border: 1px solid red;
       }
-      div {
+      /* 模拟宿主页面样式(测试是否会影响web-console的显示) */
+      div, span, p {
         color: black;
       }
 
@@ -86,7 +88,7 @@
     <div id="parent" class="a b" style="color: red">
       <div id="parent2" class="c d" style="color: red">
         <div id="element"
-          class="xyz"
+          class="xyz zyx"
           style="display: none"
           data-a="a"
           >

@@ -86,10 +86,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/variable";
+@import "../../styles/mixin";
 .tag {
+  @include descendant-color(rgb(168, 148, 166));
   white-space: pre-wrap;
   word-break: break-all;
-  color: rgb(168, 148, 166);
   &--start,
   &--end,
   &--inline {

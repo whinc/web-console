@@ -218,6 +218,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/triangle";
+@import "../../styles/mixin";
 $triangle-border-width: 6px;
 $selection-bg-color: #2196f3;
 .node {
@@ -246,18 +247,15 @@ $selection-bg-color: #2196f3;
   .element {
   }
   .text {
-    color: rgb(48, 57, 66);
-    white-space: pre-wrap;
+    @include descendant-color(rgb(48, 57, 66)) white-space: pre-wrap;
     word-break: break-all;
   }
   .comment {
-    display: flex;
-    color: rgb(35, 110, 37);
+    @include descendant-color(rgb(35, 110, 37));
   }
   // FIXME: '.node .doctype' 选择器无法选中元素，原因位置，暂时用串联选择器解决
   &.doctype {
-    color: rgb(192, 192, 192);
-    &.select {
+    @include descendant-color(rgb(192, 192, 192)) &.select {
       color: white;
       background-color: $selection-bg-color;
     }

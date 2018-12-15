@@ -1,0 +1,7 @@
+// 设置后台元素颜色
+@mixin descendant-color($color) {
+  color: $color;
+  /deep/ * {
+    color: $color;
+  }
+}

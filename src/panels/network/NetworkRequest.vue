@@ -72,6 +72,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/variable";
+@import "../../styles/mixin";
 
 $status-error-color: rgb(230, 0, 0);
 .request {
@@ -84,13 +85,13 @@ $status-error-color: rgb(230, 0, 0);
     flex-direction: row;
     align-items: center;
     &.error {
-      color: $status-error-color;
+      @include descendant-color($status-error-color);
     }
     &.even {
       background-color: rgb(245, 245, 245);
     }
     &.selected {
-      color: white;
+      @include descendant-color(white);
       background-color: #2196f3;
     }
     .cell {
