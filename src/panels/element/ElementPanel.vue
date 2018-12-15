@@ -94,13 +94,13 @@ export default {
     },
     /* eslint-disable */
     footBarButtons() {
+      const disable = !this.selectedEl || this.selectedEl.nodeType !== Node.ELEMENT_NODE;
       return [
         {
           text: this.isStylePanelVisible ? "Back" : "Inspect",
-          disable: !this.selectedEl || this.selectedEl.nodeType !== Node.ELEMENT_NODE,
+          disable,
           click: () => {
-            const el = this.selectedEl;
-            if (!el) return;
+            if (disable) return;
             this.isStylePanelVisible = !this.isStylePanelVisible;
           }
         },
