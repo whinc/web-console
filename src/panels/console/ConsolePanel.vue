@@ -82,13 +82,15 @@ export default {
   },
   watch: {
     msgList() {
-      const el = this.$refs.container;
-      if (this.isBottom && el) {
-        // 在合适的时机滚动至底部，避免阻塞交互
-        TaskScheduler.default.addAndStart(() => {
+      // 等列表渲染完成后(触发 onScroll 更新 isBottom)，再根据最新的 isBottom 决定是否需要滚动到底部
+      this.$nextTick(() => {
+        const el = this.$refs.container;
+        // logger.log('msgList changed, isBottom:', this.isBottom)
+        if (this.isBottom && el) {
+          // 在合适的时机滚动至底部，避免阻塞交互
           el.scrollTo(0, el.scrollHeight - el.clientHeight);
-        });
-      }
+        }
+      });
     }
   },
   // hook console 输出越早越好，选择最先被执行的 beforeCreate 周期方法进行 hook 操作
@@ -124,7 +126,6 @@ export default {
           taskScheduler.addAndStart(() => {
             // 移除超出的消息
             while (vm.msgList.length >= vm.maxMsgCount) vm.msgList.shift();
-
             // 冻结消息对象，避免 Vue 添加额外属性
             vm.msgList.push(Object.freeze(msg));
           });

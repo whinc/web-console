@@ -1,3 +1,41 @@
+<a name="0.3.0-beta.5"></a>
+
+# [0.3.0-beta.5](https://github.com/whinc/web-console/compare/v0.3.0-beta.4...v0.3.0-beta.5) (2018-12-06)
+
+### Features
+
+- **application:** 调整底部清除和刷新范围；删除存储数据增加二次确认弹窗 ([1953419](https://github.com/whinc/web-console/commit/1953419))
+- **settings:** 增加 CHANGELOG ([7e92468](https://github.com/whinc/web-console/commit/7e92468))
+
+### Performance Improvements
+
+- **console:** 提升批量打印日志时的显示性能 ([776891e](https://github.com/whinc/web-console/commit/776891e))
+
+<a name="0.3.0-beta.4"></a>
+
+# [0.3.0-beta.4](https://github.com/whinc/web-console/compare/v0.3.0-beta.3...v0.3.0-beta.4) (2018-12-03)
+
+### Bug Fixes
+
+- **network:** 修复底部隐藏按钮失效问题 ([a0d2269](https://github.com/whinc/web-console/commit/a0d2269))
+
+### Features
+
+- **application:** 支持折叠工具栏 ([ca20bfd](https://github.com/whinc/web-console/commit/ca20bfd))
+- **application:** 新增刷新全部和清除全部快捷按钮 ([fd4e4b4](https://github.com/whinc/web-console/commit/fd4e4b4))
+
+<a name="0.3.0-beta.3"></a>
+
+# [0.3.0-beta.3](https://github.com/whinc/web-console/compare/v0.3.0-beta.2...v0.3.0-beta.3) (2018-12-03)
+
+### Bug Fixes
+
+- **settings:** 移除 About 页标题地下多出的横线 ([14e8cde](https://github.com/whinc/web-console/commit/14e8cde))
+
+### Features
+
+- **application:** 增加底部隐藏按钮 ([5eb10fe](https://github.com/whinc/web-console/commit/5eb10fe))
+
 <a name="0.3.0-beta.2"></a>
 
 # [0.3.0-beta.2](https://github.com/whinc/web-console/compare/0.3.0-beta.1...v0.3.0-beta.2) (2018-11-29)
