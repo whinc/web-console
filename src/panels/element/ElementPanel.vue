@@ -2,7 +2,8 @@
   <div class="element-panel">
     <!-- 使用 v-show 避免销毁组件 -->
     <div v-show="!isStylePanelVisible" class="dom-tree" ref="domTree" v-prevent-bkg-scroll>
-      <NodeView :el="rootEl" ref="rootRef" class="source-code" :expandDeepth="1" />
+      <NodeView v-if="doctype" :el="doctype" class="source-code" />
+      <NodeView :el="rootEl" class="source-code" :expandDeepth="1" />
     </div>
     <div v-show="!isStylePanelVisible && selectedEl" class="dom-path" ref="domPath">
       <NodeLink v-for="(path, index) in domPaths" :key="index"
@@ -88,6 +89,9 @@ export default {
     };
   },
   computed: {
+    doctype() {
+      return document.doctype;
+    },
     /* eslint-disable */
     footBarButtons() {
       return [
@@ -151,9 +155,6 @@ export default {
     // FIXME: test
     // this.selectedEl = document.querySelector("#element");
     // this.isStylePanelVisible = true;
-    // 初始化选中元素
-    this.selectedEl = document.documentElement;
-    this.selectedRef = this.$refs.rootRef;
   },
   methods: {
     onClickDomPath(index) {
@@ -201,7 +202,7 @@ export default {
   .dom-tree {
     flex: 1 1 auto;
     overflow-y: auto;
-    padding: 5px;
+    padding: 2px 0;
   }
   .dom-path {
     flex: 0 0 auto;

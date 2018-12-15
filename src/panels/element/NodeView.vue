@@ -63,6 +63,14 @@
     >
     <span>&lt;!--{{el.data}}--&gt;</span>
   </div>
+  <div v-else-if="el && el.nodeType === Node.DOCUMENT_TYPE_NODE"
+    class="node doctype"
+    :class="{'select': isSelected}"
+    :style="indentStyle"
+    @click="onClickTag"
+    >
+    <span>&lt;!doctype html&gt;</span>
+  </div>
   <div v-else
     class="node"
     :class="{'select': isSelected}"
@@ -144,7 +152,7 @@ export default {
 
       if (childNodes.length === 0) return false;
 
-      // <style></style> 只有一个节点时折叠
+      // <style>和<script>标签只有一个节点时折叠
       const tagName = this.el.nodeName.toLowerCase();
       if (childNodes.length === 1 && ["style", "script"].findIndex(v => v === tagName) !== -1) return true;
 
@@ -257,12 +265,17 @@ $selection-active-fg-color: white;
     white-space: pre-wrap;
     word-break: break-all;
   }
-  .document-type {
-    color: rgb(192, 192, 192);
-  }
   .comment {
     display: flex;
     color: rgb(35, 110, 37);
+  }
+  // FIXME: '.node .doctype' 选择器无法选中元素，原因位置，暂时用串联选择器解决
+  &.doctype {
+    color: rgb(192, 192, 192);
+    &.select {
+      color: white;
+      background-color: $selection-bg-color;
+    }
   }
   .fold::before {
     display: inline-block;

@@ -13,6 +13,9 @@
     <template v-else-if="el.nodeType === Node.COMMENT_NODE">
       <span>&lt;!--&gt;</span>
     </template>
+    <template v-else-if="el.nodeType === Node.DOCUMENT_TYPE_NODE">
+      <span>&lt;!doctype&gt;</span>
+    </template>
     <template v-else>
       <span>(unknow)</span>
     </template>
