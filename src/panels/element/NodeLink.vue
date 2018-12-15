@@ -1,8 +1,12 @@
 <template>
   <span class="node-link" :class="{'selected': selected}" @click="$emit('click')">
     <template v-if="el.nodeType === Node.ELEMENT_NODE">
-      <span class="node-link__tag-name">{{tagName}}</span>
-      <template v-if="!compacted">
+      <template v-if="compacted">
+        <span v-if="el.id" class="node-link__id">{{id}}</span>
+        <span v-else class="node-link__tag-name">{{tagName}}</span>
+      </template>
+      <template v-else>
+        <span class="node-link__tag-name">{{tagName}}</span>
         <span v-if="el.id" class="node-link__id">{{id}}</span>
         <span v-if="el.classList.length > 0" class="node-link__class-name">{{className}}</span>
       </template>
