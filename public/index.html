@@ -44,7 +44,7 @@
       .xyz, .zyx, #element, .other {
         border: 1px solid red;
       }
-      /* 模拟宿主页面样式(测试是否会影响web-console的显示) */
+      /* 测试宿主页和浏览器设置默认样式 */
       div, span, p {
         color: black;
       }
@@ -67,6 +67,31 @@
         color: brown;
         /* 不可继承 */
         border-right-width: 2px;
+      }
+
+      /* 测试盒模型 */
+      .box-model {
+        display: none;
+        margin: 999px;
+        border: 888px solid red;
+        padding: 777px;
+        width: 666px;
+        height: 666px;
+      }
+      .box-model2 {
+        display: none;
+        position: relative;
+        left: 10px;
+        top: 20px;
+        margin-left: 1px;
+        padding-left: 2px;
+        border-left: 3px;
+      }
+      .box-model3 {
+        display: none;
+        position: absolute;
+        left: 10px;
+        top: 20px;
       }
     </style>
     <link rel="stylesheet" href="style_link.css">
@@ -120,6 +145,10 @@
           </div>
         </div>
       </div>
+      <!-- 测试盒模型 -->
+      <div class="box-model"></div>
+      <div class="box-model2"></div>
+      <div class="box-model3"></div>
     </div>
 
     <!-- import Vue before Mint UI -->

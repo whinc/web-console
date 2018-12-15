@@ -116,6 +116,9 @@ export default {
   },
   watch: {
     selectedEl(el) {
+      // 选中元素变化时，重置审查面板的默认tab
+      this.activedTab = "styles";
+
       if (!el) return;
 
       // 如果 dom 路径中存在当前所选元素，则激活 dom 路径中该项，否则重新生成 dom 路径

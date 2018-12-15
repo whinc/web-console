@@ -240,7 +240,7 @@ function findMaxSpecificity(selector) {
 @import "../../styles/variable";
 
 .tab-style {
-  height: 100%;
+  flex: auto;
   overflow-y: auto;
 }
 

@@ -5,3 +5,13 @@
     color: $color;
   }
 }
+
+// 初始化元素属性，避免宿主页面与选择器同名时受影响
+@mixin initial() {
+  width: initial;
+  height: initial;
+  padding: initial;
+  margin: initial;
+  border: initial;
+  position: initial;
+}
