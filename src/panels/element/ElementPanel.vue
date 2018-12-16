@@ -5,7 +5,7 @@
       <NodeView v-if="doctype" :el="doctype" class="source-code" />
       <NodeView :el="rootEl" class="source-code" :expandDeepth="1" />
     </div>
-    <div v-show="!isStylePanelVisible && selectedEl" class="dom-path" ref="domPath">
+    <div v-show="!isStylePanelVisible && selectedEl" class="dom-path g-hide-scrollbar" ref="domPath">
       <NodeLink v-for="(path, index) in domPaths" :key="index"
         :el="path.el"
         :selected="index === selectedDomPathIndex"
