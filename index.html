@@ -1,4 +1,93 @@
-<!DOCTYPE html><html><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=favicon.ico><title>web-console</title><link rel=stylesheet href=./mint-ui.min.css><style>#app {
+<!DOCTYPE html><html><head><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1"><link rel="shortcut icon" href=favicon.ico><title>web-console</title><style>/* CSSImportRule */
+      @import url('style_import1.css');
+
+      /* CSSStyleRule */
+      #element {
+        color: red;
+        /* 样式缩写形式 */
+        font: 1em "Fira Sans", sans-serif;
+        font-size: 15px;
+        font-weight: bold;
+        /* 样式缩写形式 */
+        border: 1px dotted blue;
+        border-left: 1px solid red;
+        padding: 5px;
+        padding-left: 10px;
+        /* 不同形式的颜色写法 */
+        color: black;
+        color: rgb(0, 0, 0);
+        color: #000;
+        background-color: #000;
+        border-bottom-color: #000;
+        border-top-color: #000;
+        border-right-color: #000;
+        border-left-color: #000;
+        border-color:#F00;
+        caret-color: #000;
+        outline-color: #000;
+        text-decoration-color: #000;
+        background: #000;
+        color:inherit;
+        color: darkmagenta
+;
+      }
+      /* 测试分组选择器 */
+      .xyz, .zyx, #element, .other {
+        border: 1px solid red;
+      }
+      /* 测试宿主页和浏览器设置默认样式 */
+      div, span, p {
+        color: black;
+      }
+
+      /* CSSKeyframesRule */
+      @keyframes out {
+        0% { }
+        100% { opacity: 0; }
+      }
+
+      /* parent element style */
+      #parent {
+        /* 可继承 */
+        color: gold;
+        /* 不可继承 */
+        border-right-width: 1px;
+      }
+
+      #parent2 {
+        color: brown;
+        /* 不可继承 */
+        border-right-width: 2px;
+      }
+
+      /* 测试盒模型 */
+      .box-model {
+        display: none;
+        margin: 99999999999999999999px;
+        border: 88888888888888888888px solid red;
+        padding: 77777777777777777777px;
+        width: 666px;
+        height: 666px;
+      }
+      .box-model2 {
+        display: none;
+        position: relative;
+        left: 10px;
+        top: 20px;
+        margin-left: 1px;
+        padding-left: 2px;
+        border-left: 3px;
+        width: -10px;
+        height: 0px;
+      }
+      .box-model3 {
+        display: none;
+        position: absolute;
+        left: 10px;
+        top: 20px;
+        width: 0px;
+        height: 10px;
+      }</style><link rel=stylesheet href=style_link.css><link rel=stylesheet href=./mint-ui.min.css><style>#app {
         height: 100%;
         overflow-y: scroll;
       }
@@ -6,7 +95,7 @@
       #app .mint-button {
         width: 100%;
         margin-bottom: 15px;
-      }</style><link href=js/app.73c531c4.js rel=preload as=script><link href=js/chunk-vendors.44069deb.js rel=preload as=script></head><body><script src=./vue.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click=$console.testFormat()>打印格式化</mt-button><mt-button type=primary @click=$console.testObject()>打印对象</mt-button><mt-button type=primary @click=$console.testException()>触发异常</mt-button><h2>Network Test</h2><mt-button type=primary @click=$network.testHTTPStatus()>测试 HTTP 状态码</mt-button><mt-button type=primary @click=$network.testRequestParams()>测试请求参数</mt-button><mt-button type=primary @click=$network.testResponseData()>测试响应数据</mt-button><mt-button type=primary @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=primary @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button><h2>Application Test</h2><mt-button type=primary @click=$application.testWriteCookie(1000)>测试 Cookie</mt-button><mt-button type=primary @click=$application.testWriteLocalStorage(1000)>测试 LocalStorage</mt-button><mt-button type=primary @click=$application.testWriteSessionStorage(1000)>测试 SessionStorage</mt-button><h2>Other</h2><mt-button type=primary @click=performanceTest(50)>日志性能测试</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click=$console.testObject()>打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=./mint-ui.min.js></script><script src=./test_console.js></script><script src=./test_network.js></script><script src=./test_application.js></script><script>new Vue({
+      }</style><link href=js/app.7f1b4ddb.js rel=preload as=script><link href=js/chunk-vendors.ae5dff19.js rel=preload as=script></head><body><div id=parent class="a b" style="color: red"><div id=parent2 class="c d" style="color: red"><div id=element class="xyz zyx" style="display: none" data-a=a><div>hello world <span>b</span><input> <input> <input></div>1<div>2<div>3<div>4<div>5<div>6</div></div></div></div></div></div></div><div class=box-model></div><div class=box-model2></div><div class=box-model3></div></div><script src=./vue.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click=$console.testFormat()>打印格式化</mt-button><mt-button type=primary @click=$console.testObject()>打印对象</mt-button><mt-button type=primary @click=$console.testException()>触发异常</mt-button><h2>Network Test</h2><mt-button type=primary @click=$network.testHTTPStatus()>测试 HTTP 状态码</mt-button><mt-button type=primary @click=$network.testRequestParams()>测试请求参数</mt-button><mt-button type=primary @click=$network.testResponseData()>测试响应数据</mt-button><mt-button type=primary @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=primary @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button><h2>Application Test</h2><mt-button type=primary @click=$application.testWriteCookie(1000)>测试 Cookie</mt-button><mt-button type=primary @click=$application.testWriteLocalStorage(1000)>测试 LocalStorage</mt-button><mt-button type=primary @click=$application.testWriteSessionStorage(1000)>测试 SessionStorage</mt-button><h2>Other</h2><mt-button type=primary @click=performanceTest(50)>日志性能测试</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click=$console.testObject()>打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=./mint-ui.min.js></script><script src=./test_console.js></script><script src=./test_network.js></script><script src=./test_application.js></script><script>new Vue({
         el: "#app",
         data: function() {
           return {
@@ -49,8 +138,8 @@
               // new Array(11).fill(0).forEach((v, i) => console.log(i))
 
               window.webConsole = new window.WebConsole({
-                activeTab: 'console',
-                panelVisible: false,
+                activeTab: 'element',
+                panelVisible: true,
                 entryStyle: 'icon'
               });
               // this.$console.testFormat()
@@ -154,4 +243,4 @@
       function testLogFormat(value, format) {
         console.log("console.log(%" + format + ", %s)", JSON.stringify(value));
         console.log(format, value);
-      }</script><script src=http://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js></script><script>var vConsole = new window.VConsole();</script><script src=js/chunk-vendors.44069deb.js></script><script src=js/app.73c531c4.js></script></body></html>
+      }</script><script src=http://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js></script><script>var vConsole = new window.VConsole();</script><script src=js/chunk-vendors.ae5dff19.js></script><script src=js/app.7f1b4ddb.js></script></body></html>
