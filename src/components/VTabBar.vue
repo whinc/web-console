@@ -1,6 +1,6 @@
 <template>
   <div class="v-tab-bar" :class="{'show-bottom-border': showBottomBorder}">
-    <div class="item-container">
+    <div class="item-container g-hide-scrollbar">
       <slot></slot>
     </div>
     <div class="icon-container">
@@ -46,10 +46,11 @@ export default {
 <style lang="scss" scoped>
 @import "../styles/variable";
 .v-tab-bar {
+  flex: 0 0 auto;
+  width: 100%;
   height: $tabbar-height;
   background-color: $tabbar-bg-color;
   display: flex;
-  flex: 0 0 auto;
   &.show-bottom-border {
     border-bottom: 1px solid $tabbar-border-color;
   }
@@ -57,6 +58,7 @@ export default {
     height: 100%;
     display: flex;
     flex: 1 1 auto;
+    overflow-x: auto;
   }
   .icon-container {
     height: 100%;

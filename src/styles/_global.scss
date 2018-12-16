@@ -7,14 +7,23 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: rgb(48, 57, 66);
+  .g-source-code,
   .source-code {
     font-size: $source-code-font-size !important;
     font-family: Menlo, Consolas, monospace;
   }
 
+  // 隐藏滚动条
+  .g-hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    overflow: -moz-scrollbars-none;
+  }
+
+  // 重置默认样式
   * {
     box-sizing: border-box;
     user-select: auto;
+    // IOS：移除默认的触摸高亮样式
     -webkit-tap-highlight-color: transparent;
     &:focus {
       outline: none;

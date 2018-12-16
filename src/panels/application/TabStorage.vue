@@ -39,8 +39,8 @@
             </div>
           </template>
           <template v-else>
-            <div class="table__cell">{{key}}</div>
-            <div class="table__cell">{{value}}</div>
+            <div class="table__cell g-hide-scrollbar">{{key}}</div>
+            <div class="table__cell g-hide-scrollbar">{{value}}</div>
           </template>
         </div>
       </div>
@@ -259,6 +259,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../styles/mixin";
 .tab-storage {
   height: 100%;
   display: flex;
@@ -281,7 +282,7 @@ export default {
   background-color: rgb(243, 243, 243);
   border-bottom: 1px solid rgb(205, 205, 205);
   &__button {
-    padding: 0.6em;
+    padding: 0.55em;
     width: 2.4em;
     &:active {
       background-color: #eaeaea;
@@ -318,20 +319,16 @@ export default {
   &__row {
     height: 30px;
     display: flex;
-    border-bottom: 1px solid transparent;
     &--head {
       border-bottom: 1px solid #aaa;
     }
     &:nth-child(even) {
       background-color: rgb(242, 247, 253);
     }
-    // 覆盖 nth-child 的背景色
-    &--selected.table__row {
-      color: white;
-      background-color: #2196f3;
-      * {
-        color: white;
-      }
+    // 覆盖选中行前景色和背景色
+    &--selected {
+      @include descendant-color(white);
+      @include descendant-bkg-color(#2196f3);
     }
   }
   &__cell {
@@ -352,18 +349,15 @@ export default {
     &--head {
     }
     &--edit {
+      @include descendant-color(black);
+      @include descendant-bkg-color(white);
       padding: 0;
-      color: black;
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
-      background-color: white;
       input {
         outline: none;
         height: 100%;
         width: 100%;
       }
-    }
-    &::-webkit-scrollbar {
-      display: none;
     }
   }
 }

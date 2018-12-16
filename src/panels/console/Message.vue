@@ -1,5 +1,5 @@
 <template>
-  <div class="message source-code" :class="[message.type]">
+  <div class="message source-code g-hide-scrollbar" :class="[message.type]">
     <div v-if="showTimestamps" class="timestamps">{{formattedTime}}</div>
     <div v-if="isErrorCaptured" class="error">
       Message 组件内部错误
@@ -272,9 +272,6 @@ function format(logArgs) {
   padding: 8px 4px;
   overflow-y: hidden;
   overflow-x: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
   &.log,
   &.debug,
   &.info {

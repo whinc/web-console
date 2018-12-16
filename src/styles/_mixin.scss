@@ -1,8 +1,14 @@
-// 设置后台元素颜色
-@mixin descendant-color($color) {
-  color: $color;
+@mixin descendant-color($value) {
+  color: $value;
   /deep/ * {
-    color: $color;
+    color: $value;
+  }
+}
+
+@mixin descendant-bkg-color($value) {
+  background-color: $value;
+  /deep/ * {
+    background-color: $value;
   }
 }
 
