@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../styles/variable";
+@import "../styles/variables";
 .v-tab-bar {
   flex: 0 0 auto;
   width: 100%;

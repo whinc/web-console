@@ -246,7 +246,7 @@ function findMaxSpecificity(selector) {
 
 
 <style lang="scss" scoped>
-@import "../../styles/variable";
+@import "../../styles/variables";
 
 .tab-style {
   flex: auto;

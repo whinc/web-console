@@ -173,7 +173,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variable";
+@import "../../styles/variables";
 
 .tab-headers {
   margin: 0 5px;

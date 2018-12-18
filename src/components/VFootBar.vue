@@ -45,7 +45,7 @@ export default {
 
 
 <style lang="scss" scoped>
-@import "../styles/variable";
+@import "../styles/variables";
 .foot-bar {
   border-top: 1px solid #d9d9d9;
   height: $footbar-height;

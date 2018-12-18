@@ -25,7 +25,7 @@ export default {
 
 
 <style lang="scss" scoped>
-@import "../../styles/mixin";
+@import "../../styles/mixins";
 .tab-computed {
   flex: auto;
   display: flex;

@@ -71,8 +71,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variable";
-@import "../../styles/mixin";
+@import "../../styles/variables";
+@import "../../styles/mixins";
 
 $status-error-color: rgb(230, 0, 0);
 .request {

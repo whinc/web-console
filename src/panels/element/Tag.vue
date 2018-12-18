@@ -85,8 +85,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variable";
-@import "../../styles/mixin";
+@import "../../styles/variables";
+@import "../../styles/mixins";
 .tag {
   @include descendant-color(rgb(168, 148, 166));
   white-space: pre-wrap;

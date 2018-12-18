@@ -264,7 +264,7 @@ function format(logArgs) {
 </script>
 
 <style scoped lang="scss">
-@import "../../styles/mixin";
+@import "../../styles/mixins";
 .message {
   display: flex;
   flex-direction: row;

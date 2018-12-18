@@ -284,7 +284,7 @@ function getColorIndex(name) {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/triangle";
+@import "../../styles/triangles";
 
 .style-property {
   display: flex;
@@ -304,11 +304,11 @@ function getColorIndex(name) {
   &__value {
     padding-left: 0.5em;
     &.collapse::before {
-      @include triangle-collapse(6px, #727272);
+      @include triangles-collapse(6px, #727272);
       margin-right: 0.2em;
     }
     &.expand::before {
-      @include triangle-expand(6px, #727272);
+      @include triangles-expand(6px, #727272);
       margin-right: 0.2em;
       margin-bottom: 1px;
     }

@@ -217,9 +217,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/triangle";
-@import "../../styles/mixin";
-$triangle-border-width: 6px;
+@import "../../styles/triangles";
+@import "../../styles/mixins";
+$triangles-border-width: 6px;
 $selection-bg-color: #2196f3;
 .node {
   display: flex;
@@ -232,11 +232,11 @@ $selection-bg-color: #2196f3;
     }
     background-color: $selection-bg-color;
     &.fold::before {
-      @include triangle-collapse($triangle-border-width, #fff);
+      @include triangles-collapse($triangles-border-width, #fff);
       margin-right: 2px;
     }
     &.unfold::before {
-      @include triangle-expand($triangle-border-width, #fff);
+      @include triangles-expand($triangles-border-width, #fff);
       margin-right: 2px;
       margin-bottom: 1px;
     }
@@ -247,7 +247,8 @@ $selection-bg-color: #2196f3;
   .element {
   }
   .text {
-    @include descendant-color(rgb(48, 57, 66)) white-space: pre-wrap;
+    @include descendant-color(rgb(48, 57, 66));
+    white-space: pre-wrap;
     word-break: break-all;
   }
   .comment {
@@ -255,17 +256,18 @@ $selection-bg-color: #2196f3;
   }
   // FIXME: '.node .doctype' 选择器无法选中元素，原因位置，暂时用串联选择器解决
   &.doctype {
-    @include descendant-color(rgb(192, 192, 192)) &.select {
+    @include descendant-color(rgb(192, 192, 192));
+    &.select {
       color: white;
       background-color: $selection-bg-color;
     }
   }
   .fold::before {
-    @include triangle-collapse($triangle-border-width, #727272);
+    @include triangles-collapse($triangles-border-width, #727272);
     margin-right: 2px;
   }
   .unfold::before {
-    @include triangle-expand($triangle-border-width, #727272);
+    @include triangles-expand($triangles-border-width, #727272);
     margin-right: 2px;
     margin-bottom: 1px;
   }

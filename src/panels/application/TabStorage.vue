@@ -259,7 +259,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/mixin";
+@import "../../styles/mixins";
 .tab-storage {
   height: 100%;
   display: flex;

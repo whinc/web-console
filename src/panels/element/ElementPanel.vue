@@ -196,7 +196,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/variable";
+@import "../../styles/variables";
 
 .element-panel {
   height: $panel-height;

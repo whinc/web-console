@@ -82,8 +82,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../styles/mixin";
-@import "../../styles/variable";
+@import "../../styles/mixins";
+@import "../../styles/variables";
 .box-model {
   @include initial();
   display: inline-block;
