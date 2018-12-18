@@ -289,19 +289,11 @@ export default {
     }
   }
   &__input {
+    @include input;
     flex: 1 1 auto;
-    color: #5a5a5a;
-    background-color: white;
-    border: 1px solid transparent;
     height: 80%;
     margin: 0 4px;
     padding: 0 4px;
-    &::placeholder {
-      color: rgb(128, 128, 128);
-    }
-    &:focus {
-      border: 1px solid #2196f3;
-    }
   }
 }
 

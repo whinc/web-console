@@ -6,11 +6,23 @@
   font-family: $font-family;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: rgb(48, 57, 66);
+  color: $default-color;
   .g-source-code,
   .source-code {
     font-size: $source-code-font-size !important;
     font-family: Menlo, Consolas, monospace;
+  }
+
+  .platform-linux {
+    color: rgb(48, 57, 66);
+    font-family: Roboto, Ubuntu, Arial, sans-serif;
+  }
+  .platform-mac {
+    color: rgb(48, 57, 66);
+    font-family: ".SFNSDisplay-Regular", "Helvetica Neue", "Lucida Grande", sans-serif;
+  }
+  .platform-windows {
+    font-family: "Segoe UI", Tahoma, sans-serif;
   }
 
   // 隐藏滚动条
