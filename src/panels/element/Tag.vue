@@ -88,7 +88,7 @@ export default {
 @import "../../styles/variables";
 @import "../../styles/mixins";
 .tag {
-  @include descendant-color(rgb(168, 148, 166));
+  @include descendant-attr("color", rgb(168, 148, 166));
   white-space: pre-wrap;
   word-break: break-all;
   &--start,

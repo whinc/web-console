@@ -247,16 +247,16 @@ $selection-bg-color: #2196f3;
   .element {
   }
   .text {
-    @include descendant-color(rgb(48, 57, 66));
+    @include descendant-attr("color", rgb(48, 57, 66));
     white-space: pre-wrap;
     word-break: break-all;
   }
   .comment {
-    @include descendant-color(rgb(35, 110, 37));
+    @include descendant-attr("color", rgb(35, 110, 37));
   }
   // FIXME: '.node .doctype' 选择器无法选中元素，原因位置，暂时用串联选择器解决
   &.doctype {
-    @include descendant-color(rgb(192, 192, 192));
+    @include descendant-attr("color", rgb(192, 192, 192));
     &.select {
       color: white;
       background-color: $selection-bg-color;

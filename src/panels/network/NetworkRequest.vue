@@ -85,13 +85,13 @@ $status-error-color: rgb(230, 0, 0);
     flex-direction: row;
     align-items: center;
     &.error {
-      @include descendant-color($status-error-color);
+      @include descendant-attr("color", $status-error-color);
     }
     &.even {
       background-color: rgb(245, 245, 245);
     }
     &.selected {
-      @include descendant-color(white);
+      @include descendant-attr("color", white);
       background-color: #2196f3;
     }
     .cell {

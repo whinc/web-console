@@ -327,8 +327,8 @@ export default {
     }
     // 覆盖选中行前景色和背景色
     &--selected {
-      @include descendant-color(white);
-      @include descendant-bkg-color(#2196f3);
+      @include descendant-attr("color", white);
+      @include descendant-attr("backgroundc-color", #2196f3);
     }
   }
   &__cell {
@@ -349,8 +349,8 @@ export default {
     &--head {
     }
     &--edit {
-      @include descendant-color(black);
-      @include descendant-bkg-color(white);
+      @include descendant-attr("color", black);
+      @include descendant-attr("background-color", white);
       padding: 0;
       box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
       input {

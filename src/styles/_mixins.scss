@@ -1,14 +1,8 @@
-@mixin descendant-color($value) {
-  color: $value;
+// 给当前元素以及后代元素设置属性
+@mixin descendant-attr($name, $value) {
+  #{$name}: $value;
   /deep/ * {
-    color: $value;
-  }
-}
-
-@mixin descendant-bkg-color($value) {
-  background-color: $value;
-  /deep/ * {
-    background-color: $value;
+    #{$name}: $value;
   }
 }
 
