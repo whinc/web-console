@@ -1,4 +1,4 @@
-import { isFunction } from "./base";
+import { isFunction } from "./miscs";
 import Logger from "./Logger";
 
 const logger = new Logger("[TaskScheduler]");

@@ -1,3 +1,5 @@
+export { default as cloneDeep } from "lodash.clonedeep";
+
 export const isNull = v => v === null;
 export const isUndefined = v => v === undefined;
 export const isString = v => typeof v === "string";
@@ -11,7 +13,6 @@ export const isObject = v => typeof v === "object" && v !== null;
 export const isDev = process.env.NODE_ENV !== "production";
 
 export const noop = function() {};
-export const cloneDeep = v => JSON.parse(JSON.stringify(v));
 
 export const nextTick = cb => {
   if (typeof window.Promise === "function") {

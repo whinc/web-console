@@ -30,6 +30,7 @@
   "dependencies": {
     "cookie_js": "^1.2.2",
     "highlight.js": "^9.13.1",
+    "lodash.clonedeep": "^4.5.0",
     "mint-ui": "^2.2.13",
     "specificity": "^0.4.1",
     "url-search-params": "^1.1.0",

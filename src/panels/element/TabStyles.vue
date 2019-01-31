@@ -20,13 +20,13 @@
 </template>
 
 <script>
-import { Logger, getURLFileName } from "@/utils";
+import { Logger, getURLFileName, Style } from "@/utils";
 import { calculate, compare } from "specificity";
 import StyleRule from "./StyleRule";
 import NodeLink from "./NodeLink";
 import BoxModel from "./BoxModel";
 
-const logger = new Logger("[TabStyles]");
+const logger = new Logger("[TabStyles.vue]");
 export default {
   components: {
     StyleRule,
@@ -88,34 +88,27 @@ export default {
 };
 
 /**
- * 获取样式规则
+ * 获取指定元素的样式规则列表(按特殊性从高到低排序)
  */
 function getDisplayStyleSheets(_el) {
   const displayStyleSheets = [];
   let el = _el;
   while (el !== document.documentElement) {
     const inherit = el !== _el;
-    const cssRules = getMatchCSSRules([].slice.call(document.styleSheets), el);
-    const displayRules = cssRules
-      .map((rule, index) => {
-        // 映射 CSSRule 到视图所需数据结构
-        return {
-          from: "styleSheet",
-          inherit,
-          // 出现顺序，值越小表示越先出现
-          order: index,
-          selector: rule.selectorText,
-          style: rule.style,
-          href: (rule.parentStyleSheet && getURLFileName(rule.parentStyleSheet.href)) || "<style>...</style>"
-        };
-      })
-      .sort((a, b) => {
-        // 根据特殊性排序，如果特殊性相同则按出现顺序排序，排在数组越前的特殊性越高
-        const selectorA = findMaxSpecificity(a.selector);
-        const selectorB = findMaxSpecificity(b.selector);
-        const c = compare(selectorA, selectorB);
-        return c === 0 ? b.order - a.order : -c;
-      });
+    const matchedCSSRules = Style.getMatchedCSSRules(el);
+    logger.log(matchedCSSRules);
+    const displayRules = matchedCSSRules.sort(Style.compareCSSRule).map((rule, index) => {
+      // 映射 CSSRule 到视图所需数据结构
+      return {
+        from: "styleSheet",
+        inherit,
+        // 出现顺序，值越小表示越先出现
+        order: rule.order,
+        selector: rule.selectorText,
+        style: rule.style,
+        href: (rule.parentStyleSheet && getURLFileName(rule.parentStyleSheet.href)) || "<style>...</style>"
+      };
+    });
 
     /**
      * 添加内联样式到样式规则列表
@@ -129,6 +122,7 @@ function getDisplayStyleSheets(_el) {
         style: el.style
       });
     }
+
     if (displayRules.length > 0) {
       displayStyleSheets.push({
         type: "element",
@@ -140,110 +134,7 @@ function getDisplayStyleSheets(_el) {
   }
   return displayStyleSheets;
 }
-
-/**
- * 获取与指定元素匹配的所有样式规则
- * document.styleSheets 返回的列表是按声明顺序排序，如果有 @import 则是递归嵌套
- *
- * ----- index.html
- * <style>
- * @import stylesheet_import1.css
- *
- * #id {
- *
- * }
- * </style>
- * <link rel="stylesheet" href="stylesheet_link.css" />
- * <div id="id"></div>
- *
- * ----- stylesheet_import1.css
- * @import stylesheet_import2.css
- * #id {
- *
- * }
- *
- * ----- stylesheet_import2.css
- * #id {
- *
- * }
- *
- * ----- stylesheet_link.css
- * #id {
- *
- * }
- *
- * Chrome DevTools 审查元素 div#id 的样式规则优先级从高到低为：
- * #id stylesheet_link.css
- * #id <style>...</style>
- * #id stylesheet_import1.css
- * #id stylesheet_import2.css
- *
- * 相同 specificity 的选择器按照出现的先后顺序层叠，后面的元素覆盖前面元素
- * 通过 import 导入的元素视作原地展开后按出现顺序层叠。
- *
- * @param {Array<StyleSheet>} styleSheets
- * @param {Element} el
- * @returns {Array<CSSRule>} 匹配的规则列表，按出现先后顺序排列
- */
-function getMatchCSSRules(styleSheets, el) {
-  const rules = [];
-  // 深度优先遍历
-  while (styleSheets.length > 0) {
-    const styleSheet = styleSheets.shift();
-    try {
-      const cssRuleArr = [].slice.call(styleSheet.cssRules);
-      while (cssRuleArr.length > 0) {
-        const rule = cssRuleArr.shift();
-        switch (rule.type) {
-          case CSSRule.IMPORT_RULE:
-            // 根据层叠规则，导入样式视作在当前样式表所有规则之前
-            cssRuleArr.unshift(...getMatchCSSRules([rule.styleSheet], el));
-            break;
-          case CSSRule.STYLE_RULE:
-            if (el.matches(rule.selectorText)) {
-              rules.push(rule);
-              // logger.log(rule.type, rule)
-            }
-            break;
-          default:
-            // TODO: 处理其他类型的 CSSRule
-            logger.error("unknow CSSRule type:", rule.type);
-            break;
-        }
-      }
-    } catch (e) {
-      // logger.error('忽略该错误', e)
-      continue;
-    }
-  }
-  return rules;
-}
-
-/**
- * 找出择器中特殊性最高的选择器
- *
- * 例如：
- * findMaxSpecificity('.a')  // '.a'
- * findMaxSpecificity('.a, #b')  // '#b'
- * findMaxSpecificity('.a, #b, #b.a')  // '#b.a'
- */
-function findMaxSpecificity(selector) {
-  let _selector;
-  if (selector.indexOf(",") !== -1) {
-    const selectorArr = selector.split(",");
-    _selector = selectorArr[0];
-    selectorArr.forEach(v => {
-      if (compare(v, _selector) === 1) {
-        _selector = v;
-      }
-    });
-  } else {
-    _selector = selector;
-  }
-  return _selector;
-}
 </script>
-
 
 <style lang="scss" scoped>
 @import "../../styles/variables";
