@@ -220,28 +220,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.normal {
-  color: #565656;
-}
-.null,
-.undefined {
-  color: rgb(128, 128, 128);
-}
-.boolean,
-.function {
-  color: rgb(13, 34, 170);
-}
-.number {
-  color: #1c00cf;
-}
-.string,
-.symbol {
-  color: rgb(196, 26, 22);
-}
-.string-quote {
-  color: #222;
-}
-.keep-format {
-  white-space: pre-wrap;
+.text-inline-block {
+  word-break: break-all;
+
+  .normal {
+    color: #565656;
+  }
+  .null,
+  .undefined {
+    color: rgb(128, 128, 128);
+  }
+  .boolean,
+  .function {
+    color: rgb(13, 34, 170);
+  }
+  .number {
+    color: #1c00cf;
+  }
+  .string,
+  .symbol {
+    color: rgb(196, 26, 22);
+  }
+  .string-quote {
+    color: #222;
+  }
+  .keep-format {
+    white-space: pre-wrap;
+  }
 }
 </style>

@@ -302,9 +302,8 @@ export default {
       // 函数类型，以斜体展示
       const b2 = isFunction(this.descriptor.value);
       return {
-        italic: b1 || b2,
+        italic: b1 || b2
         // 只有根节点需要换行展示，非根节点不换行方便阅读
-        nowrap: !this.isRoot
       };
     }
   },
@@ -467,9 +466,6 @@ function propCompareFn(propA, propB) {
 
   .italic {
     font-style: italic;
-  }
-  .nowrap {
-    white-space: nowrap;
   }
 }
 </style>
