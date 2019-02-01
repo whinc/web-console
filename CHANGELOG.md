@@ -1,3 +1,14 @@
+<a name="0.3.0-beta.6"></a>
+
+# [0.3.0-beta.6](https://github.com/whinc/web-console/compare/v0.3.0-beta.5...v0.3.0-beta.6) (2019-02-01)
+
+### Bug Fixes
+
+- 无法复制文本的问题 ([a224c2e](https://github.com/whinc/web-console/commit/a224c2e))
+- **console:** 优化消息换行展示 ([ed0567a](https://github.com/whinc/web-console/commit/ed0567a))
+- **console:** 修复 Element.prototype.scrollTo 兼容性问题 ([70d3410](https://github.com/whinc/web-console/commit/70d3410))
+- **console:** 修复数组包含非数字下标时的展示问题 ([0e9de4f](https://github.com/whinc/web-console/commit/0e9de4f))
+
 <a name="0.3.0-beta.5"></a>
 
 # [0.3.0-beta.5](https://github.com/whinc/web-console/compare/v0.3.0-beta.4...v0.3.0-beta.5) (2018-12-06)
