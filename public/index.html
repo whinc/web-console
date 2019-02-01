@@ -111,7 +111,7 @@
               window.webConsole = new window.WebConsole({
                 activeTab: 'console',
                 panelVisible: false,
-                entryStyle: 'icon'
+                entryStyle: 'button'
               });
               // this.$console.testFormat()
               // this.$network.testHTTPStatus()
@@ -217,9 +217,11 @@
       }
     </script>
     <!-- <script src="https://unpkg.com/@whinc/web-console"></script> -->
-    <script src="http://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <!-- <script src="http://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script> -->
     <script>
-      var vConsole = new window.VConsole();
+      if (window.VConsole) {
+        window._vConsole = new window.VConsole();
+      }
     </script>
     <!-- built files will be auto injected -->
   </body>
