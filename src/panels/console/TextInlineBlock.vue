@@ -20,14 +20,16 @@
       <template v-if="deepth === 0">
         <span style="color: gray">({{value.length}})&nbsp;</span>
         <span>[</span>
-        <span v-for="(v, i) in value" :key="i">
+        <!-- 数组可能包含非数字下标，使用 Object.keys 过滤出有效的 keys 进行处理 -->
+        <span v-for="(key, i) in Object.keys(value)" :key="i" v-if="i < MAX_DISPLAY_PROP_COUNT">
           <text-inline-block
-            :name="String(i)"
-            :value="short(v)"
+            :name="String(key)"
+            :value="short(value[key])"
             :deepth="deepth + 1"
           />
-          <span v-if="i !== value.length - 1">,&nbsp;</span>
+          <span v-if="i !== Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 1)">, </span>
         </span>
+        <span v-if="displayPropertyNames.length >= 5">, ...</span>
         <span>]</span>
       </template>
       <span v-else>Array({{value.length}})</span>
@@ -45,14 +47,14 @@
       <span>{</span>
       <!-- 第1层属性要展示且最多展示 5 个，超过 5 个后使用省略号替代 -->
       <template v-if="deepth === 0">
-        <span v-for="(propName, index) in displayPropertyNames" :key="index" v-if="index < maxDisplayPropertyCount">
+        <span v-for="(propName, index) in displayPropertyNames" :key="index" v-if="index < MAX_DISPLAY_PROP_COUNT">
           <span>{{propName}}: </span>
           <text-inline-block
             :name="propName"
             :value="short(value[propName])"
             :deepth="deepth + 1"
           />
-          <span v-if="index !== Math.min(maxDisplayPropertyCount - 1, displayPropertyNames.length - 1)">, </span>
+          <span v-if="index !== Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 1)">, </span>
         </span>
         <span v-if="displayPropertyNames.length >= 5">, ...</span>
       </template>
@@ -174,7 +176,7 @@ export default {
     isObject() {
       return isObject(this.value);
     },
-    maxDisplayPropertyCount() {
+    MAX_DISPLAY_PROP_COUNT() {
       return 5;
     },
     displayPropertyNames() {
@@ -208,7 +210,7 @@ export default {
   },
   methods: {
     short(value) {
-      const maxLen = 40;
+      const maxLen = 24;
       if (isString(value) && value.length > maxLen) {
         return value.slice(0, maxLen / 2) + "..." + value.slice(value.length - maxLen / 2);
       }
