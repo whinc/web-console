@@ -17,3 +17,14 @@ npm run changelog
 ```
 npm run depoly
 ```
+
+本地调试
+
+```js
+const script = document.createElement("script");
+script.src = "http://localhost:8081/app.js";
+script.onload = function() {
+  new window.WebConsole();
+};
+document.body.appendChild(script);
+```

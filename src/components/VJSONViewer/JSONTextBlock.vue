@@ -16,7 +16,6 @@
       <JSONTextInlineBlock
         :name="name"
         :value="descriptor.value"
-        class="nowrap"
       />
     </div>
     <!-- 子节点 -->
@@ -255,9 +254,6 @@ function propCompareFn(propA, propB) {
 
   .italic {
     font-style: italic;
-  }
-  .nowrap {
-    white-space: nowrap;
   }
 }
 </style>

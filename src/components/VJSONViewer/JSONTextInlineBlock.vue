@@ -1,6 +1,6 @@
 <template>
   <!-- 数组类型 -->
-  <span v-if="isArray">
+  <span v-if="isArray" class="json-text-inline-block">
     <span>[</span>
     <span v-for="(v, i) in value" :key="i">
       <JSONTextInlineBlock
@@ -13,7 +13,7 @@
     <span>]</span>
   </span>
   <!-- 对象 -->
-  <span v-else-if="isObject">
+  <span v-else-if="isObject" class="json-text-inline-block">
     <!-- 展示对象详情 -->
     <span>{</span>
     <!-- 第1层属性要展示且最多展示 5 个，超过 5 个后使用省略号替代 -->
@@ -34,7 +34,7 @@
     <span>}</span>
   </span>
   <!-- 字符串类型 -->
-  <span v-else-if="isString">
+  <span v-else-if="isString" class="json-text-inline-block">
     <template v-if="name">
       <span class="string-quote">"</span>
       <span :class="{'string': isRoot}">{{value}}</span>
@@ -45,7 +45,7 @@
     </template>
   </span>
   <!-- 其他类型 -->
-  <span v-else :class="isRoot ? valueClass : ''">{{formattedValue}}</span>
+  <span v-else class="json-text-inline-block" :class="isRoot ? valueClass : ''">{{formattedValue}}</span>
 </template>
 
 <script>
@@ -120,25 +120,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.normal {
-  color: #565656;
-}
-.null,
-.undefined {
-  color: rgb(128, 128, 128);
-}
-.boolean,
-.function {
-  color: rgb(13, 34, 170);
-}
-.number {
-  color: #1c00cf;
-}
-.string,
-.symbol {
-  color: rgb(196, 26, 22);
-}
-.string-quote {
-  color: #222;
+.json-text-inline-block {
+  word-break: break-all;
+
+  .normal {
+    color: #565656;
+  }
+  .null,
+  .undefined {
+    color: rgb(128, 128, 128);
+  }
+  .boolean,
+  .function {
+    color: rgb(13, 34, 170);
+  }
+  .number {
+    color: #1c00cf;
+  }
+  .string,
+  .symbol {
+    color: rgb(196, 26, 22);
+  }
+  .string-quote {
+    color: #222;
+  }
 }
 </style>
