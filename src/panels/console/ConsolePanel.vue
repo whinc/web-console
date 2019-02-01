@@ -25,6 +25,7 @@
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
 import { uuid, createStack, eventBus, TaskScheduler, Logger, consoleHooks } from "@/utils";
 import Message from "./Message";
+import { isFunction } from "util";
 
 const logger = new Logger("[ConsolePanel]");
 
@@ -86,7 +87,8 @@ export default {
       this.$nextTick(() => {
         const el = this.$refs.container;
         // logger.log('msgList changed, isBottom:', this.isBottom)
-        if (this.isBottom && el) {
+        if (this.isBottom && el && isFunction(HTMLElement.prototype.scrollTo)) {
+          // Element 的 scrollTo 还处于工作草案，需判断兼容性
           // 在合适的时机滚动至底部，避免阻塞交互
           el.scrollTo(0, el.scrollHeight - el.clientHeight);
         }
@@ -141,7 +143,8 @@ export default {
     // TODO: 不是监听弹窗可见，而是监听当前面板可见
     eventBus.on(eventBus.POPUP_VISIBILITY_CHANGE, () => {
       const el = this.$refs.container;
-      if (this.isBottom && el) {
+      if (this.isBottom && el && isFunction(HTMLElement.prototype.scrollTo)) {
+        // Element 的 scrollTo 还处于工作草案，需判断兼容性
         // 待新增的消息渲染完成后，滚动至底部
         el.scrollTo(0, el.scrollHeight - el.clientHeight);
       }
