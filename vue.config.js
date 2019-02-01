@@ -4,7 +4,7 @@ const path = require("path");
 const npmPkg = require("./package.json");
 process.env.VUE_APP_NAME = npmPkg.name;
 process.env.VUE_APP_VERSION = npmPkg.version;
-process.env.VUE_APP_DATE = new Date().toISOString();
+process.env.VUE_APP_DATE = new Date(Date.now() - new Date().getTimezoneOffset() * 60 * 1000).toISOString();
 
 module.exports = {
   css: {
