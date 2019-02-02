@@ -5,23 +5,29 @@
     </div>
     <div class="filter-bar">
       <input class="filter-bar__input" placeholder="Filter" v-model="filter" />
+      <input class="filter-bar__checkbox" id="showAll" type="checkbox" v-model="isShowAll" />
+      <label class="filter-bar__label" for="showAll">Show all</label>
     </div>
     <div class="computed-style table">
       <template v-for="{name, value, matchedRules} in filteredComputedStyleArr">
         <div class="table__row"
-          :class="{'table__row--override': matchedRules.length > 0, 'collapse':  matchedRules.length > 0}"
-          :key="name" >
+          :class="{'table__row--override': matchedRules.length > 0, 'collapse':  matchedRules.length > 0 && computedStyleCollapseMap[name], 'expand': matchedRules.length > 0 && !computedStyleCollapseMap[name] }"
+          :key="name"
+          @click="onClickRow(name)"
+          >
           <div class="table__cell table__cell--name">{{name}}</div>
           <div class="table__cell table__cell--value">{{value}}</div>
         </div>
-        <div v-for="(rule, index) in matchedRules"
-          class="table__row table__row--intent"
-          :class="{'table__row--override': matchedRules.length > 0}"
-          :key="name + '-' + index" >
-          <div class="table__cell table__cell--value" :class="{'table__cell--through': index !== 0}">{{rule.value}}</div>
-          <div class="table__cell table__cell--selector">{{rule.selectorText}}</div>
-          <div class="table__cell table__cell--href">{{rule.href}}</div>
-        </div>
+        <template v-if="!computedStyleCollapseMap[name]">
+          <div v-for="(rule, index) in matchedRules"
+            class="table__row table__row--intent"
+            :class="{'table__row--override': matchedRules.length > 0}"
+            :key="name + '-' + index" >
+            <div class="table__cell table__cell--value" :class="{'table__cell--through': index !== 0}">{{rule.value}}</div>
+            <div class="table__cell table__cell--selector">{{rule.selectorText}}</div>
+            <div class="table__cell table__cell--href">{{rule.href}}</div>
+          </div>
+        </template>
       </template>
     </div>
   </div>
@@ -45,7 +51,28 @@ export default {
   data() {
     return {
       filter: "",
-      computedStyleArr: []
+      isShowAll: false,
+      /**
+       * 与当前元素匹配的计算属性
+       * {
+       *  name: String,
+       *  value: String,
+       *  matchedRules: [{
+       *    value: String,
+       *    selectorText: String,
+       *    href: String
+       *  }]
+       * }
+       */
+      computedStyleArr: [],
+      /*
+      * 记录计算属性的折叠状态
+      * {
+      *   // key 是CSS样式属性名，value 是折叠状态
+      *   [String]: Boolean
+      * }
+      */
+      computedStyleCollapseMap: {}
     };
   },
   computed: {
@@ -60,10 +87,31 @@ export default {
         .sort(compareFn);
     }
   },
+  watch: {
+    isShowAll(val) {
+      this.updateComputedStyleArr(val);
+    }
+  },
   mounted() {
-    this.computedStyleArr = this.getComputedStyleArr(this.el);
+    this.updateComputedStyleArr(this.isShowAll);
+    this.computedStyleCollapseMap = this.getComputedStyleArr(this.el).reduce((pre, cur, curIndex) => {
+      if (cur.matchedRules.length > 0) {
+        pre[cur.name] = true;
+      }
+      return pre;
+    }, {});
   },
   methods: {
+    onClickRow(propName) {
+      this.$set(this.computedStyleCollapseMap, propName, !this.computedStyleCollapseMap[propName]);
+    },
+    updateComputedStyleArr(isShowAll) {
+      if (isShowAll) {
+        this.computedStyleArr = this.getComputedStyleArr(this.el);
+      } else {
+        this.computedStyleArr = this.getComputedStyleArr(this.el).filter(item => item.matchedRules.length > 0);
+      }
+    },
     // 获取元素的计算样式
     getComputedStyleArr(el) {
       const computedStyle = window.getComputedStyle(el);
@@ -77,7 +125,7 @@ export default {
         style: el.style
       });
 
-      // 搜集计算属性的键值对(如果存在包含该条属性的 CSS 规则就保存下来，后续用于展示)
+      // 搜集计算属性的键值对，并且将包含该属性的 CSS 规则保存到数组
       let name, value;
       for (let i = 0; i < computedStyle.length; ++i) {
         name = computedStyle[i];
@@ -139,11 +187,21 @@ function compareFn(a, b) {
   display: flex;
   border-top: 1px solid $divider-color;
   border-bottom: 1px solid #eee;
+  align-items: center;
   &__input {
     @include input(2em);
     flex: auto;
     padding: 0 4px;
     margin: 3px;
+  }
+  &__checkbox {
+    width: 1.2em;
+    height: 1.2em;
+    margin: 3px 5px;
+  }
+  &__label {
+    color: $default-color;
+    padding-right: 5px;
   }
 }
 
