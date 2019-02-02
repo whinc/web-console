@@ -1,21 +1,22 @@
 <template>
   <div class="style-property">
     <div class="style-property__item" @click="isExpand = !isExpand">
+      <!-- 属性名可空，为空时不展示 -->
       <span class="style-property__name">{{name}}</span>
       <span>:</span>
-      <span
-        class="style-property__value"
-        :class="[isExpandable ? (isExpand ? 'expand' : 'collapse') : '']"
-      >
-        <template v-if="valueList.length > 1">
-          <span>{{valueList[0]}}</span>
-          <span class="style-property__color" :style="{'background-color': valueList[1]}"></span>
-          <span>{{valueList[2]}}</span>
+      <!-- 属性值，如果是缩写属性，属性值前面有三角形箭头 -->
+      <span class="style-property__value" :class="[isExpandable ? (isExpand ? 'expand' : 'collapse') : '']">
+        <!-- 如属性值中包含颜色值，会被分隔成三部分，中间部分是可展示的颜色值 -->
+        <template v-if="colorValueList.length > 1">
+          <span>{{colorValueList[0]}}</span>
+          <StyleColorValue :color="colorValueList[1]" />
+          <span>{{colorValueList[2]}}</span>
         </template>
         <span v-else>{{value}}</span>
       </span>
       <span>;</span>
     </div>
+    <!-- 属性展开形式，如 padding 展开后 padding-left/padding-right/padding-top/padding-bottom -->
     <div v-if="isExpandable && isExpand" class="style-property__children">
       <StyleProperty
         v-for="prop in subProps"
@@ -28,8 +29,10 @@
 </template>
 
 <script>
+import { Style } from "@/utils";
+import StyleColorValue from "./StyleColorValue";
 /**
- * 展示 CSS 属性的键值对，支持属性的缩写形式
+ * 展示 CSS 属性的键值对，支持属性的缩写形式，支持颜色值特殊展示
  *
  * 非缩写形式属性：
  * {
@@ -47,6 +50,9 @@
  */
 export default {
   name: "StyleProperty",
+  components: {
+    StyleColorValue
+  },
   props: {
     // CSS属性名
     name: String,
@@ -70,217 +76,20 @@ export default {
       return Array.isArray(this.subProps) && this.subProps.length > 0;
     },
     // 根据颜色值在属性值中的位置，将属性值分成一个数组，数组元素之间间隔一个颜色块
-    valueList() {
+    colorValueList() {
       const value = this.value;
-      const colorRegExp = getColorRegExp();
-      const matchResult = value.match(colorRegExp);
-      if (matchResult) {
+      const colorRegExp = Style.getColorRegExp();
+      if (colorRegExp.test(value)) {
+        const matchResult = colorRegExp.exec(value);
         const colorIndex = matchResult.index;
         const color = matchResult[0];
-        return [value.slice(0, colorIndex), color, value.slice(colorIndex)];
+        return [value.slice(0, colorIndex), color, value.slice(colorIndex + color.length)];
       } else {
         return [value];
       }
     }
   }
 };
-
-function getColorRegExp() {
-  const basicColor = [
-    "black",
-    "silver",
-    "gray",
-    "white",
-    "maroon",
-    "red",
-    "purple",
-    "fuchsia",
-    "green",
-    "lime",
-    "olive",
-    "yellow",
-    "navy",
-    "blue",
-    "teal",
-    "aqua"
-  ].join("|");
-  const extendColor = [
-    "aliceblue",
-    "antiquewhite",
-    "aqua",
-    "aquamarine",
-    "azure",
-    "beige",
-    "bisque",
-    "black",
-    "blanchedalmond",
-    "blue",
-    "blueviolet",
-    "brown",
-    "burlywood",
-    "cadetblue",
-    "chartreuse",
-    "chocolate",
-    "coral",
-    "cornflowerblue",
-    "cornsilk",
-    "crimson",
-    "cyan",
-    "darkblue",
-    "darkcyan",
-    "darkgoldenrod",
-    "darkgray",
-    "darkgreen",
-    "darkgrey",
-    "darkkhaki",
-    "darkmagenta",
-    "darkorange",
-    "darkorchid",
-    "darkred",
-    "darksalmon",
-    "darkseagreen",
-    "darkslateblue",
-    "darkslategray",
-    "darkslategrey",
-    "darkturquoise",
-    "darkviolet",
-    "deeppink",
-    "deepskyblue",
-    "dimgray",
-    "dimgrey",
-    "dodgerblue",
-    "firebrick",
-    "floralwhite",
-    "forestgreen",
-    "fuchsia",
-    "gainsboro",
-    "ghostwhite",
-    "gold",
-    "goldenrod",
-    "gray",
-    "green",
-    "greenyellow",
-    "grey",
-    "honeydew",
-    "hotpink",
-    "indianred",
-    "indigo",
-    "ivory",
-    "khaki",
-    "lavender",
-    "lavenderblush",
-    "lawngreen",
-    "lemonchiffon",
-    "lightblue",
-    "lightcoral",
-    "lightcyan",
-    "lightgoldenrodyellow",
-    "lightgray",
-    "lightgreen",
-    "lightgrey",
-    "lightpink",
-    "lightsalmon",
-    "lightseagreen",
-    "lightskyblue",
-    "lightslategray",
-    "lightslategrey",
-    "lightsteelblue",
-    "lightyellow",
-    "lime",
-    "limegreen",
-    "linen",
-    "magenta",
-    "maroon",
-    "mediumaquamarine",
-    "mediumblue",
-    "mediumorchid",
-    "mediumpurple",
-    "mediumseagreen",
-    "mediumslateblue",
-    "mediumspringgreen",
-    "mediumturquoise",
-    "mediumvioletred",
-    "midnightblue",
-    "mintcream",
-    "mistyrose",
-    "moccasin",
-    "navajowhite",
-    "navy",
-    "oldlace",
-    "olive",
-    "olivedrab",
-    "orange",
-    "orangered",
-    "orchid",
-    "palegoldenrod",
-    "palegreen",
-    "paleturquoise",
-    "palevioletred",
-    "papayawhip",
-    "peachpuff",
-    "peru",
-    "pink",
-    "plum",
-    "powderblue",
-    "purple",
-    "red",
-    "rosybrown",
-    "royalblue",
-    "saddlebrown",
-    "salmon",
-    "sandybrown",
-    "seagreen",
-    "seashell",
-    "sienna",
-    "silver",
-    "skyblue",
-    "slateblue",
-    "slategray",
-    "slategrey",
-    "snow",
-    "springgreen",
-    "steelblue",
-    "tan",
-    "teal",
-    "thistle",
-    "tomato",
-    "turquoise",
-    "violet",
-    "wheat",
-    "white",
-    "whitesmoke",
-    "yellow",
-    "yellowgreen"
-  ].join("|");
-  const rgbColor = "rgba?([^)]+)";
-  const hslaColor = "hsla?([^)]+)";
-  const hexColor = "#[0-9a-fA-F]{1,8}";
-
-  const colorRegExp = new RegExp([hexColor, rgbColor, hslaColor, basicColor, extendColor].join("|"), "i");
-  getColorRegExp = function() {
-    return colorRegExp;
-  };
-  return colorRegExp;
-}
-
-// 返回指定 CSS 属性的属性值中颜色值的位置
-function getColorIndex(name) {
-  switch (name) {
-    case "color":
-    case "background-color":
-    case "border-bottom-color":
-    case "border-top-color":
-    case "border-right-color":
-    case "border-left-color":
-    case "border-left-color":
-    case "caret-color":
-    case "outline-color":
-    case "text-decoration-color":
-      return 0;
-    default:
-      return -1;
-  }
-}
 </script>
 
 <style lang="scss" scoped>

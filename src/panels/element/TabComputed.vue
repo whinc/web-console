@@ -9,21 +9,27 @@
       <label class="filter-bar__label" for="showAll">Show all</label>
     </div>
     <div class="computed-style table">
-      <template v-for="{name, value, matchedRules} in filteredComputedStyleArr">
+      <template v-for="{name, value, isColorValue, matchedRules} in filteredComputedStyleArr">
         <div class="table__row"
           :class="{'table__row--override': matchedRules.length > 0, 'collapse':  matchedRules.length > 0 && computedStyleCollapseMap[name], 'expand': matchedRules.length > 0 && !computedStyleCollapseMap[name] }"
           :key="name"
           @click="onClickRow(name)"
           >
           <div class="table__cell table__cell--name">{{name}}</div>
-          <div class="table__cell table__cell--value">{{value}}</div>
+          <div class="table__cell table__cell--value">
+            <StyleColorValue v-if="isColorValue" :color="value" />
+            <span v-else>{{value}}</span>
+          </div>
         </div>
         <template v-if="!computedStyleCollapseMap[name]">
           <div v-for="(rule, index) in matchedRules"
             class="table__row table__row--intent"
             :class="{'table__row--override': matchedRules.length > 0}"
             :key="name + '-' + index" >
-            <div class="table__cell table__cell--value" :class="{'table__cell--through': index !== 0}">{{rule.value}}</div>
+            <div class="table__cell table__cell--value" :class="{'table__cell--through': index !== 0}">
+              <StyleColorValue v-if="isColorValue" :color="rule.value" />
+              <span v-else>{{rule.value}}</span>
+            </div>
             <div class="table__cell table__cell--selector">{{rule.selectorText}}</div>
             <div class="table__cell table__cell--href">{{rule.href}}</div>
           </div>
@@ -34,13 +40,18 @@
 </template>
 
 <script>
+/**
+ * 元素计算属性展示
+ */
 import { Style, Logger, getURLFileName } from "@/utils";
 import BoxModel from "./BoxModel";
+import StyleColorValue from "./StyleColorValue";
 
 const logger = new Logger("[TabComputed]");
 export default {
   components: {
-    BoxModel
+    BoxModel,
+    StyleColorValue
   },
   props: {
     el: {
@@ -132,12 +143,14 @@ export default {
         value = computedStyle.getPropertyValue(name);
         const matchedRules = matchedCSSRules.filter(rule => !!rule.style[name]).map(rule => ({
           value: rule.style[name],
+          isColorValue: Style.getColorRegExp().test(rule.style[name]),
           selectorText: rule.selectorText,
           href: (rule.parentStyleSheet && getURLFileName(rule.parentStyleSheet.href)) || ""
         }));
         computedStyleArr.push({
           name,
           value,
+          isColorValue: Style.getColorRegExp().test(value),
           matchedRules
         });
       }
