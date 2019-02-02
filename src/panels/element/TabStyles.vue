@@ -88,7 +88,7 @@ export default {
 };
 
 /**
- * 获取指定元素的样式规则列表(按特殊性从高到低排序)
+ * 获取指定元素的样式表集合，每个样式表内包含一组样式规则列表，按特殊性从高到低排序
  */
 function getDisplayStyleSheets(_el) {
   const displayStyleSheets = [];
@@ -96,7 +96,7 @@ function getDisplayStyleSheets(_el) {
   while (el !== document.documentElement) {
     const inherit = el !== _el;
     const matchedCSSRules = Style.getMatchedCSSRules(el);
-    logger.log(matchedCSSRules);
+    // logger.log(matchedCSSRules);
     const displayRules = matchedCSSRules.sort(Style.compareCSSRule).map((rule, index) => {
       // 映射 CSSRule 到视图所需数据结构
       return {
