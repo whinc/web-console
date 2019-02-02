@@ -62,7 +62,7 @@ export default {
   data() {
     return {
       filter: "",
-      isShowAll: false,
+      isShowAll: true,
       /**
        * 与当前元素匹配的计算属性
        * {

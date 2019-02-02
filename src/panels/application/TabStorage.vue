@@ -320,7 +320,7 @@ export default {
     // 覆盖选中行前景色和背景色
     &--selected {
       @include descendant-attr("color", white);
-      @include descendant-attr("backgroundc-color", #2196f3);
+      @include descendant-attr("background-color", #2196f3);
     }
   }
   &__cell {
