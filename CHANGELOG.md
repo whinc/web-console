@@ -1,13 +1,46 @@
+<a name="0.4.0-beta.1"></a>
+
+# [0.4.0-beta.1](https://github.com/whinc/web-console/compare/v0.3.0-beta.6...v0.4.0-beta.1) (2019-02-16)
+
+### Bug Fixes
+
+- **application:** 修复选中行没有高亮颜色的 bug ([33a4633](https://github.com/whinc/web-console/commit/33a4633))
+
+### Features
+
+- **element:** 展示元素计算属性的继承值 ([072fbf2](https://github.com/whinc/web-console/commit/072fbf2))
+- **element:** 计算属性面板的颜色值增加颜色小方块展示 ([65987d2](https://github.com/whinc/web-console/commit/65987d2))
+
 <a name="0.3.0-beta.6"></a>
 
 # [0.3.0-beta.6](https://github.com/whinc/web-console/compare/v0.3.0-beta.5...v0.3.0-beta.6) (2019-02-01)
 
 ### Bug Fixes
 
+- 去除 ios 默认的 tap 高亮效果 ([873c02c](https://github.com/whinc/web-console/commit/873c02c))
 - 无法复制文本的问题 ([a224c2e](https://github.com/whinc/web-console/commit/a224c2e))
+- **components:** 修复 TabBar 组件子项超出宽度部分不可见的问题 ([56b7c40](https://github.com/whinc/web-console/commit/56b7c40))
 - **console:** 优化消息换行展示 ([ed0567a](https://github.com/whinc/web-console/commit/ed0567a))
 - **console:** 修复 Element.prototype.scrollTo 兼容性问题 ([70d3410](https://github.com/whinc/web-console/commit/70d3410))
 - **console:** 修复数组包含非数字下标时的展示问题 ([0e9de4f](https://github.com/whinc/web-console/commit/0e9de4f))
+- **element:** 修复审查分组选择器匹配元素时报错问题 ([fb43814](https://github.com/whinc/web-console/commit/fb43814))
+- **element:** 修复样式被宿主样式覆盖的 bug ([3e218ba](https://github.com/whinc/web-console/commit/3e218ba))
+- **element:** 禁止审查 doctype 元素 ([bc7cea6](https://github.com/whinc/web-console/commit/bc7cea6))
+- **element:** 隐藏 dom paths 的滚动条 ([e13e27b](https://github.com/whinc/web-console/commit/e13e27b))
+
+### Features
+
+- **element:** dom path 紧凑展示时优先展示元素 id ([24e631f](https://github.com/whinc/web-console/commit/24e631f))
+- **element:** 元素审查的 computed 面板增加盒模型 ([883ac26](https://github.com/whinc/web-console/commit/883ac26))
+- **element:** 元素审查面板新增计算样式 ([ce87971](https://github.com/whinc/web-console/commit/ce87971))
+- **element:** 审查元素的 styles 面板增加盒模型 ([fd83e9a](https://github.com/whinc/web-console/commit/fd83e9a))
+- **element:** 支持属性值中颜色值预览 ([8acb299](https://github.com/whinc/web-console/commit/8acb299))
+- **element:** 支持显示 doctype 元素 ([47f862d](https://github.com/whinc/web-console/commit/47f862d))
+- **element:** 新增 DOM 路径 ([4d41b3c](https://github.com/whinc/web-console/commit/4d41b3c))
+- **element:** 新增属性缩写形式折叠展开 ([02b952d](https://github.com/whinc/web-console/commit/02b952d))
+- **element:** 美化元素审查面板样式 ([e5309b3](https://github.com/whinc/web-console/commit/e5309b3))
+- **element:** 计算样式增加获取继承样式的方法 ([6934b5a](https://github.com/whinc/web-console/commit/6934b5a))
+- **element:** 选中底部 dom paths 时 dom tree 自动滚动到可视区域 ([22d6b1e](https://github.com/whinc/web-console/commit/22d6b1e))
 
 <a name="0.3.0-beta.5"></a>
 
@@ -16,6 +49,7 @@
 ### Features
 
 - **application:** 调整底部清除和刷新范围；删除存储数据增加二次确认弹窗 ([1953419](https://github.com/whinc/web-console/commit/1953419))
+- **element:** 支持审查元素样式 ([26344f6](https://github.com/whinc/web-console/commit/26344f6))
 - **settings:** 增加 CHANGELOG ([7e92468](https://github.com/whinc/web-console/commit/7e92468))
 
 ### Performance Improvements
@@ -41,11 +75,17 @@
 
 ### Bug Fixes
 
+- **element:** 修复同时选中开始和结束标签的问题 ([6a0cb15](https://github.com/whinc/web-console/commit/6a0cb15))
+- **settings:** 移除 input 的 appearance 样式 ([fa9a0fe](https://github.com/whinc/web-console/commit/fa9a0fe))
 - **settings:** 移除 About 页标题地下多出的横线 ([14e8cde](https://github.com/whinc/web-console/commit/14e8cde))
 
 ### Features
 
 - **application:** 增加底部隐藏按钮 ([5eb10fe](https://github.com/whinc/web-console/commit/5eb10fe))
+- **element:** 优化元素选中态样式；支持指定 DOM 树展开深度 ([76bb6d3](https://github.com/whinc/web-console/commit/76bb6d3))
+- **element:** 增加元素审查面板 ([03e82f8](https://github.com/whinc/web-console/commit/03e82f8))
+- **element:** 支持无内容标签的正确显示 ([cd31e3e](https://github.com/whinc/web-console/commit/cd31e3e))
+- **element:** 节点显式过长时自动换行 ([aa89681](https://github.com/whinc/web-console/commit/aa89681))
 
 <a name="0.3.0-beta.2"></a>
 
@@ -54,6 +94,11 @@
 ### Bug Fixes
 
 - **settings:** 移除 input 的 appearance 样式 ([c7a25b1](https://github.com/whinc/web-console/commit/c7a25b1))
+
+### Features
+
+- **element:** 元素增加折叠展开箭头 ([d000198](https://github.com/whinc/web-console/commit/d000198))
+- **element:** 支持显式 html 结构 ([fbac371](https://github.com/whinc/web-console/commit/fbac371))
 
 <a name="0.3.0-beta.1"></a>
 
