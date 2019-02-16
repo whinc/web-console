@@ -1,3 +1,5 @@
+export { default as cloneDeep } from "lodash.clonedeep";
+
 export const isNull = v => v === null;
 export const isUndefined = v => v === undefined;
 export const isString = v => typeof v === "string";
@@ -11,7 +13,6 @@ export const isObject = v => typeof v === "object" && v !== null;
 export const isDev = process.env.NODE_ENV !== "production";
 
 export const noop = function() {};
-export const cloneDeep = v => JSON.parse(JSON.stringify(v));
 
 export const nextTick = cb => {
   if (typeof window.Promise === "function") {
@@ -73,4 +74,12 @@ export const createStack = (targetObject, constructorOpt) => {
   if (typeof targetObject.stack === "string") {
     targetObject.stack = targetObject.stack.replace(/https?:\/\/.*\/(.*)/g, "$1");
   }
+};
+
+// 获取 URL 中的文件名(含扩展名)
+export const getURLFileName = url => {
+  if (typeof url !== "string") return "";
+
+  const index = url.lastIndexOf("/");
+  return url.slice(index + 1);
 };

@@ -1,9 +1,15 @@
 import Vue from "vue";
 import App from "./App.vue";
-import { consoleHooks } from "@/utils";
+import "./polyfill";
+import { consoleHooks, filters } from "@/utils";
 // import { Logger } from "@/utils";
 import infiniteScroll from "vue-infinite-scroll";
-import "./global.scss";
+import "./styles/_global.scss";
+
+// register filters
+Object.keys(filters).forEach(name => {
+  Vue.filter(name, filters[name]);
+});
 
 Vue.use(infiniteScroll);
 

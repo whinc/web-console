@@ -1,0 +1,46 @@
+/* web-console UI structure */
+$panel-height: 75vh;
+
+$footbar-height: 40px;
+
+$tabbar-height: 40px;
+
+$list-row-height: 38px;
+
+/* color */
+$default-color: rgb(48, 57, 66);
+
+$accent-color: #03a9f4;
+$accent-color-b: #2196f3;
+$accent-color-c: #3e82f7;
+
+$toolbar-bg-color: rgb(243, 243, 243);
+$toolbar-hover-bg-color: #eaeaea;
+$toolbar-border-color: rgb(205, 205, 205);
+
+$selection-fg-color: white;
+$selection-bg-color: $accent-color-b;
+$selection-inactive-bg-color: #dadada;
+
+$tab-selected-fg-color: #333;
+$tab-selected-bg-color: $toolbar-bg-color;
+
+$drop-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.1);
+
+$divider-color: #d0d0d0;
+
+$tabbar-bg-color: $toolbar-bg-color;
+$tabbar-border-color: $toolbar-border-color;
+$tab-fg-color: rgb(90, 90, 90);
+$tab-selected-fg-color: rgb(51, 51, 51);
+
+$dom-tag-name-color: rgb(136, 18, 128);
+$dom-attribute-name-color: rgb(153, 69, 0);
+$dom-attribute-value-color: rgb(26, 26, 166);
+$dom-link-color: rgb(17, 85, 204);
+
+/* font */
+$primary-font-size: 15px;
+$secondary-font-size: 13px;
+$source-code-font-size: 14px;
+$font-family: Helvetica Neue, Helvetica, Arial, sans-serif;

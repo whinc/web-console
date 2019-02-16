@@ -1,0 +1,10 @@
+@import url("style_import2.css");
+
+/* 测试元素审查 */
+#element {
+  border-color: green;
+}
+.xyz {
+  border: 2px dashed blue;
+  padding: 2px;
+}

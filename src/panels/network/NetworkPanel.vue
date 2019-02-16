@@ -243,7 +243,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variables";
 
 .network-panel {
   height: $panel-height;

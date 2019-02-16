@@ -228,7 +228,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variables";
 $primary-text-color: rgb(48, 57, 66);
 $second-text-color: #777;
 .settings-panel {

@@ -5,7 +5,7 @@
     <div class="prop" @click.stop="isFold = !isFold">
       <!-- 折叠展开符仅当缩进量大于0，或者传入值是对象且属性数量大于0时可见-->
       <div v-if="deepth > 0 || properties.length > 0" class="indent" :style="indentStyle">
-        <div class="triangle" :class="arrowClass"></div>
+        <div class="triangles" :class="arrowClass"></div>
       </div>
       <!-- 属性名 -->
       <template v-if="hasName">
@@ -432,7 +432,7 @@ function propCompareFn(propA, propB) {
     padding-right: 3px;
     flex-shrink: 0;
   }
-  .triangle {
+  .triangles {
     width: 0;
     height: 0;
     $border-width: 5px;

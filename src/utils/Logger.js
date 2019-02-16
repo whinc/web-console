@@ -1,8 +1,9 @@
-import { isDev, isString } from "./base";
+import { isDev, isString } from "./miscs";
 
 /* 原始的 console 方法  */
 const _error = window.console.error;
 const _log = window.console.log;
+const _warn = window.console.warn;
 
 /**
  * 日志类
@@ -12,6 +13,7 @@ export default class Logger {
   constructor(prefix) {
     this._prefix = prefix ? prefix + " " : "";
   }
+
   error(...args) {
     if (!isDev) return;
 
@@ -21,6 +23,16 @@ export default class Logger {
       args.unshift(this._prefix);
     }
     _error.apply(this, args);
+  }
+  warn(...args) {
+    if (!isDev) return;
+
+    if (isString(args[0])) {
+      args[0] = this._prefix + args[0];
+    } else {
+      args.unshift(this._prefix);
+    }
+    _warn.apply(this, args);
   }
   log(...args) {
     if (!isDev) return;

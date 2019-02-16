@@ -1,20 +1,42 @@
-@import "./base.scss";
+@import "variables";
 
 // 全局样式
 .web-console {
   font-size: $primary-font-size;
-  font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: $font-family;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: rgb(48, 57, 66);
+  color: $default-color;
+  .g-source-code,
   .source-code {
     font-size: $source-code-font-size !important;
     font-family: Menlo, Consolas, monospace;
   }
 
+  .platform-linux {
+    color: rgb(48, 57, 66);
+    font-family: Roboto, Ubuntu, Arial, sans-serif;
+  }
+  .platform-mac {
+    color: rgb(48, 57, 66);
+    font-family: ".SFNSDisplay-Regular", "Helvetica Neue", "Lucida Grande", sans-serif;
+  }
+  .platform-windows {
+    font-family: "Segoe UI", Tahoma, sans-serif;
+  }
+
+  // 隐藏滚动条
+  .g-hide-scrollbar::-webkit-scrollbar {
+    display: none;
+    overflow: -moz-scrollbars-none;
+  }
+
+  // 重置默认样式
   * {
     box-sizing: border-box;
     user-select: auto;
+    // IOS：移除默认的触摸高亮样式
+    -webkit-tap-highlight-color: transparent;
     &:focus {
       outline: none;
     }

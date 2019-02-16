@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../base.scss";
+@import "../../styles/variables";
 
 .application-panel {
   height: $panel-height;

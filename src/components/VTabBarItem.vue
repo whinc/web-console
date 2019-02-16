@@ -8,6 +8,9 @@
 </template>
 
 <script>
+/**
+ * Tab 栏子项
+ */
 export default {
   name: "v-tab-bar-item",
   props: {

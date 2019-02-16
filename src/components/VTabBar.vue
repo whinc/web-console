@@ -1,6 +1,6 @@
 <template>
   <div class="v-tab-bar" :class="{'show-bottom-border': showBottomBorder}">
-    <div class="item-container">
+    <div class="item-container g-hide-scrollbar">
       <slot></slot>
     </div>
     <div class="icon-container">
@@ -10,6 +10,15 @@
 </template>
 
 <script>
+/**
+ * Tab 栏
+ *
+ * 使用示例：
+ * <VTabBar v-model="activedTab">
+ *  <VTabBarItem id="tab1">Tab1</VTabBarItem>
+ *  <VTabBarItem id="tab2">Tab2</VTabBarItem>
+ * </VTabBar>
+ */
 export default {
   name: "v-tab-bar",
   props: {
@@ -35,12 +44,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../base.scss";
+@import "../styles/variables";
 .v-tab-bar {
+  flex: 0 0 auto;
+  width: 100%;
   height: $tabbar-height;
   background-color: $tabbar-bg-color;
   display: flex;
-  flex: 0 0 auto;
   &.show-bottom-border {
     border-bottom: 1px solid $tabbar-border-color;
   }
@@ -48,6 +58,7 @@ export default {
     height: 100%;
     display: flex;
     flex: 1 1 auto;
+    overflow-x: auto;
   }
   .icon-container {
     height: 100%;

@@ -1,5 +1,5 @@
 <template>
-  <div class="message source-code" :class="[message.type]">
+  <div class="message source-code g-hide-scrollbar" :class="[message.type]">
     <div v-if="showTimestamps" class="timestamps">{{formattedTime}}</div>
     <div v-if="isErrorCaptured" class="error">
       Message 组件内部错误
@@ -264,6 +264,7 @@ function format(logArgs) {
 </script>
 
 <style scoped lang="scss">
+@import "../../styles/mixins";
 .message {
   display: flex;
   flex-direction: row;
@@ -271,23 +272,20 @@ function format(logArgs) {
   padding: 8px 4px;
   overflow-y: hidden;
   overflow-x: auto;
-  &::-webkit-scrollbar {
-    display: none;
-  }
   &.log,
   &.debug,
   &.info {
     border-bottom: 1px solid rgb(240, 240, 240);
   }
   &.error {
-    color: red;
+    @include descendant-attr("color", red);
     border-top: 1px solid hsl(0, 100%, 92%);
     border-bottom: 1px solid hsl(0, 100%, 92%);
     margin-top: -1px;
     background-color: hsl(0, 100%, 97%);
   }
   &.warn {
-    color: hsl(39, 100%, 18%);
+    @include descendant-attr("color", hsl(39, 100%, 18%));
     border-top: 1px solid hsl(50, 100%, 88%);
     border-bottom: 1px solid hsl(50, 100%, 88%);
     margin-top: -1px;

@@ -30,6 +30,7 @@
       <div class="panel">
         <!-- Tabbar -->
         <v-tab-bar v-model="activeTab">
+          <v-tab-bar-item id="element">Element</v-tab-bar-item>
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
           <v-tab-bar-item id="application">Application</v-tab-bar-item>
@@ -37,6 +38,7 @@
             <VIcon name="setting" @click="onClickSetting" style="width: 2em; padding: 0.4em" />
           </template>
         </v-tab-bar>
+        <ElementPanel v-show="activeTab === 'element'" />
         <ConsolePanel v-show="activeTab === 'console'" />
         <NetworkPanel v-show="activeTab === 'network'" />
         <ApplicationPanel v-show="activeTab === 'application'" />
@@ -50,7 +52,7 @@
 <script>
 import { Popup } from "mint-ui";
 import { VTabBar, VTabBarItem, VIcon } from "@/components";
-import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel } from "@/panels";
+import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel, ElementPanel } from "@/panels";
 import { eventBus, Logger } from "@/utils";
 
 const logger = new Logger("[App]");
@@ -58,6 +60,7 @@ const logger = new Logger("[App]");
 export default {
   name: "app",
   components: {
+    ElementPanel,
     ConsolePanel,
     NetworkPanel,
     ApplicationPanel,
@@ -175,7 +178,6 @@ function createScaleManager() {
 </script>
 
 <style scoped lang="scss">
-@import "./base.scss";
 .entry {
   position: fixed;
   right: 20px;

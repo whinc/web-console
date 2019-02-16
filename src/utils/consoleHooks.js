@@ -1,4 +1,4 @@
-import { uuid, createStack } from "./base";
+import { uuid, createStack } from "./miscs";
 
 // hook console
 // install 前的 console 接口

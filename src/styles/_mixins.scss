@@ -1,0 +1,53 @@
+// 隐藏滚动条（刷新后生效）
+@mixin hide-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+    overflow: -moz-scrollbars-none;
+  }
+}
+
+// 给当前元素以及后代元素设置属性
+@mixin descendant-attr($name, $value) {
+  #{$name}: $value;
+  /deep/ * {
+    #{$name}: $value;
+  }
+}
+
+// 文本超出父容器时显示省略号
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 文本超出父容器时可滚动
+@mixin text-scroll {
+  white-space: nowrap;
+  overflow: auto;
+}
+
+// input 输入框样式
+@mixin input($height: 1.8em) {
+  height: $height;
+  outline: none;
+  color: #5a5a5a;
+  background-color: white;
+  border: 1px solid transparent;
+  &::placeholder {
+    color: rgb(128, 128, 128);
+  }
+  &:focus {
+    border: 1px solid #2196f3;
+  }
+}
+
+// 初始化元素属性，避免宿主页面与选择器同名时受影响
+@mixin initial() {
+  width: initial;
+  height: initial;
+  padding: initial;
+  margin: initial;
+  border: initial;
+  position: initial;
+}

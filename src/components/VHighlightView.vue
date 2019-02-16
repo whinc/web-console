@@ -100,8 +100,8 @@ export default {
 
   &-regexp,
   &-symbol,
-  &-variable,
-  &-template-variable,
+  &-variables,
+  &-template-variables,
   &-link,
   &-selector-attr,
   &-selector-pseudo {
