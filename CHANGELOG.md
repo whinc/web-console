@@ -1,3 +1,11 @@
+<a name="0.4.0-beta.2"></a>
+
+# [0.4.0-beta.2](https://github.com/whinc/web-console/compare/v0.4.0-beta.1...v0.4.0-beta.2) (2019-02-18)
+
+### Bug Fixes
+
+- **element:** 修复 Element.prototype.getAttributeNames 的兼容性问题 ([92b0355](https://github.com/whinc/web-console/commit/92b0355))
+
 <a name="0.4.0-beta.1"></a>
 
 # [0.4.0-beta.1](https://github.com/whinc/web-console/compare/v0.3.0-beta.6...v0.4.0-beta.1) (2019-02-16)
