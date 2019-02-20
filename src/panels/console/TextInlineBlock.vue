@@ -27,7 +27,8 @@
             :value="short(value[key])"
             :deepth="deepth + 1"
           />
-          <span v-if="i < Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 1)">, </span>
+          <!-- 关于 "displayPropertyNames.length - 2"的解释：数组的 length 属性在内联块中不显示，所以不计数 -->
+          <span v-if="i < Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 2)">, </span>
         </span>
         <span v-if="displayPropertyNames.length >= 5">, ...</span>
         <span>]</span>
