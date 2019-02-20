@@ -427,7 +427,7 @@ function propCompareFn(propA, propB) {
 }
 
 .text-block {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   line-height: 1.4em;
   .indent {

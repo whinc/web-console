@@ -46,7 +46,8 @@
       }
       /* 测试宿主页和浏览器设置默认样式 */
       div, span, p {
-        color: black;
+        /* 会覆盖 conole 面板 %c 占位符的设置的继承样式 */
+        /* color: black; */
       }
 
       /* CSSKeyframesRule */
@@ -245,7 +246,7 @@
 
               window.webConsole = new window.WebConsole({
                 activeTab: 'console',
-                panelVisible: false,
+                panelVisible: true,
                 entryStyle: 'button'
               });
               // this.$console.testFormat()

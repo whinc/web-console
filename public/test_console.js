@@ -245,12 +245,16 @@ window.$console = (function() {
     console.log("%s-%s-%s-%s-%s-%s-%s", 100, true, null, undefined, "100", {}, []);
     // 测试占位符 %c 的展示
     console.log(
-      `%cResponse%c %c params: %O data: %O`,
-      "color: white; background-color: #FF4136B0; padding: 2px 5px; border-radius: 2px",
+      `%c111 222 %c 333 %c %c %O %o %i %f %s %%`,
+      "color: white; background-color: rgba(0, 116, 217, 0.69); padding: 2px 5px; border-radius: 2px",
+      "color: #0074D9",
       "",
-      "color: #FF4136",
-      { a: 1 },
-      { b: 2 }
+      "color: white; background-color: rgba(255, 65, 54, 0.69); padding: 2px 5px; border-radius: 2px",
+      { a: 444 },
+      { b: 555 },
+      666,
+      777,
+      "888"
     );
   }
 

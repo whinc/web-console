@@ -4,19 +4,20 @@
     <div v-if="isErrorCaptured" class="error">
       Message 组件内部错误
     </div>
-    <template v-else v-for="(argInfo, index) in argInfoList">
+    <span v-else v-for="(argInfo, index) in argInfoList" class="block-wrapper">
       <text-block
         :descriptor="{value: argInfo.displayValue}"
         :showRootValueDetail="argInfo.showValueDetail"
         :key="index + '1'"
+        :style="argInfo.style"
       />
-      <span v-if="index !== argInfoList.length - 1" class="space" :key="index + '2'">{{space}}</span>
-    </template>
+      <!-- <span v-if="index !== argInfoList.length - 1" class="space" :key="index + '2'">{{space}}</span> -->
+    </span>
   </div>
 </template>
 
 <script>
-import { isString, isObject, isArray, Logger } from "@/utils";
+import { isString, isObject, isArray, Logger, cloneDeep } from "@/utils";
 import TextBlock from "./TextBlock";
 
 const logger = new Logger("[Message]");
@@ -83,7 +84,8 @@ export default {
      *  value,            // 原始值
      *  placholder,       // 占位符
      *  displayValue,     // 展示值
-     *  showValueDetail   // 是否展开细节
+     *  showValueDetail,  // 是否展开细节
+     *  style             // 样式
      * }
      *
      * 例如 console.log('a%sc%s', 'b', {}) 执行，logArgs 接收到 ['a%sc%s', 'b', {}]，argInfoList 返回
@@ -135,7 +137,8 @@ export default {
             argInfo.showValueDetail = false;
             break;
           case "%c":
-            // %c 暂时不支持，不显示
+            // %c 占位符对应的样式作用于其后开始的第一个元素直至下一个 %c 占位符或结束位置之前中间的所有元素（%O 和 %o 除外）
+            // 举例：console.log('%c A B %c C', 'color: red', 'color: blue')  // A B 是 red， C 是 blue
             argInfo.displayValue = "";
             break;
           default:
@@ -154,8 +157,8 @@ export default {
       });
       // logger.log('argInfoList2', cloneDeep(argInfoList2))
 
-      // 合并相邻字符串，减少文本块的数量，避免文本块之间的默认空白符
-      // {displayValue: 'a'} 和 {displayValue: 'b'} 将合并成一个 {displayValue: 'ab'}
+      // 合并相邻字符串（%c 占位符除外），减少文本块的数量，避免文本块之间的默认空白符
+      // 例如 {displayValue: 'a'} 和 {displayValue: 'b'} 将合并成一个 {displayValue: 'ab'}
       const argInfoList3 = [];
       while (argInfoList2.length > 0) {
         const curArgInfo = argInfoList2.shift();
@@ -163,7 +166,12 @@ export default {
           argInfoList3.push(curArgInfo);
         } else {
           const prevArgInfo = argInfoList3[argInfoList3.length - 1];
-          if (isString(prevArgInfo.displayValue) && isString(curArgInfo.displayValue)) {
+          if (
+            isString(prevArgInfo.displayValue) &&
+            isString(curArgInfo.displayValue) &&
+            prevArgInfo.placeholder !== "%c" &&
+            curArgInfo.placeholder !== "%c"
+          ) {
             prevArgInfo.displayValue += curArgInfo.displayValue;
             prevArgInfo.placeholder += curArgInfo.placeholder;
           } else {
@@ -171,8 +179,23 @@ export default {
           }
         }
       }
-      // logger.log('argInfoList3', argInfoList3)
-      return argInfoList3;
+      // logger.log('argInfoList3', cloneDeep(argInfoList3))
+
+      // 处理 %c 占位符样式，将 %c 的样式复制到其后元素，直至遇到下一个 %c 或格式串结尾才终止
+      let lastStyle = "";
+      argInfoList3.forEach(argInfo => {
+        if (argInfo.placeholder === "%c") {
+          lastStyle = argInfo.value;
+        } else {
+          if (lastStyle && !/%O|%o/.test(argInfo.placeholder)) {
+            argInfo.style = lastStyle;
+          }
+        }
+      });
+      const argInfoList4 = argInfoList3.filter(argInfo => argInfo.placeholder !== "%c");
+      // logger.log('argInfoList4', cloneDeep(argInfoList4))
+
+      return argInfoList4;
     }
   },
   // 捕获 console API 引发的错误，避免陷入循环渲染
@@ -296,6 +319,11 @@ function format(logArgs) {
     color: gray;
     margin-right: 5px;
     line-height: 20px;
+  }
+  .block-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
   }
 }
 

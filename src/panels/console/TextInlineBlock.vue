@@ -27,7 +27,7 @@
             :value="short(value[key])"
             :deepth="deepth + 1"
           />
-          <span v-if="i !== Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 1)">, </span>
+          <span v-if="i < Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 1)">, </span>
         </span>
         <span v-if="displayPropertyNames.length >= 5">, ...</span>
         <span>]</span>
@@ -54,7 +54,7 @@
             :value="short(value[propName])"
             :deepth="deepth + 1"
           />
-          <span v-if="index !== Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 1)">, </span>
+          <span v-if="index < Math.min(MAX_DISPLAY_PROP_COUNT - 1, displayPropertyNames.length - 1)">, </span>
         </span>
         <span v-if="displayPropertyNames.length >= 5">, ...</span>
       </template>
@@ -207,6 +207,11 @@ export default {
         symbol: isSymbol(value)
       };
     }
+  },
+  errorCaptured(error) {
+    // 在浏览器控制台输出错误原因
+    logger.error(error);
+    return false;
   },
   methods: {
     short(value) {
