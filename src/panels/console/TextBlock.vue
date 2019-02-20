@@ -145,6 +145,7 @@ export default {
     displayName() {
       let _name = String(this.name);
       if (_name.indexOf(" ") === 0) {
+        // 多个空白符压缩成一个，并加引号区分前后的空白符
         return '"' + _name.replace(/^\s+/, " ") + '"';
       } else {
         return _name;
@@ -196,7 +197,7 @@ export default {
         if (isFunction(descriptor.get) && isFunction(descriptor.set)) {
           // 同时存在 getter 和 setter
           return [
-            { name, descriptor },
+            { name: String(name), descriptor },
             {
               // Symbol 类型需要进行转换
               name: `get ${String(name)}`,
@@ -238,7 +239,7 @@ export default {
           ];
         } else {
           // 不存在 getter 或 setter，那就是数据访问器了
-          return [{ name, descriptor }];
+          return [{ name: String(name), descriptor }];
         }
 
         // logger.log(name, ':', descriptor)
@@ -306,6 +307,11 @@ export default {
         // 只有根节点需要换行展示，非根节点不换行方便阅读
       };
     }
+  },
+  errorCaptured(error) {
+    // 在浏览器控制台输出错误原因
+    logger.error(error);
+    return false;
   },
   methods: {
     onClickGetAccessor() {
