@@ -1,3 +1,20 @@
+<a name="0.4.1"></a>
+
+## [0.4.1](https://github.com/whinc/web-console/compare/v0.4.0-beta.3...v0.4.1) (2019-02-21)
+
+### Bug Fixes
+
+- **console:** 修复 Symbole 作为对象 key 时,打印对象报错的问题 ([27ff599](https://github.com/whinc/web-console/commit/27ff599))
+- **console:** 修复打印数组时末尾多出一个逗号 ([5b5e04d](https://github.com/whinc/web-console/commit/5b5e04d))
+
+### Features
+
+- **console:** log 格式输出支持 %c 占位符 ([0ba036d](https://github.com/whinc/web-console/commit/0ba036d))
+
+<a name="0.4.0-beta.3"></a>
+
+# [0.4.0-beta.3](https://github.com/whinc/web-console/compare/v0.4.0-beta.2...v0.4.0-beta.3) (2019-02-18)
+
 <a name="0.4.0-beta.2"></a>
 
 # [0.4.0-beta.2](https://github.com/whinc/web-console/compare/v0.4.0-beta.1...v0.4.0-beta.2) (2019-02-18)
