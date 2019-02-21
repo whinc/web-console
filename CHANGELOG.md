@@ -1,6 +1,6 @@
 <a name="0.4.1"></a>
 
-## [0.4.1](https://github.com/whinc/web-console/compare/v0.4.0-beta.3...v0.4.1) (2019-02-21)
+## [0.4.1](https://github.com/whinc/web-console/compare/v0.4.0-beta.2...v0.4.1) (2019-02-21)
 
 ### Bug Fixes
 
@@ -10,10 +10,6 @@
 ### Features
 
 - **console:** log 格式输出支持 %c 占位符 ([0ba036d](https://github.com/whinc/web-console/commit/0ba036d))
-
-<a name="0.4.0-beta.3"></a>
-
-# [0.4.0-beta.3](https://github.com/whinc/web-console/compare/v0.4.0-beta.2...v0.4.0-beta.3) (2019-02-18)
 
 <a name="0.4.0-beta.2"></a>
 
