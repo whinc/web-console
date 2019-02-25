@@ -23,11 +23,12 @@
 
 <script>
 import { VTabBar, VTabBarItem, VFootBar } from "@/components";
-import { uuid, createStack, eventBus, TaskScheduler, Logger, consoleHooks } from "@/utils";
+import { uuid, createStack, eventBus, TaskScheduler, Logger, consoleHooks, formatFileName } from "@/utils";
 import Message from "./Message";
 import { isFunction } from "util";
 
 const logger = new Logger("[ConsolePanel]");
+const taskScheduler = new TaskScheduler();
 
 export default {
   name: "ConsolePanel",
@@ -95,49 +96,15 @@ export default {
       });
     }
   },
-  // hook console 输出越早越好，选择最先被执行的 beforeCreate 周期方法进行 hook 操作
-  beforeCreate() {
-    // 停止搜集日志（交给 ConsolePanel 进行搜集)
-    consoleHooks.uninstall();
+  created() {
+    // 搜集 web-console 初始化之前用户输出的日志消息，放入消息队列中
+    this.collectUnhandledMessage();
 
-    const taskScheduler = new TaskScheduler();
+    // 拦截 Console 对象的日志打印方法，将消息放入消息队列中，并启动日志输出
+    this.interceptConsole();
 
-    const hookConsole = () => {
-      const vm = this;
-      const originConsole = {};
-      const names = ["log", "info", "error", "warn", "debug"];
-      names.forEach(name => {
-        originConsole[name] = window.console[name];
-
-        window.console[name] = function(...args) {
-          const logArgs = args.map(v => {
-            if (v instanceof Error) {
-              createStack(v, window.console[name]);
-            }
-            return v;
-          });
-          const msg = {
-            id: uuid(),
-            type: name,
-            timestamps: Date.now(),
-            logArgs
-          };
-          // 1. 性能优化：短时间内批量打印日志时，将打印操作放入队列，之后按顺序依次打印
-          // 2. 修复异常：渲染模板中抛出异常时，打印错误消息，走到这里会再次出发渲染，导致死循环，
-          //             采用任务队列后，相邻两次打印不在同一个执行堆栈中，可以避免这种情况
-          taskScheduler.addAndStart(() => {
-            // 移除超出的消息
-            while (vm.msgList.length >= vm.maxMsgCount) vm.msgList.shift();
-            // 冻结消息对象，避免 Vue 添加额外属性
-            vm.msgList.push(Object.freeze(msg));
-          });
-
-          originConsole[name].apply(this, args);
-        };
-      });
-    };
-    // 开始搜集日志
-    hookConsole();
+    // 处理全局未捕获的异常
+    this.handleUncaughtException();
 
     // 弹窗不可见时，新增数据不会滚动，当弹窗变为可见时，需要执行一次滚动至底部来修正滚动位置
     // TODO: 不是监听弹窗可见，而是监听当前面板可见
@@ -149,22 +116,6 @@ export default {
         el.scrollTo(0, el.scrollHeight - el.clientHeight);
       }
     });
-  },
-  created() {
-    // 将创建之前搜集到的日志按打印顺序追加到日志列表前面
-    // 如果超出最大消息数量，则截取最新的那部分
-    const msgList = consoleHooks.getMsgList();
-    if (msgList.length > this.maxMsgCount) {
-      this.msgList.unshift(...msgList.slice(msgList.length - this.maxMsgCount));
-      logger.log(
-        "当前消息数量(%d)超出最大消息数量(%d)，截断后消息数量(%d)",
-        msgList.length,
-        this.maxMsgCount,
-        this.msgList.length
-      );
-    } else {
-      this.msgList.unshift(...msgList);
-    }
 
     // 监听设置变化事件
     eventBus.on(eventBus.SETTINGS_CHANGE, this.onSettingsChanged.bind(this));
@@ -187,6 +138,88 @@ export default {
     onSettingsChanged(settings) {
       this.showTimestamps = !!settings.showTimestamps;
       this.maxMsgCount = settings.maxMsgCount;
+    },
+    appendMessage(type, ...args) {
+      // 冻结消息对象，避免传递过程中 Vue 添加额外字段
+      const msg = Object.freeze({
+        id: uuid(),
+        type: type,
+        // 时间戳取生成消息的时间
+        timestamps: Date.now(),
+        logArgs: args
+      });
+
+      // 1. 性能优化：短时间内批量打印日志时，将打印操作放入队列，之后按顺序依次打印
+      // 2. 修复异常：渲染模板中抛出异常时，打印错误消息，走到这里会再次出发渲染，导致死循环，
+      //             采用任务队列后，相邻两次打印不在同一个执行堆栈中，可以避免这种情况
+      taskScheduler.addAndStart(() => {
+        // 移除超出的消息
+        while (this.msgList.length >= this.maxMsgCount) this.msgList.shift();
+
+        this.msgList.push(msg);
+      });
+    },
+    collectUnhandledMessage() {
+      // 停止搜集日志，交给 ConsolePanel 进行搜集
+      consoleHooks.uninstall();
+      // 将创建之前搜集到的日志按打印顺序追加到日志列表前面
+      // 如果超出最大消息数量，则截取最新的那部分
+      const msgList = consoleHooks.getMsgList();
+      if (msgList.length > this.maxMsgCount) {
+        this.msgList.unshift(...msgList.slice(msgList.length - this.maxMsgCount));
+        logger.warn(
+          "当前消息数量(%d)超出最大消息数量(%d)，截断后消息数量(%d)",
+          msgList.length,
+          this.maxMsgCount,
+          this.msgList.length
+        );
+      } else {
+        this.msgList.unshift(...msgList);
+      }
+    },
+    // 拦截 Console 日志方法
+    interceptConsole() {
+      const vm = this;
+      const originConsole = {};
+      const names = ["log", "info", "error", "warn", "debug"];
+      names.forEach(name => {
+        originConsole[name] = window.console[name];
+
+        window.console[name] = function(...args) {
+          // 如果参数中有 Error 对象，为其生成堆栈信息
+          args.forEach(value => {
+            if (value instanceof Error) {
+              createStack(value, window.console[name]);
+            }
+          });
+
+          vm.appendMessage(name, ...args);
+
+          originConsole[name].apply(this, args);
+        };
+      });
+    },
+    // 处理全局未捕获的异常
+    handleUncaughtException() {
+      const vm = this;
+      // 未捕获的错误
+      window.addEventListener("error", function uncaughtExceptionHandler(event) {
+        let error = event.error;
+        // createStack(error, uncaughtExceptionHandler);
+
+        // if (!error.stack) {
+        //   error.stack = event.message + "\nat " + event.filename + ":" + event.lineno + ":" + event.colno;
+        // }
+        error.stack = formatFileName(error.stack);
+        vm.appendMessage("error", error);
+      });
+
+      // 未处理的 rejected Promise
+      window.addEventListener("unhandledrejection", function unhandledRejectionHandler(event) {
+        const error = new Error("(in promise) " + event.reason);
+        createStack(error, unhandledRejectionHandler);
+        vm.appendMessage("error", error);
+      });
     }
   }
 };

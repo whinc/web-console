@@ -11,10 +11,16 @@ window.$console = (function() {
   }
 
   function testException() {
-    // console.log(new Error('general error'))
-    // console.error(new Error('general error'))
+    // 测试直接输出 Error 对象
     console.error(new ReferenceError("reference error"));
-    // throw new Error("xxx");
+
+    // 测试未捕获的全局异常
+    setTimeout(function() {
+      throw new Error("This is a uncaught exception");
+    });
+
+    // 测试未处理的 rejected Promise
+    Promise.reject("uncaught rejected promise");
   }
 
   // 打印对象

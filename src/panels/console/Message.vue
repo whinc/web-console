@@ -1,18 +1,21 @@
 <template>
   <div class="message source-code g-hide-scrollbar" :class="[message.type]">
     <div v-if="showTimestamps" class="timestamps">{{formattedTime}}</div>
-    <div v-if="isErrorCaptured" class="error">
+
+    <template v-if="!isErrorCaptured">
+      <span v-for="(argInfo, index) in argInfoList" :key="index" class="block-wrapper">
+        <text-block
+          :descriptor="{value: argInfo.displayValue}"
+          :showRootValueDetail="argInfo.showValueDetail"
+          :key="index + '1'"
+          :style="argInfo.style"
+        />
+        <!-- <span v-if="index !== argInfoList.length - 1" class="space" :key="index + '2'">{{space}}</span> -->
+      </span>
+    </template>
+    <div v-else class="error">
       Message 组件内部错误
     </div>
-    <span v-else v-for="(argInfo, index) in argInfoList" class="block-wrapper">
-      <text-block
-        :descriptor="{value: argInfo.displayValue}"
-        :showRootValueDetail="argInfo.showValueDetail"
-        :key="index + '1'"
-        :style="argInfo.style"
-      />
-      <!-- <span v-if="index !== argInfoList.length - 1" class="space" :key="index + '2'">{{space}}</span> -->
-    </span>
   </div>
 </template>
 

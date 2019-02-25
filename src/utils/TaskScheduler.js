@@ -73,7 +73,7 @@ export default class TaskScheduler {
     const taskBundle = this._tasks.slice(0, count);
     this._tasks = this._tasks.slice(count);
 
-    logger.log("_shiftTaskBunlde remove:", count, "rest:", this.length);
+    // logger.log("_shiftTaskBunlde remove:", count, "rest:", this.length);
     return taskBundle;
   }
 
@@ -85,7 +85,7 @@ export default class TaskScheduler {
     if (immediate) {
       const task = this._tasks.shift();
       task.call(null);
-      logger.log("_runTask immediate size:", 1);
+      // logger.log("_runTask immediate size:", 1);
     }
     this._timerId = setTimeout(() => {
       const tasks = this._shiftTaskBunlde();

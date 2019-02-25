@@ -48,8 +48,6 @@ Vue.directive("prevent-bkg-scroll", {
   }
 });
 
-Vue.directive("");
-
 Vue.config.productionTip = false;
 
 // WebConsole 只能创建一个实例

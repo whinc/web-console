@@ -60,6 +60,8 @@ export const flatMap = (arr, callback) => {
   return r;
 };
 
+export const formatFileName = (s = "") => s.replace(/https?:\/\/.*\/(.*)/g, "$1");
+
 /**
  * 在目标对象上创建一个 stack 属性表示调用堆栈
  * @param {*} targetObject
@@ -72,7 +74,7 @@ export const createStack = (targetObject, constructorOpt) => {
   }
   // safari 创建的 Error 对象包含 stack 属性记录堆栈信息
   if (typeof targetObject.stack === "string") {
-    targetObject.stack = targetObject.stack.replace(/https?:\/\/.*\/(.*)/g, "$1");
+    targetObject.stack = formatFileName(targetObject.stack);
   }
 };
 
