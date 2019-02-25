@@ -13,7 +13,7 @@ mobile version of Chrome DevTools.
 
 CDN 地址：<https://unpkg.com/@whinc/web-console>
 
-![snapshot](./snapshot.png)
+![snapshot](./docs/snapshot.png)
 
 ## 开始使用
 
