@@ -15,6 +15,8 @@ CDN 地址：<https://unpkg.com/@whinc/web-console>
 
 ![snapshot](./docs/snapshot.png)
 
+[更多运行截图点击这里](https://github.com/whinc/web-console/blob/master/docs/snapshot.md)
+
 ## 开始使用
 
 ### 在 Web 页中使用
