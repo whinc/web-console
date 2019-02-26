@@ -255,7 +255,7 @@ window.$console = (function() {
       "color: white; background-color: rgba(0, 116, 217, 0.69); padding: 2px 5px; border-radius: 2px",
       "color: #0074D9",
       "",
-      "color: white; background-color: rgba(255, 65, 54, 0.69); padding: 2px 5px; border-radius: 2px",
+      "color: white; background-color: rgba(255, 65, 54, 0.69); padding: 2px 5px; margin-right: 5px; border-radius: 2px",
       { a: 444 },
       { b: 555 },
       666,
