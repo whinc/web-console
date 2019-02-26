@@ -3,7 +3,12 @@
 发布到 npm 仓库：
 
 ```bash
-npm version <new_version>
+# 发次版本
+npm run publish:minor
+# 发补丁版本
+npm run publish:patch
+# 预发布版
+npm run publish:prerelease
 ```
 
 生成 CHANGELOG：
