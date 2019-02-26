@@ -11,10 +11,16 @@ window.$console = (function() {
   }
 
   function testException() {
-    // console.log(new Error('general error'))
-    // console.error(new Error('general error'))
+    // 测试直接输出 Error 对象
     console.error(new ReferenceError("reference error"));
-    // throw new Error("xxx");
+
+    // 测试未捕获的全局异常
+    setTimeout(function() {
+      throw new Error("This is a uncaught exception");
+    });
+
+    // 测试未处理的 rejected Promise
+    Promise.reject("uncaught rejected promise");
   }
 
   // 打印对象
@@ -249,7 +255,7 @@ window.$console = (function() {
       "color: white; background-color: rgba(0, 116, 217, 0.69); padding: 2px 5px; border-radius: 2px",
       "color: #0074D9",
       "",
-      "color: white; background-color: rgba(255, 65, 54, 0.69); padding: 2px 5px; border-radius: 2px",
+      "color: white; background-color: rgba(255, 65, 54, 0.69); padding: 2px 5px; margin-right: 5px; border-radius: 2px",
       { a: 444 },
       { b: 555 },
       666,
