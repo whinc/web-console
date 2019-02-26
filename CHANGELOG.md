@@ -1,3 +1,23 @@
+<a name="0.4.3"></a>
+
+## [0.4.3](https://github.com/whinc/web-console/compare/v0.4.4...v0.4.3) (2019-02-26)
+
+<a name="0.4.4"></a>
+
+## [0.4.4](https://github.com/whinc/web-console/compare/v0.4.3...v0.4.4) (2019-02-26)
+
+<a name="0.4.3"></a>
+
+## [0.4.3](https://github.com/whinc/web-console/compare/v0.4.2...v0.4.3) (2019-02-26)
+
+<a name="0.4.2"></a>
+
+## [0.4.2](https://github.com/whinc/web-console/compare/v0.4.1...v0.4.2) (2019-02-26)
+
+### Features
+
+- **console:** 处理未捕获的异常(error 和 unhandledrejection 事件) ([04e7da5](https://github.com/whinc/web-console/commit/04e7da5))
+
 <a name="0.4.1"></a>
 
 ## [0.4.1](https://github.com/whinc/web-console/compare/v0.4.0-beta.2...v0.4.1) (2019-02-21)
