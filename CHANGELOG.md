@@ -1,13 +1,5 @@
 <a name="0.4.3"></a>
 
-## [0.4.3](https://github.com/whinc/web-console/compare/v0.4.4...v0.4.3) (2019-02-26)
-
-<a name="0.4.4"></a>
-
-## [0.4.4](https://github.com/whinc/web-console/compare/v0.4.3...v0.4.4) (2019-02-26)
-
-<a name="0.4.3"></a>
-
 ## [0.4.3](https://github.com/whinc/web-console/compare/v0.4.2...v0.4.3) (2019-02-26)
 
 <a name="0.4.2"></a>
