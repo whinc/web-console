@@ -3,23 +3,13 @@
 发布到 npm 仓库：
 
 ```bash
-# 发次版本
-npm run publish:minor
-# 发补丁版本
-npm run publish:patch
-# 预发布版
-npm run publish:prerelease
-```
-
-生成 CHANGELOG：
-
-```bash
-npm run changelog
+# 发版：打版本标签 -> 构建发布包 -> 发布到 npm 仓库
+npm version <new_version>
 ```
 
 更新 github.io 在线示例：
 
-```
+```bash
 npm run depoly
 ```
 
