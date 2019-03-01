@@ -1,6 +1,14 @@
-<a name="0.4.3"></a>
+<a name="0.4.4"></a>
 
-## [0.4.3](https://github.com/whinc/web-console/compare/v0.4.2...v0.4.3) (2019-02-26)
+## [0.4.4](https://github.com/whinc/web-console/compare/v0.4.2...v0.4.4) (2019-03-01)
+
+### Bug Fixes
+
+- **console:** 修复打印多参数时参数之间无空白符分隔的问题 ([7c7c525](https://github.com/whinc/web-console/commit/7c7c525))
+
+### Features
+
+- **settings:** 增加反馈入口 ([26984b9](https://github.com/whinc/web-console/commit/26984b9))
 
 <a name="0.4.2"></a>
 
