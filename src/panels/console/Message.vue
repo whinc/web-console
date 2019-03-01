@@ -9,8 +9,8 @@
           :showRootValueDetail="argInfo.showValueDetail"
           :key="index + '1'"
           :style="argInfo.style"
+          style="padding-right: 0.5em"
         />
-        <!-- <span v-if="index !== argInfoList.length - 1" class="space" :key="index + '2'">{{space}}</span> -->
       </span>
     </template>
     <div v-else class="error">
@@ -349,8 +349,8 @@ function formatLogArgsForDisplay(argInfoList) {
   }
   .block-wrapper {
     display: inline-flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
   }
 }
 
