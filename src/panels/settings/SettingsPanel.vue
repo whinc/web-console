@@ -110,14 +110,20 @@ const defaultConfigs = [
   {
     desc: "About",
     items: [
-      { type: "section", desc: "Package name" },
-      { type: "text", desc: process.env.VUE_APP_NAME },
+      { type: "section", desc: "Package Name" },
+      { type: "link", desc: process.env.VUE_APP_NAME, src: "https://github.com/whinc/web-console" },
       { type: "section", desc: "Version" },
-      { type: "text", desc: process.env.VUE_APP_VERSION },
-      { type: "section", desc: "Build date" },
+      {
+        type: "link",
+        desc: process.env.VUE_APP_VERSION,
+        src: "https://www.npmjs.com/package/@whinc/web-console/v/" + process.env.VUE_APP_VERSION
+      },
+      { type: "section", desc: "Build Date" },
       { type: "text", desc: process.env.VUE_APP_DATE },
       { type: "section", desc: "CHANGELOG" },
-      { type: "link", desc: "CHANGELOG", src: "https://github.com/whinc/web-console/blob/master/CHANGELOG.md" }
+      { type: "link", desc: "CHANGELOG", src: "https://github.com/whinc/web-console/blob/master/CHANGELOG.md" },
+      { type: "section", desc: "Feedback" },
+      { type: "link", desc: "New Issue", src: "https://github.com/whinc/web-console/issues/new" }
     ]
   }
 ];
