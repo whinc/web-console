@@ -27,7 +27,7 @@
 
     <!-- 工具面板 -->
     <mt-popup position="bottom" v-model="panelVisible">
-      <div class="panel">
+      <div class="panel" :style="{'padding': `0 ${scrollbarWidth / 2}px`}">
         <!-- Tabbar -->
         <v-tab-bar v-model="activeTab">
           <v-tab-bar-item id="element">Element</v-tab-bar-item>
@@ -83,7 +83,9 @@ export default {
       isSettingPanelVisible: false,
       activeTab: "console",
       right: 20,
-      bottom: 20
+      bottom: 20,
+      // 页面右侧滚动条宽度，通过判断滚动条宽度，在页面右侧填充适当空间，修复 PC 端滚动条覆盖面板右侧边缘的问题
+      scrollbarWidth: 0
     };
   },
   watch: {
@@ -106,6 +108,12 @@ export default {
     this.initPanelVisible ? this.scaleManager.preventScale() : this.scaleManager.recoverScale();
     this.activeTab = this.initActiveTab;
     this.entryStyle = this.initEntryStyle;
+
+    // 获取滚动条宽度
+    this.scrollbarWidth = getScrollbarWidth();
+    window.addEventListener("resize", () => {
+      this.scrollbarWidth = getScrollbarWidth();
+    });
 
     // 监听来自子元素的事件：请求隐藏弹窗
     eventBus.on(eventBus.POPUP_HIDE, () => this.hidePanel());
@@ -175,6 +183,18 @@ function createScaleManager() {
     }
   };
 }
+
+// 获取页面滚动条宽度
+// 参考：[通过 JS 判断页面是否有滚动条的简单方法](https://www.cnblogs.com/nzbin/p/8117535.html)
+function getScrollbarWidth() {
+  var scrollDiv = document.createElement("div");
+  scrollDiv.style.cssText = "width: 99px; height: 99px; overflow: scroll; position: absolute; top: -9999px;";
+  document.body.appendChild(scrollDiv);
+  var scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+  document.body.removeChild(scrollDiv);
+
+  return scrollbarWidth;
+}
 </script>
 
 <style scoped lang="scss">
@@ -206,5 +226,6 @@ function createScaleManager() {
   background-color: white;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 </style>
