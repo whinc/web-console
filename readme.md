@@ -1,13 +1,13 @@
 # web-console
 
-web-console 是一款基于 H5 开发的移动端 Web 调试工具。其高度还原了 Chrome DevTools 的功能和交互，支持 webpack 打包和`<script>`方式引入。
-
 ![Github release](https://img.shields.io/npm/v/@whinc/web-console.svg)
 ![总下载量](https://img.shields.io/npm/dt/@whinc/web-console.svg)
 ![月下载量](https://img.shields.io/npm/dm/@whinc/web-console.svg)
 ![周下载量](https://img.shields.io/npm/dw/@whinc/web-console.svg)
 ![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/@whinc/web-console.svg)
 ![LINCENSE](https://img.shields.io/github/license/mashape/apistatus.svg)
+
+web-console 是一款基于 H5 开发的移动端 Web 调试工具。其高度还原了 Chrome DevTools 的功能和交互，支持 webpack 打包和`<script>`方式引入。
 
 在线演示：<https://whinc.github.io/web-console/>
 
