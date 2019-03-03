@@ -38,6 +38,9 @@ web-console 特性列表完成情况（可能会变动）：
 - Application 面板
   - [x] 支持 cookie、localStorage 和 sessionStorage 的增删改查
   - [x] 支持 cookie、localStorage 和 sessionStorage 按关键字过滤
+- Settings 面板
+  - [x] 设置各面板默认行为
+  - [x] 关于信息
 - [ ] 支持插件
 
 
