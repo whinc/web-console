@@ -281,6 +281,8 @@ export default {
   align-items: center;
   background-color: rgb(243, 243, 243);
   border-bottom: 1px solid rgb(205, 205, 205);
+  // Fix: 子元素 <input> 设置高度百分比无效的问题
+  height: 0px;
   &__button {
     padding: 0.55em;
     width: 2.4em;
