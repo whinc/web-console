@@ -1,14 +1,21 @@
-<a name="0.4.4"></a>
+<a name="0.4.5"></a>
 
-## [0.4.4](https://github.com/whinc/web-console/compare/v0.4.2...v0.4.4) (2019-03-01)
+## [0.4.5](https://github.com/whinc/web-console/compare/v0.4.2...v0.4.5) (2019-03-03)
 
 ### Bug Fixes
 
+- 修复 PC 端滚动条覆盖面板右边缘的问题 ([bd03c0c](https://github.com/whinc/web-console/commit/bd03c0c))
+- **application:** 输入框设置高度撑破父元素的问题 ([dbbfa9c](https://github.com/whinc/web-console/commit/dbbfa9c))
 - **console:** 修复打印多参数时参数之间无空白符分隔的问题 ([7c7c525](https://github.com/whinc/web-console/commit/7c7c525))
+- **console:** 将输出内容对齐到每行的顶部 ([85a0c5f](https://github.com/whinc/web-console/commit/85a0c5f))
 
 ### Features
 
 - **settings:** 增加反馈入口 ([26984b9](https://github.com/whinc/web-console/commit/26984b9))
+
+### Reverts
+
+- px 单位转 vw 单位 ([93c52b8](https://github.com/whinc/web-console/commit/93c52b8))
 
 <a name="0.4.2"></a>
 
@@ -130,7 +137,7 @@
 
 <a name="0.3.0-beta.2"></a>
 
-# [0.3.0-beta.2](https://github.com/whinc/web-console/compare/0.3.0-beta.1...v0.3.0-beta.2) (2018-11-29)
+# [0.3.0-beta.2](https://github.com/whinc/web-console/compare/v0.3.0-beta.1...v0.3.0-beta.2) (2018-11-29)
 
 ### Bug Fixes
 
@@ -143,7 +150,7 @@
 
 <a name="0.3.0-beta.1"></a>
 
-# [0.3.0-beta.1](https://github.com/whinc/web-console/compare/v0.3.0-beta.0...0.3.0-beta.1) (2018-11-24)
+# [0.3.0-beta.1](https://github.com/whinc/web-console/compare/0.3.0-beta.1...v0.3.0-beta.1) (2018-11-24)
 
 ### Bug Fixes
 
@@ -306,7 +313,7 @@
 
 <a name="0.2.0-rc.1"></a>
 
-# [0.2.0-rc.1](https://github.com/whinc/web-console/compare/v0.1.2...v0.2.0-rc.1) (2018-09-08)
+# [0.2.0-rc.1](https://github.com/whinc/web-console/compare/v0.1.5...v0.2.0-rc.1) (2018-09-08)
 
 ### Bug Fixes
 
@@ -337,6 +344,18 @@
 - **network:** 请求头信息分类展示 ([6fdb205](https://github.com/whinc/web-console/commit/6fdb205))
 - **network:** 错误状态码高亮展示 ([78e78ac](https://github.com/whinc/web-console/commit/78e78ac))
 - 入口浮标支持滑动、图标样式 ([01bee17](https://github.com/whinc/web-console/commit/01bee17))
+
+<a name="0.1.5"></a>
+
+## [0.1.5](https://github.com/whinc/web-console/compare/v0.1.4...v0.1.5) (2018-06-20)
+
+<a name="0.1.4"></a>
+
+## [0.1.4](https://github.com/whinc/web-console/compare/v0.1.3...v0.1.4) (2018-06-20)
+
+<a name="0.1.3"></a>
+
+## [0.1.3](https://github.com/whinc/web-console/compare/v0.1.2...v0.1.3) (2018-06-20)
 
 <a name="0.1.2"></a>
 
