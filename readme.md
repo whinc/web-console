@@ -19,28 +19,27 @@ CDN 地址：<https://unpkg.com/@whinc/web-console>
 
 ## 功能特性
 
-目前已实现核心基础功能如下：
+web-console 特性列表完成情况（可能会变动）：
 
 - Element 面板
-  - 支持 DOM 树展示
-  - 支持查看节点样式和计算样式
-  - 支持查看节点盒模型
+  - [x] 支持 DOM 树展示
+  - [x] 支持查看节点样式和计算样式
+  - [x] 支持查看节点盒模型
 - Console 面板
-  - 支持 console 对象的 log/warn/info/error/debug 方法
-  - 支持 log 等日志方法的多参数输出
-  - 支持 log 等日志方法的参数格式化输出，如`%s, %i, %d, %f, %d, %o, %O, %c`
+  - [x] 支持 console 对象的 log/warn/info/error/debug 方法
+  - [x] 支持 log 等日志方法的多参数输出
+  - [x] 支持 log 等日志方法的参数格式化输出，如`%s, %i, %d, %f, %d, %o, %O, %c`
+  - [ ] 支持搜索日志
+  - [ ] 支持执行 JS 代码段
 - Network 面板
-  - 支持`XMLHttpRequest`请求和响应的展示
-  - 支持响应数据的预览
+  - [x] 支持`XMLHttpRequest`请求和响应的展示
+  - [ ] 支持`fetch`请求和响应的展示
+  - [x] 支持响应数据的预览
 - Application 面板
-  - 支持 cookie、localStorage 和 sessionStorage 的增删改查
-  - 支持 cookie、localStorage 和 sessionStorage 按关键字过滤
+  - [x] 支持 cookie、localStorage 和 sessionStorage 的增删改查
+  - [x] 支持 cookie、localStorage 和 sessionStorage 按关键字过滤
+- [ ] 支持插件
 
-未来计划：
-
-- 增强完善现有的基础功能
-- 支持插件
-- 支持一些高级特性
 
 ## 如何使用?
 
