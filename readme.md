@@ -11,7 +11,7 @@ web-console 是一款基于 H5 开发的移动端 Web 调试工具。其高度�
 
 在线演示：<https://whinc.github.io/web-console/>
 
-CDN 地址：<https://unpkg.com/@whinc/web-console>
+CDN 地址：<https://unpkg.com/@whinc/web-console>（[CDN 下载测试](https://github.com/whinc/web-console/blob/master/public/index_cdn.html)）
 
 ![snapshot](./docs/snapshot.png)
 
