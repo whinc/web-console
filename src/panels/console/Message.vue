@@ -350,7 +350,7 @@ function formatLogArgsForDisplay(argInfoList) {
   .block-wrapper {
     display: inline-flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
   }
 }
 
