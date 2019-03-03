@@ -1,6 +1,6 @@
 {
   "name": "@whinc/web-console",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "author": "whincwu@163.com",
   "license": "MIT",
   "keywords": [
@@ -17,7 +17,7 @@
     "build:lib": "vue-cli-service build --target lib --name web-console --dest dist src/main.js",
     "build:app": "vue-cli-service build --target app --dest demo",
     "depoly": "npm run build:app && npx gh-pages -d demo",
-    "postversion": "npm run build:lib && echo 'build success!!!' && npm login && npm publish --access=public && 'public success!!!' && git tag v$npm_package_version && echo 'tag success!!!' && npm run changelog",
+    "postversion": "./build/post_version.sh $npm_package_version",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md && git commit -m 'docs(changelog): 更新' || echo 'changelog 没变化'",
     "report": "vue-cli-service build --report",
     "test:unit": "vue-cli-service test:unit",
