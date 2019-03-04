@@ -5,7 +5,7 @@
 # -x 输出每行执行结果
 set -eu
 
-$version="$1"
+version="$1"
 
 echo_success () {
   printf "\033[32m%s\033[0m\n" "$1";

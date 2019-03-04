@@ -1,5 +1,4 @@
 *
 */
 !dist/*.js
-!dist/*.map
 !package*.json
