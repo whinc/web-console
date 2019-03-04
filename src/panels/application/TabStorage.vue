@@ -337,8 +337,8 @@ export default {
     white-space: nowrap;
     overflow-x: auto;
     &:first-child {
-      flex: 0 0 30%;
-      max-width: 30%;
+      flex: 0 0 50%;
+      max-width: 50%;
     }
     &--head {
     }

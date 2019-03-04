@@ -57,4 +57,13 @@
   pre {
     margin: 0;
   }
+
+  // Fix: <br> 标签不换行导致的样式问题（如 Element 面板的盒模型坍塌）
+  br:before {
+    content: "\A";
+    white-space: pre-line;
+  }
+  br:after {
+    white-space: pre-line;
+  }
 }
