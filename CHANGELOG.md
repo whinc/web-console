@@ -1,13 +1,20 @@
 <a name="0.4.6"></a>
 
-## [0.4.6](https://github.com/whinc/web-console/compare/v0.4.4...v0.4.6) (2019-03-04)
+## [0.4.6](https://github.com/whinc/web-console/compare/v0.4.5...v0.4.6) (2019-03-04)
+
+### Bug Fixes
+
+- **element:** 修复<br>标签不换行导致的 element 面板中盒模型样式坍塌问题 ([1a6cd8b](https://github.com/whinc/web-console/commit/1a6cd8b))
+
+<a name="0.4.5"></a>
+
+## [0.4.5](https://github.com/whinc/web-console/compare/v0.4.4...v0.4.5) (2019-03-03)
 
 ### Bug Fixes
 
 - 修复 PC 端滚动条覆盖面板右边缘的问题 ([bd03c0c](https://github.com/whinc/web-console/commit/bd03c0c))
 - **application:** 输入框设置高度撑破父元素的问题 ([dbbfa9c](https://github.com/whinc/web-console/commit/dbbfa9c))
 - **console:** 将输出内容对齐到每行的顶部 ([85a0c5f](https://github.com/whinc/web-console/commit/85a0c5f))
-- **element:** 修复<br>标签不换行导致的 element 面板中盒模型样式坍塌问题 ([1a6cd8b](https://github.com/whinc/web-console/commit/1a6cd8b))
 
 ### Reverts
 
