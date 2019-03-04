@@ -23,8 +23,9 @@ web-console 特性列表完成情况（可能会变动）：
 
 - Element 面板
   - [x] 支持 DOM 树展示
-  - [x] 支持查看节点样式和计算样式
-  - [x] 支持查看节点盒模型
+  - [x] 支持查看 DOM 节点的继承样式
+  - [x] 支持查看 DOM 节点的计算样式
+  - [x] 支持查看 DOM 节点的盒模型
 - Console 面板
   - [x] 支持 console 对象的 log/warn/info/error/debug 方法
   - [x] 支持 log 等日志方法的多参数输出
