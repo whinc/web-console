@@ -1,9 +1,9 @@
 import Vue from "vue";
 import App from "./App.vue";
 import "./polyfill";
-import { consoleHooks, filters } from "@/utils";
+import { consoleHooks, filters, isFunction } from "@/utils";
 // import { Logger } from "@/utils";
-import infiniteScroll from "vue-infinite-scroll";
+import InfiniteScroll from "vue-infinite-scroll";
 import "./styles/_global.scss";
 
 // register filters
@@ -11,7 +11,14 @@ Object.keys(filters).forEach(name => {
   Vue.filter(name, filters[name]);
 });
 
-Vue.use(infiniteScroll);
+// Fix: 避免重复注册插件（从 mint-ui 库引入和从 vue-infinite-scroll 引入是同一个插件的两个不同实例）
+const installedPlugins = Vue._installedPlugins || [];
+const foundIndex = installedPlugins.findIndex(plugin => isFunction(plugin.bind) && isFunction(plugin.unbind));
+if (foundIndex === -1) {
+  Vue.use(InfiniteScroll);
+} else {
+  console.warn('"vue-infinite-scroll" has been registered');
+}
 
 // const logger = new Logger("[main.js]");
 
