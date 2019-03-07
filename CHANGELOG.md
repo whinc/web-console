@@ -1,3 +1,11 @@
+<a name="0.4.7"></a>
+
+## [0.4.7](https://github.com/whinc/web-console/compare/v0.4.6...v0.4.7) (2019-03-07)
+
+### Bug Fixes
+
+- 修复 vue-infinite-scroll 插件与宿主环境冲突,导致宿主引入该插件后无效的问题 ([5fee55c](https://github.com/whinc/web-console/commit/5fee55c))
+
 <a name="0.4.6"></a>
 
 ## [0.4.6](https://github.com/whinc/web-console/compare/v0.4.5...v0.4.6) (2019-03-04)
