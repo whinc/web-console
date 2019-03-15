@@ -17,7 +17,8 @@
     "build:lib": "vue-cli-service build --target lib --name web-console --dest dist src/main.js",
     "build:app": "vue-cli-service build --target app --dest demo",
     "depoly": "npm run build:app && npx gh-pages -d demo",
-    "postversion": "./build/post_version.sh \"$npm_package_version\"",
+    "semantic-release": "cross-env GH_TOKEN=$GH_TOKEN NPM_TOKEN=$NPM_TOKEN semantic-release",
+    "postversion": "./build/post_version.sh $npm_package_version",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md && git commit -m 'docs(changelog): 更新' || echo 'changelog 没变化'",
     "report": "vue-cli-service build --report",
     "test:unit": "vue-cli-service test:unit",
@@ -42,7 +43,7 @@
     "@vue/cli-plugin-babel": "^3.4.1",
     "@vue/cli-plugin-e2e-cypress": "^3.4.1",
     "@vue/cli-plugin-eslint": "^3.4.1",
-    "@vue/cli-plugin-unit-jest": "^3.4.1",
+    "@vue/cli-plugin-unit-jest": "^3.5.1",
     "@vue/cli-service": "^3.4.1",
     "@vue/test-utils": "^1.0.0-beta.28",
     "babel-core": "^7.0.0-0",
@@ -59,6 +60,8 @@
     "prettier": "1.14.2",
     "pretty-quick": "^1.10.0",
     "sass-loader": "^6.0.6",
+    "semantic-release": "^15.13.3",
+    "semantic-release-cli": "^4.1.1",
     "vue-template-compiler": "^2.5.22"
   },
   "browserslist": [
@@ -78,6 +81,14 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
+    ]
+  },
+  "release": {
+    "ci": false,
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm"
     ]
   }
 }
