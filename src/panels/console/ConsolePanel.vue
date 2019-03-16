@@ -1,12 +1,19 @@
 <template>
   <div class="console-panel">
-    <VTabBar v-model="activeType" :equalWidth="true">
-      <VTabBarItem id="all">All</VTabBarItem>
-      <VTabBarItem id="log">Log</VTabBarItem>
-      <VTabBarItem id="info">Info</VTabBarItem>
-      <VTabBarItem id="warn">Warn</VTabBarItem>
-      <VTabBarItem id="error">Error</VTabBarItem>
-    </VTabBar>
+    <div class="head">
+      <VTabBar v-model="activeType" :equalWidth="true">
+        <VTabBarItem id="all">All</VTabBarItem>
+        <VTabBarItem id="log">Log</VTabBarItem>
+        <VTabBarItem id="info">Info</VTabBarItem>
+        <VTabBarItem id="warn">Warn</VTabBarItem>
+        <VTabBarItem id="error">Error</VTabBarItem>
+        <VIcon slot="icons" :name="isToolbarExpanded ? 'collapse' : 'expand'" class="head__icon" @click="isToolbarExpanded = !isToolbarExpanded" />
+      </VTabBar>
+      <div v-if="isToolbarExpanded" class="toolbar">
+        <input class="toolbar__input" type="text" placeholder="Filter" v-model="filter" />
+      </div>
+    </div>
+
     <div ref="container" @scroll="onScroll" class="body" v-prevent-bkg-scroll>
       <!-- 不同面板的切换比较频繁，v-show 比 v-if 更适合该场景，可以复用 Message 组件 -->
       <Message
@@ -15,6 +22,7 @@
         v-show="msg.type === activeType || activeType === 'all'"
         :message="msg"
         :showTimestamps="showTimestamps"
+        :filter="filter"
       />
     </div>
     <VFootBar class="foot" :buttons="footBarButtons" />
@@ -22,7 +30,7 @@
 </template>
 
 <script>
-import { VTabBar, VTabBarItem, VFootBar } from "@/components";
+import { VTabBar, VTabBarItem, VFootBar, VIcon } from "@/components";
 import { uuid, createStack, eventBus, TaskScheduler, Logger, consoleHooks, formatFileName } from "@/utils";
 import Message from "./Message";
 import { isFunction } from "util";
@@ -36,7 +44,8 @@ export default {
     Message,
     VFootBar,
     VTabBar,
-    VTabBarItem
+    VTabBarItem,
+    VIcon
   },
   data() {
     return {
@@ -59,7 +68,11 @@ export default {
       // 显示时间戳
       showTimestamps: false,
       // 最大消息数量（超出后移除旧消息）
-      maxMsgCount: Infinity
+      maxMsgCount: Infinity,
+      // 是否展开工具栏
+      isToolbarExpanded: false,
+      // 过滤器
+      filter: ""
     };
   },
   computed: {
@@ -227,11 +240,32 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../styles/variables";
+@import "../../styles/mixins";
 
 .console-panel {
   height: $panel-height;
   display: flex;
   flex-direction: column;
+  .head {
+    &__icon {
+      padding: 0.6em;
+      width: 2.4em;
+    }
+    .toolbar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: $toolbar-bg-color;
+      border-bottom: 1px solid $toolbar-border-color;
+      height: 2.4em;
+      &__input {
+        @include input(80%);
+        margin: 0 4px;
+        padding: 0 4px;
+        flex: 1;
+      }
+    }
+  }
   .body {
     flex-grow: 1;
     overflow-y: auto;

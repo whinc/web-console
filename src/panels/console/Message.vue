@@ -1,5 +1,5 @@
 <template>
-  <div class="message source-code g-hide-scrollbar" :class="[message.type]">
+  <div v-if="isMatched" class="message source-code g-hide-scrollbar" :class="[message.type]">
     <div v-if="showTimestamps" class="timestamps">{{formattedTime}}</div>
 
     <template v-if="!isErrorCaptured">
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { isString, isObject, isArray, Logger, cloneDeep } from "@/utils";
+import { isString, isObject, isArray, Logger, cloneDeep, isFunction } from "@/utils";
 import TextBlock from "./TextBlock";
 
 const logger = new Logger("[Message]");
@@ -46,12 +46,15 @@ export default {
       type: Object,
       required: true
     },
-    /**
-     * 显示时间戳
-     */
+    // 是否显示时间戳
     showTimestamps: {
       type: Boolean,
       default: false
+    },
+    // 过滤器
+    filter: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -90,6 +93,10 @@ export default {
       argInfoList = formatLogArgsForDisplay(argInfoList);
 
       return argInfoList;
+    },
+    // 是否匹配过滤器
+    isMatched() {
+      return !this.filter || this.argInfoList.some(value => match(value.displayValue, this.filter));
     }
   },
   // 捕获 console API 引发的错误，避免陷入循环渲染
@@ -101,6 +108,27 @@ export default {
     return false;
   }
 };
+
+/**
+ * 如果 value 包含 filter 所表示的关键字，则返回 true，否则返回 false
+ * @param {any} value 内容
+ * @param {String} filter 过滤关键字
+ * @param {Number} deepth 匹配深度
+ * @returns {boolean}
+ */
+function match(value, filter, deepth = Infinity) {
+  if (deepth < 0) return false;
+
+  if (isArray(value)) {
+    return value.some(el => match(el, filter, deepth - 1));
+  } else if (isObject(value)) {
+    return Object.keys(value).some(key => match(key, filter, deepth - 1) || match(value[key], filter, deepth - 1));
+  } else if (isFunction(value)) {
+    return value.name.indexOf(filter) !== -1;
+  } else {
+    return String(value).indexOf(filter) !== -1;
+  }
+}
 
 /**
  * 解析日志方法接收到的的参数列表，返回包含占位符描述对象的数组
@@ -203,7 +231,7 @@ function parseLogArgs(logArgs) {
  *  {value: 'c'}
  *  {value: {}, placeholder: '%s'}
  * ]
- * 将上面描述对象数组进一步处理得到：
+ * 将上面描述对象数组进一步处理得到（还有一个合并相邻字符串的处理，此处省略）：
  * [
  *  {value: 'a', displayValue: 'a', placeholder: ''}
  *  {value: 'b', displayValue: 'b', placeholder: '%s'}
