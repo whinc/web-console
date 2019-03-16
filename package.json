@@ -14,19 +14,15 @@
   "main": "dist/web-console.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "prebuild:lib": "npm run lint",
     "build:lib": "vue-cli-service build --target lib --name web-console --dest dist src/main.js",
     "build:app": "vue-cli-service build --target app --dest demo",
     "depoly": "npm run build:app && npx gh-pages -d demo",
-    "semantic-release": "cross-env GH_TOKEN=$GH_TOKEN NPM_TOKEN=$NPM_TOKEN semantic-release",
-    "postversion": "./build/post_version.sh $npm_package_version",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md && git commit -m 'docs(changelog): 更新' || echo 'changelog 没变化'",
+    "semantic-release": "npm run lint && npm run build:lib && cross-env GH_TOKEN=$GH_TOKEN NPM_TOKEN=$NPM_TOKEN semantic-release",
     "report": "vue-cli-service build --report",
     "test:unit": "vue-cli-service test:unit",
     "test:api": "cd ./tests/api && nodemon index.js",
     "e2e": "vue-cli-service e2e",
-    "lint": "vue-cli-service lint src/**/*.js",
-    "e2e:open": "vue-cli-service e2e:open"
+    "lint": "vue-cli-service lint src/**/*.js"
   },
   "dependencies": {
     "cookie_js": "^1.2.2",
