@@ -30,7 +30,7 @@ web-console 特性列表完成情况（可能会变动）：
   - [x] 支持 console 对象的 log/warn/info/error/debug 方法
   - [x] 支持 log 等日志方法的多参数输出
   - [x] 支持 log 等日志方法的参数格式化输出，如`%s, %i, %d, %f, %d, %o, %O, %c`
-  - [ ] 支持日志过滤
+  - [x] 支持日志过滤
   - [ ] 支持执行 JS 代码段
 - Network 面板
   - [x] 支持`XMLHttpRequest`请求和响应的展示
@@ -43,7 +43,6 @@ web-console 特性列表完成情况（可能会变动）：
   - [x] 设置各面板默认行为
   - [x] 关于信息
 - [ ] 支持插件
-
 
 ## 如何使用?
 
@@ -66,7 +65,7 @@ new WebConsole();
 
 ```js
 if (process.env.NODE_ENV === "development") {
-  import("@whinc/web-console").then((WebConsole) => {
+  import("@whinc/web-console").then(WebConsole => {
     new WebConsole();
   });
 }
