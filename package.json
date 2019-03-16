@@ -14,6 +14,7 @@
   "main": "dist/web-console.umd.min.js",
   "scripts": {
     "serve": "vue-cli-service serve",
+    "prebuild:lib": "npm run lint",
     "build:lib": "vue-cli-service build --target lib --name web-console --dest dist src/main.js",
     "build:app": "vue-cli-service build --target app --dest demo",
     "depoly": "npm run build:app && npx gh-pages -d demo",
@@ -24,7 +25,7 @@
     "test:unit": "vue-cli-service test:unit",
     "test:api": "cd ./tests/api && nodemon index.js",
     "e2e": "vue-cli-service e2e",
-    "lint": "vue-cli-service lint src/**/*",
+    "lint": "vue-cli-service lint src/**/*.js",
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
@@ -50,6 +51,7 @@
     "babel-jest": "^22.4.4",
     "babel-plugin-component": "^1.1.1",
     "conventional-changelog-cli": "^2.0.12",
+    "cross-env": "^5.2.0",
     "cz-conventional-changelog": "^2.1.0",
     "gh-pages": "^1.2.0",
     "gulp": "^4.0.0",

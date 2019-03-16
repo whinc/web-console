@@ -133,8 +133,20 @@
  *  c: ƒ say()
  * }
  */
-import { isNull, isBoolean, isString, isNumber, isObject, isSymbol, isUndefined, isArray, isFunction } from "@/utils";
+import {
+  isNull,
+  isBoolean,
+  isString,
+  isNumber,
+  isObject,
+  isSymbol,
+  isUndefined,
+  isArray,
+  isFunction,
+  Logger
+} from "@/utils";
 
+const logger = new Logger("TextInlineBlock");
 export default {
   name: "text-inline-block",
   props: {

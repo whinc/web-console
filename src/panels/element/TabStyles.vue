@@ -20,13 +20,12 @@
 </template>
 
 <script>
-import { Logger, getURLFileName, Style } from "@/utils";
-import { calculate, compare } from "specificity";
+import { /*Logger, */ getURLFileName, Style } from "@/utils";
 import StyleRule from "./StyleRule";
 import NodeLink from "./NodeLink";
 import BoxModel from "./BoxModel";
 
-const logger = new Logger("[TabStyles.vue]");
+// const logger = new Logger("[TabStyles.vue]");
 export default {
   components: {
     StyleRule,
@@ -97,7 +96,7 @@ function getDisplayStyleSheets(_el) {
     const inherit = el !== _el;
     const matchedCSSRules = Style.getMatchedCSSRules(el);
     // logger.log(matchedCSSRules);
-    const displayRules = matchedCSSRules.sort(Style.compareCSSRule).map((rule, index) => {
+    const displayRules = matchedCSSRules.sort(Style.compareCSSRule).map(rule => {
       // 映射 CSSRule 到视图所需数据结构
       return {
         from: "styleSheet",

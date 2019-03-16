@@ -29,13 +29,13 @@
 
 <script>
 import { VFootBar, VTabBar, VTabBarItem } from "@/components";
-import { eventBus, Logger } from "@/utils";
+import { eventBus /*Logger*/ } from "@/utils";
 import NodeView from "./NodeView";
 import TabStyles from "./TabStyles";
 import TabComputed from "./TabComputed";
 import NodeLink from "./NodeLink";
 
-const logger = new Logger("[ElementPanel]");
+// const logger = new Logger("[ElementPanel]");
 export default {
   name: "ElementPanel",
   components: {

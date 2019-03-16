@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { isString, isObject, isArray, Logger, cloneDeep, isFunction } from "@/utils";
+import { isString, isObject, isArray, Logger, isFunction } from "@/utils";
 import TextBlock from "./TextBlock";
 
 const logger = new Logger("[Message]");

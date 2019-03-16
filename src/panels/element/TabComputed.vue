@@ -43,11 +43,11 @@
 /**
  * 元素计算属性展示
  */
-import { Style, Logger, getURLFileName } from "@/utils";
+import { Style, /*Logger, */ getURLFileName } from "@/utils";
 import BoxModel from "./BoxModel";
 import StyleColorValue from "./StyleColorValue";
 
-const logger = new Logger("[TabComputed]");
+// const logger = new Logger("[TabComputed]");
 export default {
   components: {
     BoxModel,
@@ -89,9 +89,10 @@ export default {
   computed: {
     filteredComputedStyleArr() {
       const filter = this.filter;
-      if (!filter) return this.computedStyleArr.sort(compareFn);
+      const clonedComputedStyleArr = [...this.computedStyleArr];
+      if (!filter) return clonedComputedStyleArr.sort(compareFn);
 
-      return this.computedStyleArr
+      return clonedComputedStyleArr
         .filter(({ name, value }) => {
           return name.indexOf(filter) !== -1 || value.indexOf(filter) !== -1;
         })
@@ -105,7 +106,7 @@ export default {
   },
   mounted() {
     this.updateComputedStyleArr(this.isShowAll);
-    this.computedStyleCollapseMap = this.getComputedStyleArr(this.el).reduce((pre, cur, curIndex) => {
+    this.computedStyleCollapseMap = this.getComputedStyleArr(this.el).reduce((pre, cur) => {
       if (cur.matchedRules.length > 0) {
         pre[cur.name] = true;
       }

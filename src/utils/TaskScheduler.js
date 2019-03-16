@@ -1,7 +1,7 @@
 import { isFunction } from "./miscs";
-import Logger from "./Logger";
+// import Logger from "./Logger";
 
-const logger = new Logger("[TaskScheduler]");
+// const logger = new Logger("[TaskScheduler]");
 /**
  * 任务调度器
  * 用途：按任意速率添加任务，之后这些任务按指定速率按序执行，避免阻塞交互
