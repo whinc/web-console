@@ -1,7 +1,7 @@
 <template>
   <div class="network-panel">
     <div class="head">
-      <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">
+      <span class="cell cell--long" :style="{'max-width': `${4/6*100}vw`}">
         Name {{requestInfoList.length > 0 ? `(${requestInfoList.length})` : ''}}
       </span>
       <span class="cell">Method</span>
@@ -388,7 +388,7 @@ export default {
       padding: 0px 4px;
       align-items: center;
       flex: 1 1;
-      &.long {
+      &--long {
         flex: 4 1;
         display: inline-block;
         text-overflow: ellipsis;

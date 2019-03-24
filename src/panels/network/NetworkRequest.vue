@@ -1,17 +1,17 @@
 <template>
   <div class="request">
-    <div class="summary" @click="$emit('click')" :class="{selected: isSelected, even: isEven, error: isStatusError(requestInfo)}">
-      <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{requestInfo.url}}</span>
+    <div class="row" @click="$emit('click')" :class="{selected: isSelected, even: isEven, error: isStatusError(requestInfo)}">
+      <span class="cell cell--long" :style="{'max-width': `${4/6*100}vw`}">{{requestInfo.url}}</span>
       <span class="cell">{{requestInfo.method}}</span>
       <span class="cell">{{requestInfo.displayStatus}}</span>
       <span class="cell">{{requestInfo.type}}</span>
     </div>
-    <div class="detail" v-if="requestInfo.isExpand">
-      <v-tab-bar v-model="requestInfo.activeTab" :show-bottom-border="false">
-        <v-tab-bar-item id="headers">Headers</v-tab-bar-item>
-        <v-tab-bar-item id="preview">Preview</v-tab-bar-item>
-        <v-tab-bar-item id="response">Response</v-tab-bar-item>
-      </v-tab-bar>
+    <div class="row-expand" v-if="requestInfo.isExpand">
+      <VTabBar v-model="requestInfo.activeTab" :show-bottom-border="false">
+        <VTabBarItem id="headers">Headers</VTabBarItem>
+        <VTabBarItem id="preview">Preview</VTabBarItem>
+        <VTabBarItem id="response">Response</VTabBarItem>
+      </VTabBar>
 
       <TabHeaders
         v-show="requestInfo.activeTab === 'headers'"
@@ -37,8 +37,8 @@ import TabPreview from "./TabPreview";
 
 export default {
   components: {
-    [VTabBar.name]: VTabBar,
-    [VTabBarItem.name]: VTabBarItem,
+    VTabBar,
+    VTabBarItem,
     TabHeaders,
     TabResponse,
     TabPreview
@@ -82,7 +82,7 @@ $status-error-color: rgb(230, 0, 0);
 .request {
   display: flex;
   flex-direction: column;
-  .summary {
+  .row {
     width: 100%;
     height: $list-row-height;
     display: flex;
@@ -106,7 +106,7 @@ $status-error-color: rgb(230, 0, 0);
       padding: 0px 4px;
       align-items: center;
       flex: 1 1;
-      &.long {
+      &--long {
         flex: 4 1;
         display: inline-block;
         text-overflow: ellipsis;
@@ -116,21 +116,7 @@ $status-error-color: rgb(230, 0, 0);
       }
     }
   }
-  .detail {
-    .head {
-      background-color: rgba($toolbar-bg-color, 0.5);
-      color: $tab-fg-color;
-      border-bottom: 1px solid rgba($toolbar-border-color, 0.5);
-      .tab-item {
-        background-color: rgba(0, 0, 0, 0);
-        &.selected {
-          color: $tab-selected-fg-color;
-        }
-      }
-    }
-    .tab-container {
-      background-color: white;
-    }
+  .row-expand {
   }
 }
 </style>
