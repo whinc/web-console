@@ -3,8 +3,7 @@
 发布到 npm 仓库：
 
 ```bash
-# 发版：打版本标签 -> 构建发布包 -> 发布到 npm 仓库
-npm version <new_version>
+npm run semantic-release
 ```
 
 更新 github.io 在线示例：

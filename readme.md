@@ -34,7 +34,7 @@ web-console 特性列表完成情况（可能会变动）：
   - [ ] 支持执行 JS 代码段
 - Network 面板
   - [x] 支持`XMLHttpRequest`请求和响应的展示
-  - [ ] 支持`fetch`请求和响应的展示
+  - [x] 支持`fetch`请求和响应的展示
   - [x] 支持响应数据的预览
 - Application 面板
   - [x] 支持 cookie、localStorage 和 sessionStorage 的增删改查

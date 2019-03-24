@@ -1,28 +1,47 @@
+<a name="0.6.0"></a>
+
+# [0.6.0](https://github.com/whinc/web-console/compare/v0.5.0...v0.6.0) (2019-03-24)
+
+### Bug Fixes
+
+- **network:** 修复 fetch 请求参数为 Request 时的异常 ([e4739b6](https://github.com/whinc/web-console/commit/e4739b6))
+- **network:** 修复请求状态展示错误 ([74f53b6](https://github.com/whinc/web-console/commit/74f53b6))
+
+### Features
+
+- **network:** 初步支持 fetch 请求 ([5e64f03](https://github.com/whinc/web-console/commit/5e64f03))
+- **settings:** 支持设置"显示/隐藏"网络请求类型 ([b70cad5](https://github.com/whinc/web-console/commit/b70cad5))
+
+<a name="0.5.0"></a>
+
+# [0.5.0](https://github.com/whinc/web-console/compare/v0.4.7...v0.5.0) (2019-03-16)
+
+### Bug Fixes
+
+- 修复 lint 警告 ([e21046e](https://github.com/whinc/web-console/commit/e21046e))
+
+### Features
+
+- **console:** 增加搜索日志 ([8c90bac](https://github.com/whinc/web-console/commit/8c90bac))
+
 <a name="0.4.7"></a>
 
 ## [0.4.7](https://github.com/whinc/web-console/compare/v0.4.6...v0.4.7) (2019-03-07)
 
 ### Bug Fixes
 
-- 修复 vue-infinite-scroll 插件与宿主环境冲突,导致宿主引入该插件后无效的问题 ([5fee55c](https://github.com/whinc/web-console/commit/5fee55c))
+- 修复 vue-infinite-scroll 插件与宿主环境冲突,导致宿主引入该插件后无效的问题 ([8a89a15](https://github.com/whinc/web-console/commit/8a89a15))
 
 <a name="0.4.6"></a>
 
-## [0.4.6](https://github.com/whinc/web-console/compare/v0.4.5...v0.4.6) (2019-03-04)
-
-### Bug Fixes
-
-- **element:** 修复<br>标签不换行导致的 element 面板中盒模型样式坍塌问题 ([1a6cd8b](https://github.com/whinc/web-console/commit/1a6cd8b))
-
-<a name="0.4.5"></a>
-
-## [0.4.5](https://github.com/whinc/web-console/compare/v0.4.4...v0.4.5) (2019-03-03)
+## [0.4.6](https://github.com/whinc/web-console/compare/v0.4.4...v0.4.6) (2019-03-04)
 
 ### Bug Fixes
 
 - 修复 PC 端滚动条覆盖面板右边缘的问题 ([bd03c0c](https://github.com/whinc/web-console/commit/bd03c0c))
 - **application:** 输入框设置高度撑破父元素的问题 ([dbbfa9c](https://github.com/whinc/web-console/commit/dbbfa9c))
 - **console:** 将输出内容对齐到每行的顶部 ([85a0c5f](https://github.com/whinc/web-console/commit/85a0c5f))
+- **element:** 修复<br>标签不换行导致的 element 面板中盒模型样式坍塌问题 ([1a6cd8b](https://github.com/whinc/web-console/commit/1a6cd8b))
 
 ### Reverts
 
