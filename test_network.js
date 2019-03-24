@@ -1,29 +1,42 @@
 window.$network = (function() {
   var baseURL = "http://localhost:8090";
+  var nodeApi = "https://nodejs.org/dist/latest-v8.x/docs/api/index.json";
 
-  function ajax(options) {
-    options = options || {};
-    var url = options.url;
-    var method = options.method || "GET";
-    var data = options.data || undefined;
-    var requestHeaders = options.requestHeaders || {};
+  function testXMLHttpRequest() {}
 
-    var xhr = new window.XMLHttpRequest();
-    // xhr.onreadystatechange = function() {
-    //   console.log("readyState:", this.readyState);
-    // };
-    xhr.open(method, url);
-    Object.keys(requestHeaders).forEach(key => {
-      xhr.setRequestHeader(key, requestHeaders[key]);
+  function testFetch() {
+    if (typeof window.fetch !== "function") {
+      console.warn("current browser version don't support fetch api");
+      return;
+    }
+
+    var url = baseURL + "/get_status/" + 200;
+
+    // 不带选项
+    var options = {
+      method: "GET",
+      headers: {
+        "Content-Type": "text/plain"
+      }
+    };
+    fetch(url);
+    fetch(url, options);
+
+    fetch(new Request(url));
+    fetch(new Request(url, options));
+
+    fetch(new Request(url, options), {
+      headers: {
+        "Content-Type": "text/html"
+      }
     });
-    xhr.send(data);
   }
 
   // 测试 HTTP 状态码
   function testHTTPStatus() {
-    ajax({ url: "https://nodejs.org/dist/latest-v8.x/docs/api/index.json" });
+    request({ url: nodeApi });
     [100, 200, 300, 400, 500].forEach(function(status) {
-      ajax({ url: baseURL + "/get_status/" + status });
+      request({ url: baseURL + "/get_status/" + status });
     });
   }
 
@@ -32,17 +45,17 @@ window.$network = (function() {
    */
   function testRequestParams() {
     // GET
-    ajax({ url: baseURL + "/get?a=1&b=2&c=&d" });
+    request({ url: baseURL + "/get?a=1&b=2&c=&d" });
     var email = "xx@yy.com";
     var password = "zz";
     // POST：plain text
-    ajax({
+    request({
       url: baseURL + "/post",
       method: "POST",
       data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
     });
     // POST：Form Data
-    ajax({
+    request({
       url: baseURL + "/post",
       method: "POST",
       requestHeaders: {
@@ -51,7 +64,7 @@ window.$network = (function() {
       data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
     });
     // POST: JSON
-    ajax({
+    request({
       url: baseURL + "/post",
       method: "POST",
       requestHeaders: {
@@ -64,7 +77,7 @@ window.$network = (function() {
       // data: '{"email": aa}'
     });
     // POST: JSON with invalid format
-    ajax({
+    request({
       url: baseURL + "/post",
       method: "POST",
       requestHeaders: {
@@ -90,13 +103,49 @@ window.$network = (function() {
     ];
 
     mimeTypeList.forEach(mimeType => {
-      ajax({ url: baseURL + "/get_data/?mime_type=" + encodeURIComponent(mimeType) });
+      request({ url: baseURL + "/get_data/?mime_type=" + encodeURIComponent(mimeType) });
     });
   }
 
   return {
     testHTTPStatus: testHTTPStatus,
     testResponseData: testResponseData,
-    testRequestParams: testRequestParams
+    testRequestParams: testRequestParams,
+    testFetch: testFetch,
+    testXMLHttpRequest: testXMLHttpRequest
   };
 })();
+
+function request(options) {
+  options = options || {};
+  var url = options.url;
+  var method = options.method || "GET";
+  var data = options.data || null;
+  var requestHeaders = options.requestHeaders || {};
+
+  /* XMLHttpRequest */
+  var xhr = new window.XMLHttpRequest();
+  xhr.onreadystatechange = function() {
+    // console.log("readyState:", this.readyState);
+    if (this.readyState === XMLHttpRequest.DONE) {
+      // console.log(this.getResponseHeader("content-type"));
+      // console.log(this.response);
+    }
+  };
+  xhr.open(method, url);
+  Object.keys(requestHeaders).forEach(key => {
+    xhr.setRequestHeader(key, requestHeaders[key]);
+  });
+  xhr.send(data);
+
+  /* fetch */
+  if (typeof window.fetch === "function") {
+    fetch(url, {
+      method: method,
+      body: data,
+      headers: requestHeaders
+    });
+  } else {
+    console.warn('current brwoser don\'t support "fetch"');
+  }
+}

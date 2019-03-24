@@ -96,12 +96,12 @@
       #app .mint-button {
         width: 100%;
         margin-bottom: 15px;
-      }</style><link href=js/app.3dfac6a3.js rel=preload as=script><link href=js/chunk-vendors.0821ec9a.js rel=preload as=script></head><body><div id=parent class="a b" style="color: red"><div id=parent2 class="c d" style="color: red"><div id=element class="xyz zyx" style="display: none" data-a=a><div>hello world <span>b</span><input> <input> <input></div>1<div>2<div>3<div>4<div>5<div>6</div></div></div></div></div></div></div><div class=box-model></div><div class=box-model2></div><div class=box-model3></div></div><script src=./vue.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click="onClickPrint('log_level')">打印不同级别日志</mt-button><mt-button type=primary @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=primary @click=$console.testFormat()>打印格式化</mt-button><mt-button type=primary @click=$console.testObject()>打印对象</mt-button><mt-button type=primary @click=$console.testException()>触发异常</mt-button><h2>Network Test</h2><mt-button type=primary @click=$network.testHTTPStatus()>测试 HTTP 状态码</mt-button><mt-button type=primary @click=$network.testRequestParams()>测试请求参数</mt-button><mt-button type=primary @click=$network.testResponseData()>测试响应数据</mt-button><mt-button type=primary @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=primary @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button><h2>Application Test</h2><mt-button type=primary @click=$application.testWriteCookie(1000)>测试 Cookie</mt-button><mt-button type=primary @click=$application.testWriteLocalStorage(1000)>测试 LocalStorage</mt-button><mt-button type=primary @click=$application.testWriteSessionStorage(1000)>测试 SessionStorage</mt-button><h2>Other</h2><mt-button type=primary @click=performanceTest(50)>日志性能测试</mt-button></div><div v-else><mt-button type=primary @click="onClickPrint('log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickPrint('info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickPrint('debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickPrint('warn')">警告日志(warn)</mt-button><mt-button type=primary @click="onClickPrint('error')">报错日志(error)</mt-button><mt-button type=default @click="onClickPrint('log_params')">打印多参数</mt-button><mt-button type=default @click=$console.testObject()>打印对象</mt-button><mt-button type=default @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button><mt-button type=default @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button></div><mt-switch v-model=isDev>切换</mt-switch></div><script src=./mint-ui.min.js></script><script src=./test_console.js></script><script src=./test_network.js></script><script src=./test_application.js></script><script>new Vue({
+      }</style><link href=js/app.c68d0922.js rel=preload as=script><link href=js/chunk-vendors.0724bd7d.js rel=preload as=script></head><body><div id=parent class="a b" style="color: red"><div id=parent2 class="c d" style="color: red"><div id=element class="xyz zyx" style="display: none" data-a=a><div>hello world <span>b</span><input> <input> <input></div>1<div>2<div>3<div>4<div>5<div>6</div></div></div></div></div></div></div><div class=box-model></div><div class=box-model2></div><div class=box-model3></div></div><script src=./vue.js></script><div id=app><h1>WebConsole</h1><div v-if=isDev><h2>Console Test</h2><mt-button type=primary @click=$console.testLogLevel>打印不同级别日志</mt-button><mt-button type=primary @click=$console.testLogParams()>打印多参数</mt-button><mt-button type=primary @click=$console.testFormat()>打印格式化</mt-button><mt-button type=primary @click=$console.testObject()>打印对象</mt-button><mt-button type=primary @click=$console.testException()>触发异常</mt-button><h2>Network Test</h2><mt-button type=primary @click=$network.testXMLHttpRequest()>测试 XHR 请求</mt-button><mt-button type=primary @click=$network.testFetch()>测试 fetch 请求</mt-button><mt-button type=primary @click=$network.testHTTPStatus()>测试 HTTP 状态码</mt-button><mt-button type=primary @click=$network.testRequestParams()>测试请求参数</mt-button><mt-button type=primary @click=$network.testResponseData()>测试响应数据</mt-button><h2>Application Test</h2><mt-button type=primary @click=$application.testWriteCookie(1000)>测试 Cookie</mt-button><mt-button type=primary @click=$application.testWriteLocalStorage(1000)>测试 LocalStorage</mt-button><mt-button type=primary @click=$application.testWriteSessionStorage(1000)>测试 SessionStorage</mt-button><h2>Other</h2><mt-button type=primary @click=performanceTest(50)>日志性能测试</mt-button></div><div v-else><mt-button type=primary @click="onClickLog('level_log')">普通日志(log)</mt-button><mt-button type=primary @click="onClickLog('level_info')">信息日志(info)</mt-button><mt-button type=primary @click="onClickLog('level_debug')">调试日志(debug)</mt-button><mt-button type=primary @click="onClickLog('level_warn')">警告日志(warn)</mt-button><mt-button type=danger @click="onClickLog('level_error')">报错日志(error)</mt-button><h2></h2><mt-button type=primary @click="onClickLog('object')">打印对象</mt-button><mt-button type=danger @click="onClickLog('error')">打印错误</mt-button><h2></h2><mt-button type=primary @click="onClickRequest('xhr')">发起 XMLHttpRequest 请求</mt-button><mt-button type=primary @click="onClickRequest('fetch')">发起 fetch 请求</mt-button></div><p><mt-switch v-model=isDev>切换</mt-switch></p></div><script src=./mint-ui.min.js></script><script src=./test_console.js></script><script src=./test_network.js></script><script src=./test_application.js></script><script>var isDev = !!localStorage.getItem('web-console:isDev')
+      new Vue({
         el: "#app",
         data: function() {
           return {
-            // isDev: false
-            isDev: true
+            isDev: isDev
           };
         },
         computed: {
@@ -139,11 +139,15 @@
               // new Array(11).fill(0).forEach((v, i) => console.log(i))
 
               window.webConsole = new window.WebConsole({
-                activeTab: 'console',
-                panelVisible: true,
+                activeTab: isDev ? 'network' : 'console',
+                panelVisible: isDev ? true : false,
                 entryStyle: 'button'
               });
-              this.$console.testFormat()
+              if (isDev) {
+                this.$network.testFetch()
+              }
+              // self.$network.testFetchApi()
+              // this.$console.testFormat()
               // this.$network.testHTTPStatus()
               // this.$network.testRequestParams()
               // this.$network.testResponseData()
@@ -154,75 +158,48 @@
               }, 200);
             }
           },
-          onClickPrint: function(type) {
-            var numInt = 1;
-            var numFloat = 1.23;
-            var str = "hello";
-            var obj = {
-              a: 1,
-              b: 2,
-              c: {
-                d: 3
-              }
-            };
-            var arr = [1, 2, [3, obj]];
+          onClickLog: function(type) {
             switch (type) {
-              case "log":
+              case "level_log":
                 console.log("log");
                 break;
-              case "info":
+              case "level_info":
                 console.info("info");
                 break;
-              case "debug":
+              case "level_debug":
                 console.debug("debug");
                 break;
-              case "warn":
+              case "level_warn":
                 console.warn("warn");
+                break;
+              case "level_error":
+                console.error("error");
+                break;
+              case "object":
+                console.log({a: 100, b: [1, 2], c: true});
                 break;
               case "error":
-                console.error("error");
-                break;
-              case "log_level":
-                console.log("log");
-                console.info("info");
-                console.debug("debug");
-                console.warn("warn");
-                console.error("error");
-                break;
-              case "log_params":
-                console.log('> console.log("aa", 100, true, null, undefined, { a: "a" }, Symbol())')
-                console.log("aa", 100, true, null, undefined, { a: "a" }, Symbol());
+                console.error(new Error('你触发了一个错误'));
                 break;
             }
+            this.$toast({message: '已打印，请打开 Console 面板查看'})
           },
-          onClickAjax(type) {
-            var server = "http://localhost:8090";
-            switch (type) {
-              case "xhr_get":
-                var xhr = new window.XMLHttpRequest();
-                xhr.open("GET", server + "/get");
-                xhr.onreadystatechange = function() {
-                  console.log("readyState:", this.readyState);
-                };
-                xhr.send();
+          onClickRequest(type) {
+            var nodeDocsApi = "https://nodejs.org/dist/latest-v8.x/docs/api/index.json";
+            if (type === 'xhr') {
+              var xhr = new window.XMLHttpRequest();
+              xhr.open("GET", nodeDocsApi);
+              xhr.send();
+              this.$toast({message: '已发送，请打开 Network 面板查看'})
+            } else if (type === 'fetch') {
+              if (typeof window.fetch === 'function') {
+                window.fetch(nodeDocsApi)
+                this.$toast({message: '已发送，请打开 Network 面板查看'})
+              } else {
+                this.$toast({message: '您的浏览器不支持 fetch 请求'})
+              }
+            } else {
 
-                ajax({
-                  url: "https://mta.qq.com/h5/api/ctr_core_data"
-                });
-                // setTimeout(() => {
-                //   xhr.onreadystatechange = function () {
-                //     console.log('readyState:', this.readyState)
-                //   }
-                // })
-                break;
-              case "xhr_post":
-                // var xhr = new window.XMLHttpRequest()
-                // xhr.open('POST', server + '/post')
-                // const data = {
-                //   name: 'whincwu'
-                // }
-                // xhr.send(JSON.stringify(data))
-                break;
             }
           }
         }
@@ -247,4 +224,4 @@
         console.log(format, value);
       }</script><script>if (window.VConsole) {
         window._vConsole = new window.VConsole();
-      }</script><script src=js/chunk-vendors.0821ec9a.js></script><script src=js/app.3dfac6a3.js></script></body></html>
+      }</script><script src=js/chunk-vendors.0724bd7d.js></script><script src=js/app.c68d0922.js></script></body></html>
