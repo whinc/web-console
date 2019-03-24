@@ -6,9 +6,10 @@ window.$network = (function() {
     options = options || {};
     var url = options.url;
     var method = options.method || "GET";
-    var data = options.data || undefined;
+    var data = options.data || null;
     var requestHeaders = options.requestHeaders || {};
 
+    /* XMLHttpRequest */
     var xhr = new window.XMLHttpRequest();
     xhr.onreadystatechange = function() {
       console.log("readyState:", this.readyState);
@@ -22,6 +23,17 @@ window.$network = (function() {
       xhr.setRequestHeader(key, requestHeaders[key]);
     });
     xhr.send(data);
+
+    /* fetch */
+    if (typeof window.fetch === "function") {
+      fetch(url, {
+        method: method,
+        body: data,
+        headers: requestHeaders
+      });
+    } else {
+      console.warn('current brwoser don\'t support "fetch"');
+    }
   }
 
   // 测试 HTTP 状态码
@@ -104,10 +116,13 @@ window.$network = (function() {
       console.warn("current browser version don't support fetch api");
       return;
     }
+
     fetch(baseURL + "/get_status/" + 200, {
-      method: "POST",
+      method: "GET",
       body: null,
-      headers: {}
+      headers: {
+        "Content-Type": "text/plain"
+      }
     });
   }
 
