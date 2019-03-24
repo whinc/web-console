@@ -4,7 +4,7 @@
       <span class="cell cell--long" :style="{'max-width': `${4/6*100}vw`}">{{requestInfo.url}}</span>
       <span class="cell">{{requestInfo.method}}</span>
       <span class="cell">{{requestInfo.displayStatus}}</span>
-      <span class="cell">{{requestInfo.type}}</span>
+      <span v-if="showRequestType" class="cell">{{requestInfo.type}}</span>
     </div>
     <div class="row-expand" v-if="requestInfo.isExpand">
       <VTabBar v-model="requestInfo.activeTab" :show-bottom-border="false">
@@ -57,6 +57,10 @@ export default {
     isEven: {
       type: Boolean,
       default: false
+    },
+    showRequestType: {
+      type: Boolean,
+      required: true
     }
   },
   methods: {

@@ -98,12 +98,19 @@ const defaultConfigs = [
           { text: "Infinity", value: Number.MAX_VALUE }
         ]
       },
+      { type: "section", desc: "Network" },
+      {
+        type: "checkbox",
+        name: "showRequestType",
+        value: false,
+        desc: "Show request type"
+      },
       { type: "section", desc: "Application" },
       {
         type: "checkbox",
         name: "showApplicationToolbar",
         value: false,
-        desc: "Show Toolbar"
+        desc: "Always show toolbar"
       }
     ]
   },

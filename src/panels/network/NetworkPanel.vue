@@ -6,15 +6,16 @@
       </span>
       <span class="cell">Method</span>
       <span class="cell">Status</span>
-      <span class="cell">Type</span>
+      <span v-if="showRequestType" class="cell">Type</span>
     </div>
     <div class="body" v-prevent-bkg-scroll>
       <NetworkRequest
         v-for="(requestInfo, index) in requestInfoList"
         :key="requestInfo.id"
         :requestInfo="requestInfo"
-        :is-selected="selectedId === requestInfo.id"
-        :is-even="index % 2 === 0"
+        :isSelected="selectedId === requestInfo.id"
+        :isEven="index % 2 === 0"
+        :showRequestType="showRequestType"
         @click="onClickItem(requestInfo.id)"
       />
     </div>
@@ -77,7 +78,9 @@ export default {
         */
       },
       // 选中的请求编号
-      selectedId: ""
+      selectedId: "",
+      // 是否显示请求类型(xhr, fetch)
+      showRequestType: false
     };
   },
   computed: {
@@ -103,6 +106,10 @@ export default {
       ];
     }
     /* eslint-enable */
+  },
+  created() {
+    // 监听"偏好设置"变化
+    eventBus.on(eventBus.SETTINGS_CHANGE, this.onSettingsChanged.bind(this));
   },
   mounted() {
     // 拦截 XMLHttpRequest
@@ -359,6 +366,9 @@ export default {
     },
     getRequestInfo(id) {
       return this.requestInfoMap[id];
+    },
+    onSettingsChanged(settings) {
+      this.showRequestType = settings.showRequestType;
     }
   }
 };
