@@ -403,6 +403,7 @@ export default {
         display: inline-block;
         text-overflow: ellipsis;
         overflow-x: hidden;
+        overflow-y: hidden;
         white-space: nowrap;
         line-height: $list-row-height;
       }
