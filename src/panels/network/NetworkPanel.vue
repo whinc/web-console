@@ -2,14 +2,14 @@
   <div class="network-panel">
     <div class="head">
       <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">
-        Name {{requestList.length > 0 ? `(${requestList.length})` : ''}}
+        Name {{requestInfoList.length > 0 ? `(${requestInfoList.length})` : ''}}
       </span>
       <span class="cell">Method</span>
       <span class="cell">Status</span>
     </div>
     <div class="body" v-prevent-bkg-scroll>
       <NetworkRequest
-        v-for="(requestInfo, index) in requestList"
+        v-for="(requestInfo, index) in requestInfoList"
         :key="requestInfo.id"
         :requestInfo="requestInfo"
         :is-selected="selectedId === requestInfo.id"
@@ -24,16 +24,25 @@
 
 <script>
 import { VFootBar, VJSONViewer } from "@/components";
-import { nextTick, Logger, eventBus } from "@/utils";
+import { nextTick, Logger, eventBus, isFunction, uuid } from "@/utils";
 import NetworkRequest from "./NetworkRequest";
+import RequestType from "./RequestType";
 
 const logger = new Logger("[NetworkPanel]");
+
 const ReadyState = Object.freeze({
   UNSENT: 0,
   OPENED: 1,
   HEADERS_RECEIVED: 2,
   LOADING: 3,
   DONE: 4
+});
+
+const StatusText = Object.freeze({
+  UNSENT: "-",
+  PENDDING: "(pendding)",
+  LOADING: "(loading)",
+  FAIL: "fail"
 });
 
 export default {
@@ -46,15 +55,30 @@ export default {
   data() {
     return {
       // 请求列表
-      requestMap: {},
-      // 选中请求的编号
+      requestInfoMap: {
+        // [id: number]: {
+        // id: string     // 请求编号(UUID)
+        // method: string // 请求方法
+        // url: string    // 请求地址
+        // status: number // 请求状态
+        // statusText: string // 请求状态描述
+        // body: string | Blob | BufferSource | FormData | URLSearchParams // 请求体
+        // requestHeaders: Object   // 请求头
+        // responseHeaders: Object  // 响应头
+        // response: Response | any // 取值由 HTTP 头部的 content-type 決定
+        /* UI 相关项 */
+        // activeTab: string  // 请求详情当前激活的面板
+        // isExpand: boolean  // 是否展开请求详情
+        //}
+      },
+      // 选中的请求编号
       selectedId: ""
     };
   },
   computed: {
     // 展示的列表（后面会按时间或类型进行排序）
-    requestList() {
-      return Object.keys(this.requestMap).map(key => this.requestMap[key]);
+    requestInfoList() {
+      return Object.keys(this.requestInfoMap).map(key => this.requestInfoMap[key]);
     },
     /* eslint-disable */
     footBarButtons() {
@@ -62,7 +86,7 @@ export default {
         {
           text: "Clear",
           click: () => {
-            this.requestMap = {};
+            this.requestInfoMap = {};
           }
         },
         {
@@ -76,31 +100,32 @@ export default {
     /* eslint-enable */
   },
   mounted() {
+    // 拦截 XMLHttpRequest
     this.hookXMLHttpRequest();
+
+    // 拦截 fetch 请求
+    this.hookFetch();
   },
   errorCaptured(error) {
-    // 在浏览器控制台输出错误原因
     logger.error(error);
     return false;
   },
   methods: {
     onClickItem(id) {
-      const item = this.requestMap[id];
+      const item = this.requestInfoMap[id];
       // 点击同一行，切换展开态
       // 点击不同行，展开当前选中行，折叠之前选中行
       if (id === this.selectedId) {
         item.isExpand = !item.isExpand;
       } else {
-        this.requestMap[id].isExpand = true;
-        if (this.requestMap[this.selectedId]) {
-          this.requestMap[this.selectedId].isExpand = false;
+        this.requestInfoMap[id].isExpand = true;
+        if (this.requestInfoMap[this.selectedId]) {
+          this.requestInfoMap[this.selectedId].isExpand = false;
         }
       }
       this.selectedId = id;
     },
-    /**
-     * 拦截 XMLHttpRequest 请求并记录状态
-     */
+    // 拦截 XMLHttpRequest 请求
     hookXMLHttpRequest() {
       const vm = this;
       const XMLHttpRequest = window.XMLHttpRequest;
@@ -110,37 +135,28 @@ export default {
 
       XMLHttpRequest.prototype.open = function(method, url) {
         const xhr = this;
-        const id = vm.genUUID();
+        const id = uuid();
 
         // 保存数据在 xhr 实例中，方便后续获取
         xhr.$id = id;
-        xhr.$method = typeof method === "string" ? method.toUpperCase() : method;
+        xhr.$method = method;
         xhr.$url = url;
 
         // 返回重写的 onreadystatechange 事件处理程序
-        const getOverrideHandler = () => {
-          // 监听请求状态变化，并更新视图状态
+        const getOnReadyStateChange = () => {
           const _onreadystatechange = xhr.onreadystatechange || function() {};
-          return function() {
-            // console.log(
-            //   "[NetworkPanel] %s ready state: %s",
-            //   url,
-            //   xhr.readyState
-            // );
-            const item = vm.requestMap[id] || {};
-
-            item.readyState = xhr.readyState;
-            item.responseType = xhr.responseType;
+          return function(...args) {
+            const requestInfo = vm.getRequestInfo(id);
             switch (xhr.readyState) {
               case ReadyState.UNSENT:
-                item.statusText = "(pending)";
+                requestInfo.statusText = StatusText.PENDDING;
                 break;
               case ReadyState.OPENED:
-                item.statusText = "(pending)";
+                requestInfo.statusText = StatusText.PENDDING;
                 break;
               case ReadyState.HEADERS_RECEIVED:
-                item.status = xhr.status;
-                item.statusText = "(loading)";
+                requestInfo.status = xhr.status;
+                requestInfo.statusText = StatusText.LOADING;
                 const headers = xhr.getAllResponseHeaders();
                 const headerArr = headers.split(/[\r\n]+/);
                 const responseHeaders = {};
@@ -151,92 +167,149 @@ export default {
                   const value = parts.join(": ");
                   responseHeaders[key] = value;
                 });
-                item.responseHeaders = responseHeaders;
+                requestInfo.responseHeaders = responseHeaders;
                 break;
               case ReadyState.LOADING:
-                item.status = xhr.status;
-                item.statusText = "(loading)";
+                requestInfo.status = xhr.status;
+                requestInfo.statusText = StatusText.LOADING;
                 break;
               case ReadyState.DONE:
-                item.status = xhr.status;
-                item.statusText = xhr.status;
-                item.response = xhr.response;
+                requestInfo.status = xhr.status;
+                requestInfo.statusText = xhr.status;
+                requestInfo.response = xhr.response;
                 break;
               default:
                 break;
             }
 
-            vm.updateRequest(id, item);
+            vm.updateRequestInfo(id, requestInfo);
 
-            _onreadystatechange.apply(this, arguments);
+            _onreadystatechange.call(this, ...args);
           };
         };
 
         // 如果 open() 方法调用前，onreadystatechange 已注册，可以立即重写
         // 否则，在下一个微任务中重写，即等到用户注册后再执行
-        if (typeof xhr.onreadystatechange === "function") {
-          xhr.onreadystatechange = getOverrideHandler();
+        if (isFunction(xhr.onreadystatechange)) {
+          xhr.onreadystatechange = getOnReadyStateChange();
         } else {
           nextTick(() => {
-            xhr.onreadystatechange = getOverrideHandler();
+            xhr.onreadystatechange = getOnReadyStateChange();
           });
         }
 
         _open.apply(this, arguments);
       };
 
-      XMLHttpRequest.prototype.send = function(...args) {
+      XMLHttpRequest.prototype.send = function(body) {
         const xhr = this;
-        const id = xhr.$id;
-        const item = vm.requestMap[id] || {};
-        item.id = id;
-        item.method = xhr.$method;
-        item.url = xhr.$url;
-        item.status = 0;
-        item.statusText = "-";
-        if (xhr.$method === "GET" || xhr.$method === "HEAD") {
-          item.data = null;
-        } else {
-          item.data = args[0] || null;
-        }
-        vm.updateRequest(id, item);
+        const method = String(xhr.$method).toUpperCase();
+        vm.addRequestInfo(xhr.$id, {
+          type: RequestType.XHR,
+          url: xhr.$url,
+          method,
+          body: method === "GET" || method === "HEAD" ? null : body
+        });
 
         _send.apply(this, arguments);
       };
 
-      XMLHttpRequest.prototype.setRequestHeader = function(header, value) {
+      XMLHttpRequest.prototype.setRequestHeader = function(key, value) {
         const xhr = this;
-        const id = xhr.$id;
-        const item = vm.requestMap[id] || {};
-        item.requestHeaders = { ...item.requestHeaders, [header]: value };
-        vm.updateRequest(id, item);
+        const requestInfo = vm.getRequestInfo(xhr.$id);
+        vm.updateRequestInfo(xhr.$id, {
+          requestHeaders: {
+            ...requestInfo.requestHeaders,
+            [key]: value
+          }
+        });
 
         _setRequestHeaders.apply(this, arguments);
       };
     },
-    genUUID() {
-      let id = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(c) {
-        let r = (Math.random() * 16) | 0,
-          v = c == "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      });
-      return id;
-    },
-    updateRequest(id, item) {
-      let _item = this.requestMap[id];
+    hookFetch() {
+      if (!isFunction(window.fetch)) return;
 
-      if (_item) {
-        this.$set(this.requestMap, id, { ..._item, ...item });
-      } else {
-        // 添加初始值，并拷贝新值
-        const initValue = {
-          isExpand: false,
-          activeTab: "preview",
-          responseHeaders: {},
-          requestHeaders: {}
-        };
-        this.$set(this.requestMap, id, { ...initValue, ...item });
+      const vm = this;
+      // save original "fetch"
+      const _fetch = window.fetch;
+      window.fetch = function(...args) {
+        // invoke original "fetch"
+        const resultPromise = _fetch.call(this, ...args);
+
+        // display request status
+        const [input, init] = args;
+        const id = uuid();
+        vm.addRequestInfo(id, {
+          type: RequestType.FETCH,
+          url: input,
+          method: init.method
+        });
+
+        resultPromise.then(
+          response => {
+            return response.text().then(text => {
+              const responseHeaders = {};
+              for (const [key, value] of response.headers) {
+                responseHeaders[key] = value;
+              }
+              vm.updateRequestInfo(id, {
+                status: response.status,
+                statusText: response.statusText,
+                responseHeaders,
+                response: text
+              });
+            });
+          },
+          err => {
+            // network error
+            vm.updateRequestInfo(id, {
+              statusText: StatusText.FAIL
+            });
+          }
+        );
+
+        // return result
+        return resultPromise;
+      };
+    },
+    addRequestInfo(
+      id,
+      {
+        type,
+        url,
+        method,
+        status = 0,
+        statusText = StatusText.UNSENT,
+        body = null,
+        requestHeaders = {},
+        responseHeaders = {},
+        isExpand = false,
+        activeTab = "preview"
       }
+    ) {
+      if (type !== RequestType.XHR && type !== RequestType.FETCH) {
+        throw new Error('invalid arguments "type":', type);
+      }
+      this.$set(this.requestInfoMap, id, {
+        id,
+        type,
+        url,
+        method,
+        status,
+        statusText,
+        body,
+        responseHeaders,
+        requestHeaders,
+        isExpand,
+        activeTab
+      });
+    },
+    updateRequestInfo(id, requestInfo) {
+      this.$set(this.requestInfoMap, id, { ...(this.requestInfoMap[id] || {}), ...requestInfo });
+    },
+    getRequestInfo(id) {
+      return this.requestInfoMap[id];
     }
   }
 };

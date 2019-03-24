@@ -1,5 +1,6 @@
 window.$network = (function() {
   var baseURL = "http://localhost:8090";
+  var nodeApi = "https://nodejs.org/dist/latest-v8.x/docs/api/index.json";
 
   function ajax(options) {
     options = options || {};
@@ -9,9 +10,13 @@ window.$network = (function() {
     var requestHeaders = options.requestHeaders || {};
 
     var xhr = new window.XMLHttpRequest();
-    // xhr.onreadystatechange = function() {
-    //   console.log("readyState:", this.readyState);
-    // };
+    xhr.onreadystatechange = function() {
+      console.log("readyState:", this.readyState);
+      if (this.readyState === XMLHttpRequest.DONE) {
+        console.log(this.getResponseHeader("content-type"));
+        console.log(this.response);
+      }
+    };
     xhr.open(method, url);
     Object.keys(requestHeaders).forEach(key => {
       xhr.setRequestHeader(key, requestHeaders[key]);
@@ -21,7 +26,7 @@ window.$network = (function() {
 
   // 测试 HTTP 状态码
   function testHTTPStatus() {
-    ajax({ url: "https://nodejs.org/dist/latest-v8.x/docs/api/index.json" });
+    ajax({ url: nodeApi });
     [100, 200, 300, 400, 500].forEach(function(status) {
       ajax({ url: baseURL + "/get_status/" + status });
     });
@@ -94,9 +99,22 @@ window.$network = (function() {
     });
   }
 
+  function testFetchApi() {
+    if (typeof window.fetch !== "function") {
+      console.warn("current browser version don't support fetch api");
+      return;
+    }
+    fetch(baseURL + "/get_status/" + 200, {
+      method: "POST",
+      body: null,
+      headers: {}
+    });
+  }
+
   return {
     testHTTPStatus: testHTTPStatus,
     testResponseData: testResponseData,
-    testRequestParams: testRequestParams
+    testRequestParams: testRequestParams,
+    testFetchApi: testFetchApi
   };
 })();

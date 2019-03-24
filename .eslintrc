@@ -9,9 +9,9 @@
     "node": true
   },
   "globals": {
-    "console": true
   },
   "rules": {
+    "no-console": "off",
     "no-case-declarations": "off"
   }
 }

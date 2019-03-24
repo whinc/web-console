@@ -173,6 +173,7 @@
         <mt-button type="primary" @click="$network.testResponseData()">测试响应数据</mt-button>
         <mt-button type="primary" @click="onClickAjax('xhr_get')">发起 GET 请求</mt-button>
         <mt-button type="primary" @click="onClickAjax('xhr_post')">发起 POST 请求</mt-button>
+        <mt-button type="primary" @click="$network.testFetchApi()">测试 fetch 请求</mt-button>
 
         <h2>Application Test</h2>
         <mt-button type="primary" @click="$application.testWriteCookie(1000)">测试 Cookie</mt-button>
@@ -245,11 +246,14 @@
               // new Array(11).fill(0).forEach((v, i) => console.log(i))
 
               window.webConsole = new window.WebConsole({
-                activeTab: 'console',
+                activeTab: 'network',
                 panelVisible: true,
                 entryStyle: 'button'
               });
-              this.$console.testFormat()
+              setTimeout(function () {
+                self.$network.testFetchApi()
+              }, 1000)
+              // this.$console.testFormat()
               // this.$network.testHTTPStatus()
               // this.$network.testRequestParams()
               // this.$network.testResponseData()

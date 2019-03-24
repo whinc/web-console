@@ -16,6 +16,7 @@
 <script>
 import { VHighlightView } from "@/components";
 import { mimeType2Language } from "@/utils";
+import RequestType from "./RequestType";
 
 export default {
   components: {
