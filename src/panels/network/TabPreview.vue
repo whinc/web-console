@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     content() {
-      return this.requestInfo.response;
+      return this.requestInfo.responseText;
     },
     contentType() {
       return this.requestInfo.responseHeaders["content-type"];

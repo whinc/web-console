@@ -3,7 +3,8 @@
     <div class="summary" @click="$emit('click')" :class="{selected: isSelected, even: isEven, error: isStatusError(requestInfo)}">
       <span class="cell long" :style="{'max-width': `${4/6*100}vw`}">{{requestInfo.url}}</span>
       <span class="cell">{{requestInfo.method}}</span>
-      <span class="cell">{{requestInfo.statusText}}</span>
+      <span class="cell">{{requestInfo.displayStatus}}</span>
+      <span class="cell">{{requestInfo.type}}</span>
     </div>
     <div class="detail" v-if="requestInfo.isExpand">
       <v-tab-bar v-model="requestInfo.activeTab" :show-bottom-border="false">

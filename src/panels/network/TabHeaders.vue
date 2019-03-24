@@ -83,6 +83,7 @@ export default {
       arr.push({ key: "Request URL", value: requestInfo.url });
 
       const status = requestInfo.status;
+      const statusText = requestInfo.statusText || HttpStatus[status];
       const statusRange = parseInt(status / 100);
       if (statusRange === 2 || statusRange === 3 || statusRange === 4 || statusRange === 5) {
         arr.push({
@@ -91,7 +92,7 @@ export default {
         });
         arr.push({
           key: "Status Code",
-          value: `${status} ${HttpStatus[status]}`,
+          value: `${status} ${statusText}`,
           icon: require(`@/assets/icons/${statusRange}xx.png`)
         });
       }

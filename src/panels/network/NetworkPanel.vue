@@ -6,6 +6,7 @@
       </span>
       <span class="cell">Method</span>
       <span class="cell">Status</span>
+      <span class="cell">Type</span>
     </div>
     <div class="body" v-prevent-bkg-scroll>
       <NetworkRequest
@@ -38,7 +39,7 @@ const ReadyState = Object.freeze({
   DONE: 4
 });
 
-const StatusText = Object.freeze({
+const DisplayStatus = Object.freeze({
   UNSENT: "-",
   PENDDING: "(pendding)",
   LOADING: "(loading)",
@@ -56,20 +57,24 @@ export default {
     return {
       // 请求列表
       requestInfoMap: {
-        // [id: number]: {
-        // id: string     // 请求编号(UUID)
-        // method: string // 请求方法
-        // url: string    // 请求地址
-        // status: number // 请求状态
-        // statusText: string // 请求状态描述
-        // body: string | Blob | BufferSource | FormData | URLSearchParams // 请求体
-        // requestHeaders: Object   // 请求头
-        // responseHeaders: Object  // 响应头
-        // response: Response | any // 取值由 HTTP 头部的 content-type 決定
-        /* UI 相关项 */
-        // activeTab: string  // 请求详情当前激活的面板
-        // isExpand: boolean  // 是否展开请求详情
-        //}
+        /*
+        * [id: number]: {
+        *   id: string     // 请求编号(UUID)
+        *   method: string // 请求方法
+        *   url: string    // 请求地址
+        *   requestHeaders: Object   // 请求 HTTP 头
+        *   body: string   // 请求参数
+        * 
+        *   status: number // 状态码
+        *   statusText: string // 状态码描述
+        *   responseHeaders: Object  // 响应 HTTP 头
+        *   responseText: string  // 响应数据
+        * 
+        *   displayStatus: string // 展示请求状态
+        *   activeTab: string  // 请求详情当前激活的面板
+        *   isExpand: boolean  // 是否展开请求详情
+        * }
+        */
       },
       // 选中的请求编号
       selectedId: ""
@@ -141,6 +146,7 @@ export default {
         xhr.$id = id;
         xhr.$method = method;
         xhr.$url = url;
+        xhr.$displayStatus = DisplayStatus.UNSENT;
 
         // 返回重写的 onreadystatechange 事件处理程序
         const getOnReadyStateChange = () => {
@@ -149,14 +155,12 @@ export default {
             const requestInfo = vm.getRequestInfo(id);
             switch (xhr.readyState) {
               case ReadyState.UNSENT:
-                requestInfo.statusText = StatusText.PENDDING;
-                break;
               case ReadyState.OPENED:
-                requestInfo.statusText = StatusText.PENDDING;
+                // 在发送请求前，不会创建 requestInfo(避免显示到 UI 上)，此时如果状态变化，记录到 xhr 实例上，待发送后从实例上读取初始状态值创建 requestInfo 实例
+                xhr.$displayStatus = DisplayStatus.PENDDING;
                 break;
               case ReadyState.HEADERS_RECEIVED:
-                requestInfo.status = xhr.status;
-                requestInfo.statusText = StatusText.LOADING;
+                requestInfo.displayStatus = DisplayStatus.LOADING;
                 const headers = xhr.getAllResponseHeaders();
                 const headerArr = headers.split(/[\r\n]+/);
                 const responseHeaders = {};
@@ -170,13 +174,13 @@ export default {
                 requestInfo.responseHeaders = responseHeaders;
                 break;
               case ReadyState.LOADING:
-                requestInfo.status = xhr.status;
-                requestInfo.statusText = StatusText.LOADING;
+                requestInfo.displayStatus = DisplayStatus.LOADING;
                 break;
               case ReadyState.DONE:
                 requestInfo.status = xhr.status;
-                requestInfo.statusText = xhr.status;
-                requestInfo.response = xhr.response;
+                requestInfo.statusText = xhr.statusText;
+                requestInfo.displayStatus = xhr.status;
+                requestInfo.responseText = xhr.responseText;
                 break;
               default:
                 break;
@@ -208,6 +212,7 @@ export default {
           type: RequestType.XHR,
           url: xhr.$url,
           method,
+          displayStatus: xhr.$displayStatus,
           body: method === "GET" || method === "HEAD" ? null : body
         });
 
@@ -227,6 +232,7 @@ export default {
         _setRequestHeaders.apply(this, arguments);
       };
     },
+    // 拦截 fetch 请求
     hookFetch() {
       if (!isFunction(window.fetch)) return;
 
@@ -238,7 +244,7 @@ export default {
         const resultPromise = _fetch.call(this, ...args);
 
         // display request status
-        const [input, init] = args;
+        const [input, init = {}] = args;
         const id = uuid();
         vm.addRequestInfo(id, {
           type: RequestType.FETCH,
@@ -254,17 +260,18 @@ export default {
                 responseHeaders[key] = value;
               }
               vm.updateRequestInfo(id, {
+                displayStatus: response.status,
                 status: response.status,
                 statusText: response.statusText,
                 responseHeaders,
-                response: text
+                responseText: text
               });
             });
           },
           err => {
             // network error
             vm.updateRequestInfo(id, {
-              statusText: StatusText.FAIL
+              displayStatus: DisplayStatus.FAIL
             });
           }
         );
@@ -279,8 +286,9 @@ export default {
         type,
         url,
         method,
+        displayStatus = DisplayStatus.UNSENT,
         status = 0,
-        statusText = StatusText.UNSENT,
+        statusText = "",
         body = null,
         requestHeaders = {},
         responseHeaders = {},
@@ -296,6 +304,7 @@ export default {
         type,
         url,
         method,
+        displayStatus,
         status,
         statusText,
         body,
@@ -339,12 +348,13 @@ export default {
       padding: 0px 4px;
       align-items: center;
       flex: 1 1;
-      .long {
+      &.long {
         flex: 4 1;
         display: inline-block;
         text-overflow: ellipsis;
         overflow-x: hidden;
         white-space: nowrap;
+        line-height: $list-row-height;
       }
       &:first-child {
         border-left: none;
