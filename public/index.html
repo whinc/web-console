@@ -162,18 +162,17 @@
       <h1>WebConsole</h1>
       <div v-if="isDev">
         <h2>Console Test</h2>
-        <mt-button type="primary" @click="onClickLog('log_level')">打印不同级别日志</mt-button>
-        <mt-button type="primary" @click="onClickLog('log_params')">打印多参数</mt-button>
+        <mt-button type="primary" @click="$console.testLogLevel">打印不同级别日志</mt-button>
+        <mt-button type="primary" @click="$console.testLogParams()">打印多参数</mt-button>
         <mt-button type="primary" @click="$console.testFormat()">打印格式化</mt-button>
         <mt-button type="primary" @click="$console.testObject()">打印对象</mt-button>
         <mt-button type="primary" @click="$console.testException()">触发异常</mt-button>
         <h2>Network Test</h2>
+        <mt-button type="primary" @click="$network.testXMLHttpRequest()">测试 XHR 请求</mt-button>
+        <mt-button type="primary" @click="$network.testFetch()">测试 fetch 请求</mt-button>
         <mt-button type="primary" @click="$network.testHTTPStatus()">测试 HTTP 状态码</mt-button>
         <mt-button type="primary" @click="$network.testRequestParams()">测试请求参数</mt-button>
         <mt-button type="primary" @click="$network.testResponseData()">测试响应数据</mt-button>
-        <mt-button type="primary" @click="onClickRequest('xhr_get')">发起 GET 请求</mt-button>
-        <mt-button type="primary" @click="onClickRequest('xhr_post')">发起 POST 请求</mt-button>
-        <mt-button type="primary" @click="$network.testFetchApi()">测试 fetch API</mt-button>
 
         <h2>Application Test</h2>
         <mt-button type="primary" @click="$application.testWriteCookie(1000)">测试 Cookie</mt-button>
@@ -254,6 +253,9 @@
                 panelVisible: isDev ? true : false,
                 entryStyle: 'button'
               });
+              if (isDev) {
+                this.$network.testFetch()
+              }
               // self.$network.testFetchApi()
               // this.$console.testFormat()
               // this.$network.testHTTPStatus()

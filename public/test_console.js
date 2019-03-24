@@ -1,4 +1,16 @@
 window.$console = (function() {
+  function testLogLevel() {
+    console.log("log");
+    console.info("info");
+    console.debug("debug");
+    console.warn("warn");
+    console.error("error");
+  }
+
+  function testLogParams() {
+    console.log(100, true, undefined, null, { a: 100 });
+  }
+
   // 测试log格式化输出
   function testLogFormat(value, format) {
     console.log("console.log(%" + format + ", %s)", JSON.stringify(value));
@@ -265,6 +277,8 @@ window.$console = (function() {
   }
 
   return {
+    testLogLevel: testLogLevel,
+    testLogParams: testLogParams,
     testFormat: testFormat,
     testException: testException,
     testIntervalLog: testIntervalLog,

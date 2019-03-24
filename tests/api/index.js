@@ -70,6 +70,8 @@ const routes = {
     const pathname = url.parse(req.url).pathname;
     const status = new RegExp("/get_status/(\\d+)").exec(pathname)[1];
     res.writeHead(status, {
+      "Access-Control-Allow-Method": "GET,POST,OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Content-Type": "text/plain; charset=utf-8"
     });

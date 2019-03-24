@@ -43,7 +43,7 @@ const DisplayStatus = Object.freeze({
   UNSENT: "-",
   PENDDING: "(pendding)",
   LOADING: "(loading)",
-  FAIL: "fail"
+  FAIL: "(failed)"
 });
 
 export default {
@@ -130,7 +130,19 @@ export default {
       }
       this.selectedId = id;
     },
-    // 拦截 XMLHttpRequest 请求
+    /**
+     * 拦截 XMLHttpRequest 请求
+     *
+     * XMLHttpReqeust.prototype.open(method: string, url: string, async?: boolean, user?: string, password?: string)
+     * XMLHttpReqeust.prototype.send(body?: Object | null)
+     * XMLHttpReqeust.prototype.setRequestHeader(key: string, value: string)
+     * xhr.onreadystatechange
+     *
+     * XHR 调用 open() 后就会触发 onreadystatechange 变化，调用 send() 后开始发送请求并触发 onreadystatechange 变化，通过监听
+     * onreadystatechange 状态变化来跟踪请求的阶段以及获取返回数据。
+     *
+     * XHR 的请求地址、请求方法从 open() 方法中获取，post数据从 send() 方法中获取，HTTP请求头从 setRequestHeader 中获取
+     */
     hookXMLHttpRequest() {
       const vm = this;
       const XMLHttpRequest = window.XMLHttpRequest;
@@ -232,7 +244,23 @@ export default {
         _setRequestHeaders.apply(this, arguments);
       };
     },
-    // 拦截 fetch 请求
+    /**
+     * 拦截 fetch 请求
+     *
+     * fetch(input: string | Request, init?: Object): Promise<Response>
+     * Request(input: string, init?: Object)
+     *
+     * fetch 有多种调用方式，hook 时都需要考虑到，且 fetch 中的 init 优先级高于 Request 中的 init
+     * 1) fetch(url)
+     * 2) fetch(url, init)
+     * 3) fetch(new Request(url))
+     * 4) fetch(new Request(url, init))
+     * 3) fetch(new Request(url, init), init)
+     *
+     * fetch 请求地址、请求方法、post数据、HTTP头都从 init 参数中获取
+     *
+     * fetch 没有 XHR 中的 readystate 来标志请求阶段，只能通过 Promise 已被 resolve 或 reject 了来判断请求已完成，从而读取请求结果。
+     */
     hookFetch() {
       if (!isFunction(window.fetch)) return;
 
@@ -246,18 +274,29 @@ export default {
         // display request status
         const [input, init = {}] = args;
         const id = uuid();
-        vm.addRequestInfo(id, {
-          type: RequestType.FETCH,
-          url: input,
-          method: init.method
-        });
+        if (input instanceof Request) {
+          vm.addRequestInfo(id, {
+            type: RequestType.FETCH,
+            url: input.url,
+            method: init.method || input.method || "GET",
+            requestHeaders: init.headers || input.headers
+          });
+        } else {
+          vm.addRequestInfo(id, {
+            type: RequestType.FETCH,
+            url: input,
+            method: init.method || "GET"
+          });
+        }
 
         resultPromise.then(
           response => {
             return response.text().then(text => {
               const responseHeaders = {};
-              for (const [key, value] of response.headers) {
-                responseHeaders[key] = value;
+              if (isFunction(response.headers.entries)) {
+                for (const [key, value] of response.headers.entries()) {
+                  responseHeaders[key] = value;
+                }
               }
               vm.updateRequestInfo(id, {
                 displayStatus: response.status,
@@ -271,6 +310,7 @@ export default {
           err => {
             // network error
             vm.updateRequestInfo(id, {
+              status: -1,
               displayStatus: DisplayStatus.FAIL
             });
           }

@@ -63,9 +63,12 @@ export default {
     isStatusError(requestInfo) {
       if (requestInfo.status >= 400 && requestInfo.status < 600) {
         return true;
-      } else {
-        return false;
       }
+      if (requestInfo.status === -1) {
+        return true;
+      }
+
+      return false;
     }
   }
 };
