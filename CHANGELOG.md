@@ -1,4 +1,8 @@
-<a name="0.6.0"></a>
+## [0.6.1](https://github.com/whinc/web-console/compare/v0.6.0...v0.6.1) (2019-03-24)
+
+### Bug Fixes
+
+- **network:** 修复样式 ([f815474](https://github.com/whinc/web-console/commit/f815474))
 
 # [0.6.0](https://github.com/whinc/web-console/compare/v0.5.0...v0.6.0) (2019-03-24)
 
@@ -12,8 +16,6 @@
 - **network:** 初步支持 fetch 请求 ([5e64f03](https://github.com/whinc/web-console/commit/5e64f03))
 - **settings:** 支持设置"显示/隐藏"网络请求类型 ([b70cad5](https://github.com/whinc/web-console/commit/b70cad5))
 
-<a name="0.5.0"></a>
-
 # [0.5.0](https://github.com/whinc/web-console/compare/v0.4.7...v0.5.0) (2019-03-16)
 
 ### Bug Fixes
@@ -24,15 +26,11 @@
 
 - **console:** 增加搜索日志 ([8c90bac](https://github.com/whinc/web-console/commit/8c90bac))
 
-<a name="0.4.7"></a>
-
 ## [0.4.7](https://github.com/whinc/web-console/compare/v0.4.6...v0.4.7) (2019-03-07)
 
 ### Bug Fixes
 
 - 修复 vue-infinite-scroll 插件与宿主环境冲突,导致宿主引入该插件后无效的问题 ([8a89a15](https://github.com/whinc/web-console/commit/8a89a15))
-
-<a name="0.4.6"></a>
 
 ## [0.4.6](https://github.com/whinc/web-console/compare/v0.4.4...v0.4.6) (2019-03-04)
 
@@ -47,8 +45,6 @@
 
 - px 单位转 vw 单位 ([93c52b8](https://github.com/whinc/web-console/commit/93c52b8))
 
-<a name="0.4.4"></a>
-
 ## [0.4.4](https://github.com/whinc/web-console/compare/v0.4.2...v0.4.4) (2019-03-01)
 
 ### Bug Fixes
@@ -59,15 +55,11 @@
 
 - **settings:** 增加反馈入口 ([26984b9](https://github.com/whinc/web-console/commit/26984b9))
 
-<a name="0.4.2"></a>
-
 ## [0.4.2](https://github.com/whinc/web-console/compare/v0.4.1...v0.4.2) (2019-02-26)
 
 ### Features
 
 - **console:** 处理未捕获的异常(error 和 unhandledrejection 事件) ([04e7da5](https://github.com/whinc/web-console/commit/04e7da5))
-
-<a name="0.4.1"></a>
 
 ## [0.4.1](https://github.com/whinc/web-console/compare/v0.4.0-beta.2...v0.4.1) (2019-02-21)
 
@@ -80,15 +72,11 @@
 
 - **console:** log 格式输出支持 %c 占位符 ([0ba036d](https://github.com/whinc/web-console/commit/0ba036d))
 
-<a name="0.4.0-beta.2"></a>
-
 # [0.4.0-beta.2](https://github.com/whinc/web-console/compare/v0.4.0-beta.1...v0.4.0-beta.2) (2019-02-18)
 
 ### Bug Fixes
 
 - **element:** 修复 Element.prototype.getAttributeNames 的兼容性问题 ([92b0355](https://github.com/whinc/web-console/commit/92b0355))
-
-<a name="0.4.0-beta.1"></a>
 
 # [0.4.0-beta.1](https://github.com/whinc/web-console/compare/v0.3.0-beta.6...v0.4.0-beta.1) (2019-02-16)
 
@@ -100,8 +88,6 @@
 
 - **element:** 展示元素计算属性的继承值 ([072fbf2](https://github.com/whinc/web-console/commit/072fbf2))
 - **element:** 计算属性面板的颜色值增加颜色小方块展示 ([65987d2](https://github.com/whinc/web-console/commit/65987d2))
-
-<a name="0.3.0-beta.6"></a>
 
 # [0.3.0-beta.6](https://github.com/whinc/web-console/compare/v0.3.0-beta.5...v0.3.0-beta.6) (2019-02-01)
 
@@ -132,8 +118,6 @@
 - **element:** 计算样式增加获取继承样式的方法 ([6934b5a](https://github.com/whinc/web-console/commit/6934b5a))
 - **element:** 选中底部 dom paths 时 dom tree 自动滚动到可视区域 ([22d6b1e](https://github.com/whinc/web-console/commit/22d6b1e))
 
-<a name="0.3.0-beta.5"></a>
-
 # [0.3.0-beta.5](https://github.com/whinc/web-console/compare/v0.3.0-beta.4...v0.3.0-beta.5) (2018-12-06)
 
 ### Features
@@ -146,8 +130,6 @@
 
 - **console:** 提升批量打印日志时的显示性能 ([776891e](https://github.com/whinc/web-console/commit/776891e))
 
-<a name="0.3.0-beta.4"></a>
-
 # [0.3.0-beta.4](https://github.com/whinc/web-console/compare/v0.3.0-beta.3...v0.3.0-beta.4) (2018-12-03)
 
 ### Bug Fixes
@@ -158,8 +140,6 @@
 
 - **application:** 支持折叠工具栏 ([ca20bfd](https://github.com/whinc/web-console/commit/ca20bfd))
 - **application:** 新增刷新全部和清除全部快捷按钮 ([fd4e4b4](https://github.com/whinc/web-console/commit/fd4e4b4))
-
-<a name="0.3.0-beta.3"></a>
 
 # [0.3.0-beta.3](https://github.com/whinc/web-console/compare/v0.3.0-beta.2...v0.3.0-beta.3) (2018-12-03)
 
@@ -177,8 +157,6 @@
 - **element:** 支持无内容标签的正确显示 ([cd31e3e](https://github.com/whinc/web-console/commit/cd31e3e))
 - **element:** 节点显式过长时自动换行 ([aa89681](https://github.com/whinc/web-console/commit/aa89681))
 
-<a name="0.3.0-beta.2"></a>
-
 # [0.3.0-beta.2](https://github.com/whinc/web-console/compare/v0.3.0-beta.1...v0.3.0-beta.2) (2018-11-29)
 
 ### Bug Fixes
@@ -189,8 +167,6 @@
 
 - **element:** 元素增加折叠展开箭头 ([d000198](https://github.com/whinc/web-console/commit/d000198))
 - **element:** 支持显式 html 结构 ([fbac371](https://github.com/whinc/web-console/commit/fbac371))
-
-<a name="0.3.0-beta.1"></a>
 
 # [0.3.0-beta.1](https://github.com/whinc/web-console/compare/0.3.0-beta.1...v0.3.0-beta.1) (2018-11-24)
 
@@ -205,8 +181,6 @@
 
 - **application:** 优化修改和删除操作的性能 ([c376187](https://github.com/whinc/web-console/commit/c376187))
 - **application:** 大幅提升展示大量(1W+)storage 和 cookie 的性能 ([66b8c45](https://github.com/whinc/web-console/commit/66b8c45))
-
-<a name="0.3.0-beta.0"></a>
 
 # [0.3.0-beta.0](https://github.com/whinc/web-console/compare/v0.2.0-rc.15...v0.3.0-beta.0) (2018-11-20)
 
@@ -236,11 +210,7 @@
 - **application:** 提高巨量(1w+)storage 条目的展示性能 ([258568d](https://github.com/whinc/web-console/commit/258568d))
 - **console:** 优化短期内批量打印日志造成的 UI 假死现象 ([53be149](https://github.com/whinc/web-console/commit/53be149))
 
-<a name="0.2.0-rc.15"></a>
-
 # [0.2.0-rc.15](https://github.com/whinc/web-console/compare/v0.2.0-rc.14...v0.2.0-rc.15) (2018-11-08)
-
-<a name="0.2.0-rc.14"></a>
 
 # [0.2.0-rc.14](https://github.com/whinc/web-console/compare/v0.2.0-rc.13...v0.2.0-rc.14) (2018-11-08)
 
@@ -256,8 +226,6 @@
 - **settings:** 增加设置面板 ([89c4492](https://github.com/whinc/web-console/commit/89c4492))
 - **settings:** 增加设置项持久化 ([1f542bc](https://github.com/whinc/web-console/commit/1f542bc))
 
-<a name="0.2.0-rc.13"></a>
-
 # [0.2.0-rc.13](https://github.com/whinc/web-console/compare/v0.2.0-rc.12...v0.2.0-rc.13) (2018-11-06)
 
 ### Bug Fixes
@@ -268,23 +236,17 @@
 
 - **console:** 缩略展示长字符串 ([a7af920](https://github.com/whinc/web-console/commit/a7af920))
 
-<a name="0.2.0-rc.12"></a>
-
 # [0.2.0-rc.12](https://github.com/whinc/web-console/compare/v0.2.0-rc.11...v0.2.0-rc.12) (2018-11-05)
 
 ### Features
 
 - **application:** 实现 cookie 的展示、删除、过滤、刷新 ([0a26517](https://github.com/whinc/web-console/commit/0a26517))
 
-<a name="0.2.0-rc.11"></a>
-
 # [0.2.0-rc.11](https://github.com/whinc/web-console/compare/v0.2.0-rc.10...v0.2.0-rc.11) (2018-10-31)
 
 ### Features
 
 - 增加设置(展示版本信息) ([6ab8caa](https://github.com/whinc/web-console/commit/6ab8caa))
-
-<a name="0.2.0-rc.10"></a>
 
 # [0.2.0-rc.10](https://github.com/whinc/web-console/compare/v0.2.0-rc.9...v0.2.0-rc.10) (2018-10-30)
 
@@ -301,19 +263,13 @@
 - **console:** 打印 Error 对象堆栈信息 ([599206b](https://github.com/whinc/web-console/commit/599206b))
 - **console:** 输出日志时可自动定位到最新位置 ([2509392](https://github.com/whinc/web-console/commit/2509392))
 
-<a name="0.2.0-rc.9"></a>
-
 # [0.2.0-rc.9](https://github.com/whinc/web-console/compare/v0.2.0-rc.7...v0.2.0-rc.9) (2018-10-26)
 
 ### Performance Improvements
 
 - **console:** 提升面板切换性能 ([a068d6c](https://github.com/whinc/web-console/commit/a068d6c))
 
-<a name="0.2.0-rc.7"></a>
-
 # [0.2.0-rc.7](https://github.com/whinc/web-console/compare/v0.2.0-rc.6...v0.2.0-rc.7) (2018-10-09)
-
-<a name="0.2.0-rc.6"></a>
 
 # [0.2.0-rc.6](https://github.com/whinc/web-console/compare/v0.2.0-rc.5...v0.2.0-rc.6) (2018-10-09)
 
@@ -324,23 +280,17 @@
 - **network:** 增加响应数据预览 ([0bb4e95](https://github.com/whinc/web-console/commit/0bb4e95))
 - **network:** 支持预览 gif/jpg/svg/txt ([72fcd52](https://github.com/whinc/web-console/commit/72fcd52))
 
-<a name="0.2.0-rc.5"></a>
-
 # [0.2.0-rc.5](https://github.com/whinc/web-console/compare/v0.2.0-rc.4...v0.2.0-rc.5) (2018-09-14)
 
 ### Bug Fixes
 
 - 修复触摸滚动穿透问题 ([f017338](https://github.com/whinc/web-console/commit/f017338))
 
-<a name="0.2.0-rc.4"></a>
-
 # [0.2.0-rc.4](https://github.com/whinc/web-console/compare/v0.2.0-rc.3...v0.2.0-rc.4) (2018-09-11)
 
 ### Bug Fixes
 
 - **network:** response 数据超出边界时无法滚动查看 ([4111487](https://github.com/whinc/web-console/commit/4111487))
-
-<a name="0.2.0-rc.3"></a>
 
 # [0.2.0-rc.3](https://github.com/whinc/web-console/compare/v0.2.0-rc.2...v0.2.0-rc.3) (2018-09-10)
 
@@ -349,11 +299,7 @@
 - **console:** 未正确识别占位符 %c 导致的显示问题 ([c740d16](https://github.com/whinc/web-console/commit/c740d16))
 - 面板可见时悬浮按钮未隐藏 ([41f8af5](https://github.com/whinc/web-console/commit/41f8af5))
 
-<a name="0.2.0-rc.2"></a>
-
 # [0.2.0-rc.2](https://github.com/whinc/web-console/compare/v0.2.0-rc.1...v0.2.0-rc.2) (2018-09-08)
-
-<a name="0.2.0-rc.1"></a>
 
 # [0.2.0-rc.1](https://github.com/whinc/web-console/compare/v0.1.5...v0.2.0-rc.1) (2018-09-08)
 
@@ -387,23 +333,13 @@
 - **network:** 错误状态码高亮展示 ([78e78ac](https://github.com/whinc/web-console/commit/78e78ac))
 - 入口浮标支持滑动、图标样式 ([01bee17](https://github.com/whinc/web-console/commit/01bee17))
 
-<a name="0.1.5"></a>
-
 ## [0.1.5](https://github.com/whinc/web-console/compare/v0.1.4...v0.1.5) (2018-06-20)
-
-<a name="0.1.4"></a>
 
 ## [0.1.4](https://github.com/whinc/web-console/compare/v0.1.3...v0.1.4) (2018-06-20)
 
-<a name="0.1.3"></a>
-
 ## [0.1.3](https://github.com/whinc/web-console/compare/v0.1.2...v0.1.3) (2018-06-20)
 
-<a name="0.1.2"></a>
-
 ## [0.1.2](https://github.com/whinc/web-console/compare/v0.1.1...v0.1.2) (2018-06-12)
-
-<a name="0.1.1"></a>
 
 ## [0.1.1](https://github.com/whinc/web-console/compare/1dfc2f0...v0.1.1) (2018-06-12)
 
