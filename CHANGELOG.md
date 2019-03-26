@@ -1,3 +1,9 @@
+## [0.6.2](https://github.com/whinc/web-console/compare/v0.6.1...v0.6.2) (2019-03-26)
+
+### Bug Fixes
+
+- **network:** 修复部分情况下请求参数未展示的 bug ([edeff31](https://github.com/whinc/web-console/commit/edeff31))
+
 ## [0.6.1](https://github.com/whinc/web-console/compare/v0.6.0...v0.6.1) (2019-03-24)
 
 ### Bug Fixes
