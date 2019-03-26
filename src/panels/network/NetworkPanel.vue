@@ -175,7 +175,8 @@ export default {
             switch (xhr.readyState) {
               case ReadyState.UNSENT:
               case ReadyState.OPENED:
-                // 在发送请求前，不会创建 requestInfo(避免显示到 UI 上)，此时如果状态变化，记录到 xhr 实例上，待发送后从实例上读取初始状态值创建 requestInfo 实例
+                // 在发送请求前，不会创建 requestInfo(避免显示到 UI 上)，此时如果状态变化，
+                // 先记录到 xhr 实例上，待调用 send() 后从实例上读取初始状态值创建 requestInfo 实例
                 xhr.$displayStatus = DisplayStatus.PENDDING;
                 break;
               case ReadyState.HEADERS_RECEIVED:
@@ -232,7 +233,8 @@ export default {
           url: xhr.$url,
           method,
           displayStatus: xhr.$displayStatus,
-          body: method === "GET" || method === "HEAD" ? null : body
+          body: method === "GET" || method === "HEAD" ? null : body,
+          requestHeaders: xhr.$requestHeaders
         });
 
         _send.apply(this, arguments);
@@ -241,12 +243,20 @@ export default {
       XMLHttpRequest.prototype.setRequestHeader = function(key, value) {
         const xhr = this;
         const requestInfo = vm.getRequestInfo(xhr.$id);
-        vm.updateRequestInfo(xhr.$id, {
-          requestHeaders: {
-            ...requestInfo.requestHeaders,
-            [key]: value
-          }
-        });
+        // 如果调用 XHR 在 send() 之前调用 setRequestHeader()，此时 XHR 请求信息尚未创建，暂时挂载到 xhr 实例上
+        // 稍后调用 send() 创建请求信息时，再从实例中获取请求后信息进行初始化
+        if (requestInfo) {
+          vm.updateRequestInfo(xhr.$id, {
+            requestHeaders: {
+              ...requestInfo.requestHeaders,
+              [key]: value
+            }
+          });
+        } else {
+          const requestHeaders = xhr.$requestHeaders || {};
+          requestHeaders[key] = value;
+          xhr.$requestHeaders = requestHeaders;
+        }
 
         _setRequestHeaders.apply(this, arguments);
       };
@@ -278,23 +288,17 @@ export default {
         // invoke original "fetch"
         const resultPromise = _fetch.call(this, ...args);
 
-        // display request status
-        const [input, init = {}] = args;
+        const request = args[0] instanceof Request ? args[0] : { url: args[0] };
+        const init = args[1];
+
         const id = uuid();
-        if (input instanceof Request) {
-          vm.addRequestInfo(id, {
-            type: RequestType.FETCH,
-            url: input.url,
-            method: init.method || input.method || "GET",
-            requestHeaders: init.headers || input.headers
-          });
-        } else {
-          vm.addRequestInfo(id, {
-            type: RequestType.FETCH,
-            url: input,
-            method: init.method || "GET"
-          });
-        }
+        vm.addRequestInfo(id, {
+          type: RequestType.FETCH,
+          url: request.url,
+          method: init.method || request.method || "GET",
+          requestHeaders: init.headers || request.headers,
+          body: init.body || request.body || null
+        });
 
         resultPromise.then(
           response => {
@@ -361,8 +365,16 @@ export default {
         activeTab
       });
     },
-    updateRequestInfo(id, requestInfo) {
-      this.$set(this.requestInfoMap, id, { ...(this.requestInfoMap[id] || {}), ...requestInfo });
+    updateRequestInfo(id, requestInfo = {}) {
+      const _requestInfo = this.requestInfoMap[id];
+      if (!_requestInfo) {
+        // logger.warn('invalid params:', ...arguments)
+        return;
+      }
+      if (Object.keys(requestInfo).length <= 0) {
+        return;
+      }
+      this.$set(this.requestInfoMap, id, { ..._requestInfo, ...requestInfo });
     },
     getRequestInfo(id) {
       return this.requestInfoMap[id];

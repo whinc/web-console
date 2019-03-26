@@ -139,15 +139,15 @@ export default {
         headers: []
       };
 
-      const data = this.requestInfo.data;
-      if (!data) return result;
+      const body = this.requestInfo.body;
+      if (!body) return result;
 
       const requestHeaders = this.requestInfo.requestHeaders;
       const mimeType = (requestHeaders["Content-Type"] || "").split(";")[0].replace(/(^\s+)|(\s+$)/g, "");
       switch (mimeType) {
         case "application/x-www-form-urlencoded":
           result.title = "Form Data";
-          const params = new URLSearchParams(data);
+          const params = new URLSearchParams(body);
           for (let pair of params.entries()) {
             result.headers.push({
               key: decodeURIComponent(pair[0]),
@@ -157,13 +157,14 @@ export default {
           break;
         case "application/json":
           try {
-            result.headers.push({ value: JSON.parse(data) });
+            result.headers.push({ value: JSON.parse(body) });
           } catch (error) {
-            result.headers.push({ value: data });
+            result.headers.push({ value: body });
           }
           break;
         default:
-          result.headers.push({ value: data });
+          // raw text
+          result.headers.push({ value: body });
           break;
       }
 

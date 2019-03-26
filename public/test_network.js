@@ -43,48 +43,64 @@ window.$network = (function() {
   /**
    * 测试请求参数
    */
-  function testRequestParams() {
-    // GET
-    request({ url: baseURL + "/get?a=1&b=2&c=&d" });
+  function testRequestParams(type = "get") {
     var email = "xx@yy.com";
     var password = "zz";
-    // POST：plain text
-    request({
-      url: baseURL + "/post",
-      method: "POST",
-      data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
-    });
-    // POST：Form Data
-    request({
-      url: baseURL + "/post",
-      method: "POST",
-      requestHeaders: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
-    });
-    // POST: JSON
-    request({
-      url: baseURL + "/post",
-      method: "POST",
-      requestHeaders: {
-        "Content-Type": "application/json;charset=UTF-8"
-      },
-      data: JSON.stringify({
-        email: email,
-        password: password
-      })
-      // data: '{"email": aa}'
-    });
-    // POST: JSON with invalid format
-    request({
-      url: baseURL + "/post",
-      method: "POST",
-      requestHeaders: {
-        "Content-Type": "application/json;charset=UTF-8"
-      },
-      data: '{"email": aa}'
-    });
+
+    switch (type) {
+      case "get":
+        // GET
+        request({ url: baseURL + "/get?email=" + email + "&password=" + password + "&a=&b" });
+        break;
+      case "post:raw":
+        request({
+          url: baseURL + "/post",
+          method: "POST",
+          data: "hello"
+        });
+        break;
+      case "post:raw:text":
+        request({
+          url: baseURL + "/post",
+          method: "POST",
+          requestHeaders: {
+            "Content-Type": "text/plain"
+          },
+          data: "hello"
+        });
+        break;
+      case "post:raw:json":
+        request({
+          url: baseURL + "/post",
+          method: "POST",
+          requestHeaders: {
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          data: '{"email": aa}'
+        });
+        break;
+      case "post:x-www-form-urlencoded":
+        request({
+          url: baseURL + "/post",
+          method: "POST",
+          requestHeaders: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          data: "email=" + encodeURIComponent(email) + "&password=" + encodeURIComponent(password)
+        });
+        break;
+      case "post:form-data":
+        var formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+
+        request({
+          url: baseURL + "/post",
+          method: "POST",
+          data: formData
+        });
+        break;
+    }
   }
 
   // 测试响应数据类型

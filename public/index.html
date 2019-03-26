@@ -171,8 +171,14 @@
         <mt-button type="primary" @click="$network.testXMLHttpRequest()">测试 XHR 请求</mt-button>
         <mt-button type="primary" @click="$network.testFetch()">测试 fetch 请求</mt-button>
         <mt-button type="primary" @click="$network.testHTTPStatus()">测试 HTTP 状态码</mt-button>
-        <mt-button type="primary" @click="$network.testRequestParams()">测试请求参数</mt-button>
         <mt-button type="primary" @click="$network.testResponseData()">测试响应数据</mt-button>
+        <h3>query string & body</h3>
+        <mt-button type="primary" @click="$network.testRequestParams('get')">get</mt-button>
+        <mt-button type="primary" @click="$network.testRequestParams('post:raw')">post:raw</mt-button>
+        <mt-button type="primary" @click="$network.testRequestParams('post:raw:text')">post:raw:text</mt-button>
+        <mt-button type="primary" @click="$network.testRequestParams('post:raw:json')">post:raw:json</mt-button>
+        <mt-button type="primary" @click="$network.testRequestParams('post:form-data')">post:form-data</mt-button>
+        <mt-button type="primary" @click="$network.testRequestParams('post:x-www-form-urlencoded')">post:x-www-form-urlencoded</mt-button>
 
         <h2>Application Test</h2>
         <mt-button type="primary" @click="$application.testWriteCookie(1000)">测试 Cookie</mt-button>
@@ -254,7 +260,7 @@
                 entryStyle: 'button'
               });
               if (isDev) {
-                this.$network.testFetch()
+                // this.$network.testRequestParams()
               }
               // self.$network.testFetchApi()
               // this.$console.testFormat()
