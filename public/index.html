@@ -257,7 +257,43 @@
               window.webConsole = new window.WebConsole({
                 activeTab: isDev ? 'network' : 'console',
                 panelVisible: isDev ? true : false,
-                entryStyle: 'button'
+                entryStyle: 'button',
+                plugins: [
+                  {
+                    name: 'plugin1',
+                    component: {
+                      data: function () {
+                        return {
+                          text: 'plugin1 panel'
+                        }
+                      },
+                      methods: {
+                        onWebConsoleShow: function () {
+                          console.log('onWebConsoleShow is called')
+                        },
+                        onWebConsoleHide: function () {
+                          console.log('onWebConsoleHide is called')
+                        }
+                      },
+                      render: function (h) {
+                        return h('div', {}, this.text)
+                      }
+                    }
+                  },
+                  {
+                    name: 'plugin2',
+                    component: {
+                      data: function () {
+                        return {
+                          text: 'plugin2 panel'
+                        }
+                      },
+                      render: function (h) {
+                        return h('div', {}, this.text)
+                      }
+                    }
+                  }
+                ]
               });
               if (isDev) {
                 // this.$network.testRequestParams()

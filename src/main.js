@@ -1,8 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
 import "./polyfill";
-import { consoleHooks, filters, isFunction } from "@/utils";
-// import { Logger } from "@/utils";
+import { consoleHooks, filters, isFunction, isObject } from "@/utils";
+import { pluginManager } from "@/plugins";
 import InfiniteScroll from "vue-infinite-scroll";
 import "./styles/_global.scss";
 
@@ -73,7 +73,17 @@ class WebConsole {
       activeTab: "console",
       entryStyle: "button"
     };
+    const plugins = options.plugins || [];
+    plugins.forEach(plugin => this.addPlugin(plugin));
     this._load(options);
+  }
+
+  addPlugin(plugin) {
+    if (!isObject(plugin)) {
+      console.warn("plugin must be a object");
+      return;
+    }
+    pluginManager.addPlugin(plugin);
   }
 
   _load(options = {}) {

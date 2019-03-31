@@ -34,6 +34,8 @@
           <v-tab-bar-item id="console">Console</v-tab-bar-item>
           <v-tab-bar-item id="network">Network</v-tab-bar-item>
           <v-tab-bar-item id="application">Application</v-tab-bar-item>
+          <!-- 插件 -->
+          <v-tab-bar-item v-for="plugin in plugins" :key="plugin.id" :id="plugin.id">{{plugin.name}}</v-tab-bar-item> 
           <template slot="icons">
             <VIcon name="setting" @click="onClickSetting" style="width: 2em; padding: 0.4em" />
           </template>
@@ -42,6 +44,10 @@
         <ConsolePanel v-show="activeTab === 'console'" />
         <NetworkPanel v-show="activeTab === 'network'" />
         <ApplicationPanel v-show="activeTab === 'application'" />
+        <!-- 插件 -->
+        <div v-for="plugin in plugins" :key="plugin.id" :data-name="plugin.name" class="plugin-panel" v-show="activeTab === plugin.id">
+          <component :is="plugin.component" />
+        </div>
         <!-- 设置面板 -->
         <SettingsPanel v-model="isSettingPanelVisible" />
       </div>
@@ -54,8 +60,11 @@ import { Popup } from "mint-ui";
 import { VTabBar, VTabBarItem, VIcon } from "@/components";
 import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel, ElementPanel } from "@/panels";
 import { eventBus, Logger } from "@/utils";
+import { pluginManager } from "@/plugins";
 
 const logger = new Logger("[App]");
+
+logger.log("pluginManager:", pluginManager);
 
 export default {
   name: "app",
@@ -85,7 +94,8 @@ export default {
       right: 20,
       bottom: 20,
       // 页面右侧滚动条宽度，通过判断滚动条宽度，在页面右侧填充适当空间，修复 PC 端滚动条覆盖面板右侧边缘的问题
-      scrollbarWidth: 0
+      scrollbarWidth: 0,
+      plugins: []
     };
   },
   watch: {
@@ -116,14 +126,23 @@ export default {
     });
 
     // 监听来自子元素的事件：请求隐藏弹窗
-    eventBus.on(eventBus.POPUP_HIDE, () => this.hidePanel());
+    eventBus.on(eventBus.REQUEST_WEB_CONSOLE_HIDE, () => this.hidePanel());
+
+    // 加载插件
+    this.installPlugins();
   },
   methods: {
     showPanel() {
-      this.panelVisible = true;
+      if (!this.panelVisible) {
+        this.panelVisible = true;
+        eventBus.emit(eventBus.WEB_CONSOLE_SHOW);
+      }
     },
     hidePanel() {
-      this.panelVisible = false;
+      if (this.panelVisible) {
+        this.panelVisible = false;
+        eventBus.emit(eventBus.WEB_CONSOLE_HIDE);
+      }
     },
     onTouchStart(e) {
       this.isTouched = true;
@@ -150,6 +169,9 @@ export default {
     },
     onClickSetting() {
       this.isSettingPanelVisible = true;
+    },
+    installPlugins() {
+      this.plugins = pluginManager.getPlugins();
     }
   }
 };
@@ -198,6 +220,7 @@ function getScrollbarWidth() {
 </script>
 
 <style scoped lang="scss">
+@import "./styles/variables";
 .entry {
   position: fixed;
   right: 20px;
@@ -227,5 +250,9 @@ function getScrollbarWidth() {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+.plugin-panel {
+  height: $panel-height;
 }
 </style>

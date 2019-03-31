@@ -88,7 +88,7 @@ export default {
         {
           text: "Hide",
           click: () => {
-            eventBus.emit(eventBus.POPUP_HIDE);
+            eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE);
           }
         }
       ];
