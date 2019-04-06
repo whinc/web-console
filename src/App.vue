@@ -60,7 +60,7 @@ import { Popup } from "mint-ui";
 import { VTabBar, VTabBarItem, VIcon } from "@/components";
 import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel, ElementPanel } from "@/panels";
 import { eventBus, Logger } from "@/utils";
-import { pluginManager } from "@/plugins";
+import { pluginManager, pluginEvents } from "@/plugins";
 
 const logger = new Logger("[App]");
 
@@ -99,6 +99,9 @@ export default {
     };
   },
   watch: {
+    activeTab(newVal, oldVal) {
+      pluginManager.emit(pluginEvents.WEB_CONSOLE_TAB_CHANGED, newVal, oldVal);
+    },
     panelVisible(value) {
       // 通知子元素弹窗可见性变化
       this.$nextTick(() => {
@@ -111,6 +114,9 @@ export default {
     // 非 reactivity 数据
     this.scaleManager = createScaleManager();
     this.isTouched = false;
+
+    // mounted 之前加载插件，mounted 执行时插件已挂载
+    this.installPlugins();
   },
   mounted() {
     // 设置初始值
@@ -127,21 +133,23 @@ export default {
 
     // 监听来自子元素的事件：请求隐藏弹窗
     eventBus.on(eventBus.REQUEST_WEB_CONSOLE_HIDE, () => this.hidePanel());
+    eventBus.on(eventBus.SETTINGS_CHANGE, settings =>
+      pluginManager.emit(pluginEvents.WEB_CONSOLE_SETTINGS_CHANGED, settings)
+    );
 
-    // 加载插件
-    this.installPlugins();
+    pluginManager.emit(pluginEvents.WEB_CONSOLE_READY);
   },
   methods: {
     showPanel() {
       if (!this.panelVisible) {
         this.panelVisible = true;
-        eventBus.emit(eventBus.WEB_CONSOLE_SHOW);
+        pluginManager.emit(pluginEvents.WEB_CONSOLE_SHOW);
       }
     },
     hidePanel() {
       if (this.panelVisible) {
         this.panelVisible = false;
-        eventBus.emit(eventBus.WEB_CONSOLE_HIDE);
+        pluginManager.emit(pluginEvents.WEB_CONSOLE_HIDE);
       }
     },
     onTouchStart(e) {

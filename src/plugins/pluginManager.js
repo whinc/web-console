@@ -1,9 +1,21 @@
-import { eventBus, isFunction } from "@/utils";
+import { eventBus, EventBus, isFunction } from "@/utils";
+import pluginEvents from "./pluginEvents";
 
 let id = 0;
 
-class PluginManager {
-  constructor() {
+const hostProxy = {
+  echo() {
+    console.log("echo in App.vue");
+  },
+  hidePanel() {
+    eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE);
+  }
+};
+
+class PluginManager extends EventBus {
+  constructor(...args) {
+    super(...args);
+
     this._plugins = [
       /**
        *  {
@@ -13,33 +25,36 @@ class PluginManager {
        *  }
        */
     ];
-  }
-
-  toString() {
-    return JSON.stringify(this._plugins, null, 4);
+    this._isWebConsoleReady = false;
   }
 
   addPlugin(plugin) {
+    const that = this;
     const pluginId = `web-console-plugin-${id++}`;
+
+    this.on(pluginEvents.WEB_CONSOLE_READY, () => {
+      this._isWebConsoleReady = true;
+    });
+
+    const injectedLifeCycleMethods = {
+      // created 周期函数触发时，Vue 已完成事件部署
+      created() {
+        const vm = this;
+        // 注册插件生命周期方法
+        Object.keys(pluginEvents).forEach(event => {
+          that.on(event, (...args) => {
+            const fn = this[event];
+            isFunction(fn) && fn.call(vm, hostProxy, ...args);
+          });
+        });
+      }
+    };
     const _plugin = {
       id: pluginId,
       name: plugin.name,
       component: {
         ...plugin.component,
-        mixins: [
-          {
-            mounted() {
-              eventBus.on(
-                eventBus.WEB_CONSOLE_SHOW,
-                () => isFunction(this.onWebConsoleShow) && this.onWebConsoleShow()
-              );
-              eventBus.on(
-                eventBus.WEB_CONSOLE_HIDE,
-                () => isFunction(this.onWebConsoleHide) && this.onWebConsoleHide()
-              );
-            }
-          }
-        ],
+        mixins: [injectedLifeCycleMethods],
         name: pluginId
       }
     };
@@ -48,6 +63,10 @@ class PluginManager {
 
   getPlugins() {
     return this._plugins;
+  }
+
+  toString() {
+    return JSON.stringify(this._plugins, null, 4);
   }
 }
 

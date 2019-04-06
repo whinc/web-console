@@ -268,15 +268,33 @@
                         }
                       },
                       methods: {
-                        onWebConsoleShow: function () {
-                          console.log('onWebConsoleShow is called')
+                        onWebConsoleReady: function (hostProxy) {
+                          this.hostProxy = hostProxy
                         },
-                        onWebConsoleHide: function () {
-                          console.log('onWebConsoleHide is called')
+                        onWebConsoleShow: function (hostProxy) {
+                          console.log('web-console show')
+                        },
+                        onWebConsoleHide: function (hostProxy) {
+                          console.log('web-console hide')
+                        },
+                        onWebConsoleTabChanged: function (hostProxy, newVal, oldVal) {
+                          console.log('web-console tab changed: %s -> %s', oldVal, newVal)
+                        },
+                        onWebConsoleSettingsChanged: function (hostProxy, settings) {
+                          console.log('web-console settings changed: %o', settings)
+                        },
+                        hidePanel: function () {
+                          this.hostProxy.hidePanel()
                         }
                       },
                       render: function (h) {
-                        return h('div', {}, this.text)
+                        return h('div', {}, [
+                          h('button', {
+                            on: {
+                              click: this.hidePanel
+                            }
+                          }, 'hide panel')
+                        ])
                       }
                     }
                   },
