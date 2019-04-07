@@ -84,7 +84,9 @@ export default {
   },
   created() {
     // 监听"偏好设置"变化
-    eventBus.on(eventBus.SETTINGS_CHANGE, this.onSettingsChanged.bind(this));
+    const bindOnSettingsChanged = this.onSettingsChanged.bind(this);
+    eventBus.on(eventBus.SETTINGS_LOADED, bindOnSettingsChanged);
+    eventBus.on(eventBus.SETTINGS_CHANGE, bindOnSettingsChanged);
   },
   methods: {
     onSettingsChanged(settings) {

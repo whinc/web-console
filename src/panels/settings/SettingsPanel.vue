@@ -62,6 +62,7 @@
 <script>
 import { VIcon } from "@/components";
 import { eventBus, Logger, cloneDeep } from "@/utils";
+import { pluginManager } from "@/plugins";
 
 const logger = new Logger("[SettingsPanel]");
 const KEY_SETTINGS = "web-console:settings";
@@ -158,13 +159,27 @@ export default {
       return this.configs[this.activedIndex];
     }
   },
-  mounted() {
+  beforeMount() {
+    // 安装插件的设置项
+    this.installPluginSettings();
     // 加载配置
     this.loadSettings();
+  },
+  mounted() {
     // 通知配置更新
-    this.onSettingsChanged();
+    // this.$nextTick(() => this.onSettingsChanged())
   },
   methods: {
+    installPluginSettings() {
+      const pluginSettings = [];
+      const plugins = pluginManager.getPlugins();
+      plugins.forEach(plugin => {
+        if (!Array.isArray(plugin.settings) || plugin.settings.length === 0) return;
+        pluginSettings.push({ type: "section", desc: plugin.name }, ...plugin.settings);
+      });
+
+      this.configs[0].items.push(...pluginSettings);
+    },
     // 通知配置更新
     onSettingsChanged() {
       const settings = this.extractSettings();
@@ -184,12 +199,17 @@ export default {
     },
     loadSettings() {
       const content = window.localStorage.getItem(KEY_SETTINGS);
-      if (!content) return;
+      if (!content) {
+        eventBus.emit(eventBus.SETTINGS_LOADED, {});
+        return;
+      }
       try {
         const settings = JSON.parse(content);
         this.recoverSettings(settings);
+        eventBus.emit(eventBus.SETTINGS_LOADED, settings);
       } catch (err) {
         logger.error(err);
+        eventBus.emit(eventBus.SETTINGS_LOADED, {});
       }
     },
     /**

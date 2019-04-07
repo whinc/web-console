@@ -68,6 +68,7 @@ class WebConsole {
     }
 
     _webConsole = this;
+    this._isLoaded = false;
     this._defaultOptions = {
       panelVisible: false,
       activeTab: "console",
@@ -88,7 +89,8 @@ class WebConsole {
 
   _load(options = {}) {
     // console.log("web-console start");
-    if (document.readyState === "interactive" || document.readyState === "complete") {
+    if (!this._isLoaded && (document.readyState === "interactive" || document.readyState === "complete")) {
+      this._isLoaded = true;
       const root = document.createElement("div");
       (document.documentElement || document.body).appendChild(root);
 
@@ -106,7 +108,7 @@ class WebConsole {
           })
       });
     } else {
-      document.addEventListener("readystatechange", this._load.bind(this));
+      document.addEventListener("readystatechange", this._load.bind(this, ...arguments));
     }
   }
 }

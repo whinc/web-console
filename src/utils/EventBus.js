@@ -40,6 +40,7 @@ export { EventBus };
 export default new EventBus({
   POPUP_VISIBILITY_CHANGE: "popup_visibility_change",
   SETTINGS_CHANGE: "settings_change",
+  SETTINGS_LOADED: "settings_loaded",
   WEB_CONSOLE_SHOW: "web-console:show",
   WEB_CONSOLE_HIDE: "web-console:hide",
   REQUEST_WEB_CONSOLE_HIDE: "request:web-console:hide"

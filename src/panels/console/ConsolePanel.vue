@@ -131,7 +131,9 @@ export default {
     });
 
     // 监听设置变化事件
-    eventBus.on(eventBus.SETTINGS_CHANGE, this.onSettingsChanged.bind(this));
+    const bindOnSettingsChanged = this.onSettingsChanged.bind(this);
+    eventBus.on(eventBus.SETTINGS_LOADED, bindOnSettingsChanged);
+    eventBus.on(eventBus.SETTINGS_CHANGE, bindOnSettingsChanged);
   },
   errorCaptured(error) {
     // 在浏览器控制台输出错误原因

@@ -112,6 +112,7 @@
         margin-bottom: 15px;
       }
     </style>
+    <link rel="stylesheet" href="./HelloPlugin.css">
   </head>
   <body>
     <!-- 测试 element 面板 -->
@@ -211,6 +212,8 @@
     <script src="./test_console.js"></script>
     <script src="./test_network.js"></script>
     <script src="./test_application.js"></script>
+    <script src="./test_plugin.js"></script>
+    <script src="./HelloPlugin.js"></script>
     <script type="text/javascript">
       var isDev = !!localStorage.getItem('web-console:isDev')
       new Vue({
@@ -258,60 +261,7 @@
                 activeTab: isDev ? 'network' : 'console',
                 panelVisible: isDev ? true : false,
                 entryStyle: 'button',
-                plugins: [
-                  {
-                    name: 'plugin1',
-                    component: {
-                      data: function () {
-                        return {
-                          text: 'plugin1 panel'
-                        }
-                      },
-                      methods: {
-                        onWebConsoleReady: function (hostProxy) {
-                          this.hostProxy = hostProxy
-                        },
-                        onWebConsoleShow: function (hostProxy) {
-                          console.log('web-console show')
-                        },
-                        onWebConsoleHide: function (hostProxy) {
-                          console.log('web-console hide')
-                        },
-                        onWebConsoleTabChanged: function (hostProxy, newVal, oldVal) {
-                          console.log('web-console tab changed: %s -> %s', oldVal, newVal)
-                        },
-                        onWebConsoleSettingsChanged: function (hostProxy, settings) {
-                          console.log('web-console settings changed: %o', settings)
-                        },
-                        hidePanel: function () {
-                          this.hostProxy.hidePanel()
-                        }
-                      },
-                      render: function (h) {
-                        return h('div', {}, [
-                          h('button', {
-                            on: {
-                              click: this.hidePanel
-                            }
-                          }, 'hide panel')
-                        ])
-                      }
-                    }
-                  },
-                  {
-                    name: 'plugin2',
-                    component: {
-                      data: function () {
-                        return {
-                          text: 'plugin2 panel'
-                        }
-                      },
-                      render: function (h) {
-                        return h('div', {}, this.text)
-                      }
-                    }
-                  }
-                ]
+                plugins: window.$plugins
               });
               if (isDev) {
                 // this.$network.testRequestParams()

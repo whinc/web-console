@@ -45,9 +45,14 @@
         <NetworkPanel v-show="activeTab === 'network'" />
         <ApplicationPanel v-show="activeTab === 'application'" />
         <!-- 插件 -->
-        <div v-for="plugin in plugins" :key="plugin.id" :data-name="plugin.name" class="plugin-panel" v-show="activeTab === plugin.id">
-          <component :is="plugin.component" />
-        </div>
+        <component
+          v-for="plugin in plugins"
+          :key="plugin.id"
+          :id="plugin.id"
+          class="plugin-panel"
+          :is="plugin.component"
+          v-show="activeTab === plugin.id"
+        />
         <!-- 设置面板 -->
         <SettingsPanel v-model="isSettingPanelVisible" />
       </div>
@@ -57,7 +62,7 @@
 
 <script>
 import { Popup } from "mint-ui";
-import { VTabBar, VTabBarItem, VIcon } from "@/components";
+import { VTabBar, VTabBarItem, VIcon, VFootBar } from "@/components";
 import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel, ElementPanel } from "@/panels";
 import { eventBus, Logger } from "@/utils";
 import { pluginManager, pluginEvents } from "@/plugins";
@@ -75,6 +80,7 @@ export default {
     ApplicationPanel,
     SettingsPanel,
     VIcon,
+    VFootBar,
     [VTabBar.name]: VTabBar,
     [VTabBarItem.name]: VTabBarItem,
     [Popup.name]: Popup
@@ -108,6 +114,22 @@ export default {
         eventBus.emit(eventBus.POPUP_VISIBILITY_CHANGE, value);
       });
       value ? this.scaleManager.preventScale() : this.scaleManager.recoverScale();
+    },
+    footBarButtons() {
+      return [
+        {
+          text: "Clear",
+          click: () => {
+            this.msgList = [];
+          }
+        },
+        {
+          text: "Hide",
+          click: () => {
+            eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE);
+          }
+        }
+      ];
     }
   },
   beforeMount() {
@@ -115,8 +137,14 @@ export default {
     this.scaleManager = createScaleManager();
     this.isTouched = false;
 
-    // mounted 之前加载插件，mounted 执行时插件已挂载
+    // mounted 之前加载插件，确保 mounted 执行时插件已挂载
     this.installPlugins();
+
+    // 监听来自子元素的事件：请求隐藏弹窗
+    eventBus.on(eventBus.REQUEST_WEB_CONSOLE_HIDE, () => this.hidePanel());
+    eventBus.on(eventBus.SETTINGS_CHANGE, settings =>
+      pluginManager.emit(pluginEvents.WEB_CONSOLE_SETTINGS_CHANGED, settings)
+    );
   },
   mounted() {
     // 设置初始值
@@ -131,13 +159,12 @@ export default {
       this.scrollbarWidth = getScrollbarWidth();
     });
 
-    // 监听来自子元素的事件：请求隐藏弹窗
-    eventBus.on(eventBus.REQUEST_WEB_CONSOLE_HIDE, () => this.hidePanel());
-    eventBus.on(eventBus.SETTINGS_CHANGE, settings =>
-      pluginManager.emit(pluginEvents.WEB_CONSOLE_SETTINGS_CHANGED, settings)
-    );
-
+    // 此时插件已挂载并且设置已加载，触发插件 onWebConsoleReady 周期方法
     pluginManager.emit(pluginEvents.WEB_CONSOLE_READY);
+    // 如果此刻 web-console 处于可见状态，触发插件 onWebConsoleShow 周期方法
+    if (this.panelVisible) {
+      pluginManager.emit(pluginEvents.WEB_CONSOLE_SHOW);
+    }
   },
   methods: {
     showPanel() {
