@@ -42,7 +42,7 @@ web-console 特性列表完成情况（可能会变动）：
 - Settings 面板
   - [x] 设置各面板默认行为
   - [x] 关于信息
-- [ ] 支持插件
+- [x] 支持插件
 
 ## 如何使用?
 
@@ -66,7 +66,7 @@ new WebConsole();
 ```js
 if (process.env.NODE_ENV === "development") {
   import("@whinc/web-console").then(WebConsole => {
-    new WebConsole();
+    new WebConsole(config);
   });
 }
 ```
@@ -83,8 +83,16 @@ if (process.env.NODE_ENV === "development") {
 通过下面代码初始化
 
 ```js
-new WebConsole();
+new WebConsole(config);
 ```
+
+## API
+
+TODO
+
+## 插件开发
+
+[插件开发](./docs/plugin.md)
 
 ## 更新日志
 
