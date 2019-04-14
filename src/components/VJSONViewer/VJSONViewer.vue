@@ -14,7 +14,7 @@ export default {
     JSONTextBlock
   },
   props: {
-    // 有效的 JSON 值
+    // 任意 JS 类型值
     value: {
       required: true
     }

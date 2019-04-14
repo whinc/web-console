@@ -2,10 +2,8 @@
  * 插件基类
  */
 import { isFunction } from "@/utils";
-import { VFootBar } from "@/components";
+import { VFootBar, VIcon, VTabBar, VTabBarItem, VHighlightView, VJSONViewer } from "@/components";
 import pluginEvents from "./pluginEvents";
-
-let _id = 0;
 
 export default class Plugin {
   constructor({ id, name, settings, component }) {
@@ -18,16 +16,20 @@ export default class Plugin {
   __init__(pluginMgr) {
     // const plugin = this;
     const component = this.component;
-    const pluginId = this.pluginId;
 
     this.component = {
       ...component,
-      name: component.name || pluginId,
+      name: component.name || this.id,
       mixins: [
         ...(component.mixins || []),
         {
           components: {
-            VFootBar
+            VFootBar,
+            VHighlightView,
+            VIcon,
+            VTabBar,
+            VTabBarItem,
+            VJSONViewer
           },
           created() {
             // created 周期函数触发时，Vue 已完成事件部署

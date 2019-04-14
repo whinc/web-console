@@ -8,7 +8,8 @@ window.$plugins = function(WebConsole) {
       return {
         data: function() {
           return {
-            text: "plugin1 panel"
+            text: "plugin1 panel",
+            activeTab: "A"
           };
         },
         methods: {
@@ -77,7 +78,61 @@ window.$plugins = function(WebConsole) {
                       }
                     },
                     "print settings"
+                  ),
+                  h(
+                    "div",
+                    {
+                      style: {
+                        "margin-top": "20px",
+                        display: "flex",
+                        "flex-direction": "row"
+                      }
+                    },
+                    ["setting", "close", "refresh", "ban", "edit", "save", "add", "cancel", "expand", "collapse"].map(
+                      name =>
+                        h("VIcon", {
+                          style: {
+                            "margin-left": "10px",
+                            width: "20px",
+                            height: "20px"
+                          },
+                          props: {
+                            name: name
+                          }
+                        })
+                    )
                   )
+                ]
+              ),
+              h("VJSONViewer", {
+                props: {
+                  value: { a: 1, b: "2", c: { a: 1, b: "2" } }
+                }
+              }),
+              h("VHighlightView", {
+                props: {
+                  code: "var a = 1;\nvar b 2;\nconsole.log('a + b =', a + b)",
+                  language: "javascript"
+                }
+              }),
+              h(
+                "VTabBar",
+                {
+                  props: {
+                    value: vm.activeTab,
+                    equalWidth: true
+                  },
+                  on: {
+                    input: function(id) {
+                      vm.activeTab = id;
+                    }
+                  }
+                },
+                [
+                  h("VTabBarItem", { props: { id: "A" } }, "Tab1"),
+                  h("VTabBarItem", { props: { id: "B" } }, "Tab2"),
+                  h("VTabBarItem", { props: { id: "C" } }, "Tab3"),
+                  h("VTabBarItem", { props: { id: "D" } }, "Tab4")
                 ]
               ),
               h("v-foot-bar", {

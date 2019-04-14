@@ -38,6 +38,7 @@
 export default {
   props: {
     // 图标名称（必须是支持的图标名）
+    // 目前支持：["setting", "close", "refresh", "ban", "edit", "save", "add", "cancel", "expand", "collapse"]
     name: {
       type: String
       // validator(type) {
