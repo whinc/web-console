@@ -25,7 +25,7 @@ class EventBus {
     //   return;
     // }
 
-    logger.log('on: "%s"', eventName);
+    // logger.log('on: "%s"', eventName);
     this._vue.$on(eventName, callback);
   }
 }

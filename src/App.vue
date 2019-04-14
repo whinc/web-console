@@ -106,6 +106,7 @@ export default {
   },
   watch: {
     activeTab(newVal, oldVal) {
+      // 触发 Tab 变化事件
       pluginManager.emit(pluginEvents.WEB_CONSOLE_TAB_CHANGED, newVal, oldVal);
     },
     panelVisible(value) {
@@ -140,8 +141,13 @@ export default {
     // mounted 之前加载插件，确保 mounted 执行时插件已挂载
     this.installPlugins();
 
-    // 监听来自子元素的事件：请求隐藏弹窗
+    // 监听请求隐藏主面板事件
     eventBus.on(eventBus.REQUEST_WEB_CONSOLE_HIDE, () => this.hidePanel());
+    // 监听设置加载完毕事件
+    eventBus.on(eventBus.SETTINGS_LOADED, settings =>
+      pluginManager.emit(pluginEvents.WEB_CONSOLE_SETTINGS_LOADED, settings)
+    );
+    // 监听设置变化事件
     eventBus.on(eventBus.SETTINGS_CHANGE, settings =>
       pluginManager.emit(pluginEvents.WEB_CONSOLE_SETTINGS_CHANGED, settings)
     );
@@ -159,9 +165,10 @@ export default {
       this.scrollbarWidth = getScrollbarWidth();
     });
 
-    // 此时插件已挂载并且设置已加载，触发插件 onWebConsoleReady 周期方法
+    // 触发插件 onWebConsoleReady 事件
+    // 设置加载是在 beforeMount 中完成的，当主面板 mounted 时，设置项已经可用并且主面板也已经渲染完成，可以安全的告诉插件一切就绪
     pluginManager.emit(pluginEvents.WEB_CONSOLE_READY);
-    // 如果此刻 web-console 处于可见状态，触发插件 onWebConsoleShow 周期方法
+    // 如果主面板默认处于可见状态，则立即触发插件 onWebConsoleShow 周期方法
     if (this.panelVisible) {
       pluginManager.emit(pluginEvents.WEB_CONSOLE_SHOW);
     }

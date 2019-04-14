@@ -4,15 +4,6 @@ import pluginEvents from "./pluginEvents";
 
 let id = 0;
 
-const hostProxy = {
-  echo() {
-    console.log("echo in App.vue");
-  },
-  hidePanel() {
-    eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE);
-  }
-};
-
 class PluginManager extends EventBus {
   constructor(...args) {
     super(...args);
@@ -26,10 +17,18 @@ class PluginManager extends EventBus {
        *  }
        */
     ];
-    this._isWebConsoleReady = false;
+    // this._isWebConsoleReady = false;
+    // 当前最新设置
+    this._settings = {};
+
+    this._hostProxy = {
+      echo: () => console.log("echo in App.vue"),
+      hidePanel: () => eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE),
+      getSettings: () => this._settings
+    };
 
     const pluginMgr = this;
-    this._injectedLifeCycleMethods = {
+    const mixins = {
       components: {
         VFootBar
       },
@@ -37,18 +36,20 @@ class PluginManager extends EventBus {
       created() {
         const vm = this;
         // 注册插件生命周期方法
+        // 当接收到特定事件时，自动触发相应的插件生命周期方法
         Object.keys(pluginEvents)
           .map(key => pluginEvents[key])
           .forEach(event => {
             pluginMgr.on(event, (...args) => {
-              const fn = this[event];
+              const fn = vm[event];
               if (isFunction(fn)) {
-                fn.call(vm, hostProxy, ...args);
+                fn.call(vm, pluginMgr._hostProxy, ...args);
               }
             });
           });
       } // created
     };
+    this._mixins = mixins;
   }
 
   /**
@@ -60,9 +61,9 @@ class PluginManager extends EventBus {
     const { name, component, settings } = plugin;
     const pluginId = `WebConsolePlugin${id++}`;
 
-    this.on(pluginEvents.WEB_CONSOLE_READY, () => {
-      this._isWebConsoleReady = true;
-    });
+    // this.on(pluginEvents.WEB_CONSOLE_READY, () => {
+    //   this._isWebConsoleReady = true;
+    // });
 
     const _plugin = {
       id: pluginId,
@@ -71,7 +72,7 @@ class PluginManager extends EventBus {
       component: {
         ...component,
         name: component.name || pluginId,
-        mixins: [...(component.mixins || []), this._injectedLifeCycleMethods]
+        mixins: [...(component.mixins || []), this._mixins]
       }
     };
     this._plugins.push(_plugin);
@@ -79,6 +80,14 @@ class PluginManager extends EventBus {
 
   getPlugins() {
     return this._plugins;
+  }
+
+  updateSettings(settings) {
+    this._settings = settings;
+  }
+
+  getSettings() {
+    return this._settings;
   }
 
   toString() {

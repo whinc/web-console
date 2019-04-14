@@ -25,6 +25,9 @@ window.$plugins = [
         },
         hidePanel: function() {
           this.hostProxy.hidePanel();
+        },
+        printSettings: function() {
+          console.log("settings:", this.hostProxy.getSettings());
         }
       },
       render: function(h) {
@@ -54,6 +57,18 @@ window.$plugins = [
                     }
                   },
                   "hide panel"
+                ),
+                h(
+                  "button",
+                  {
+                    style: {
+                      "margin-left": "10px"
+                    },
+                    on: {
+                      click: this.printSettings
+                    }
+                  },
+                  "print settings"
                 )
               ]
             ),

@@ -68,11 +68,14 @@ const logger = new Logger("[SettingsPanel]");
 const KEY_SETTINGS = "web-console:settings";
 
 /**
- * 默认配置
- * name 作为存储时的键
- * desc 作为显示的描述文案
- * settings 是子项
- *  type 是 UI 类型
+ * 默认配置，一组配置段，每个配置段包含一个或多个表单配置项
+ * name 配置段名称
+ * desc 配置段描述
+ * items 表单配置项列表
+ *   type 表单类型
+ *   desc 字段描述
+ *   name 字段名
+ *   value 字段值
  */
 const defaultConfigs = [
   {
@@ -163,11 +166,11 @@ export default {
     // 安装插件的设置项
     this.installPluginSettings();
     // 加载配置
-    this.loadSettings();
-  },
-  mounted() {
-    // 通知配置更新
-    // this.$nextTick(() => this.onSettingsChanged())
+    this.loadSettings(settings => {
+      pluginManager.updateSettings(settings);
+      eventBus.emit(eventBus.SETTINGS_LOADED, settings || {});
+      return;
+    });
   },
   methods: {
     installPluginSettings() {
@@ -183,6 +186,7 @@ export default {
     // 通知配置更新
     onSettingsChanged() {
       const settings = this.extractSettings();
+      pluginManager.updateSettings(settings);
       eventBus.emit(eventBus.SETTINGS_CHANGE, settings);
       // logger.log('%o --extract--> %o --expand--> %o', this.configs, settings, this.recoverSettings(settings))
       // logger.log("extractSettings:", settings);
@@ -197,19 +201,19 @@ export default {
       const settings = this.extractSettings();
       window.localStorage.setItem(KEY_SETTINGS, JSON.stringify(settings));
     },
-    loadSettings() {
+    loadSettings(cb) {
       const content = window.localStorage.getItem(KEY_SETTINGS);
       if (!content) {
-        eventBus.emit(eventBus.SETTINGS_LOADED, {});
+        cb && cb();
         return;
       }
       try {
         const settings = JSON.parse(content);
         this.recoverSettings(settings);
-        eventBus.emit(eventBus.SETTINGS_LOADED, settings);
+        cb && cb(settings);
       } catch (err) {
         logger.error(err);
-        eventBus.emit(eventBus.SETTINGS_LOADED, {});
+        cb && cb();
       }
     },
     /**
