@@ -1,10 +1,6 @@
 # web-console 插件开发
 
-web-console 插件开发很简单，每个插件都是一个 Vue 组件，你可以利用 Vue 强大能力编写插件。同时 web-console 提供了一些插件生命周期方法，使你可以在组件中针对各个时间做出相应的处理。
-
-插件命名`web-console-plugin-<name>`，如 `web-console-plugin-source`
-
-插件开发模板，方便快速编写插件，支持本地调试、热更新和热重载、一键发布到 npm 仓库。
+通过插件可以增强 web-console 的能力，扩大使用场景。web-console 插件基于 Vue 组件开发，提供了丰富的 API、生命周期方法、内置组件、自定义偏好设置，同时提供了一个初始的插件开发项目模板方便开发、测试和发布。
 
 ## 创建插件
 
@@ -15,12 +11,13 @@ const plugin = new WebConsole.Plugin(config);
 ```
 
 其中参数`config`的取值如下：
-|字段|类型|必填|备注|
-|-|-|-|-|
-|id|string|true|不能与已安装的插件 id 相同|
-|name|string|false|插件名称，用于显示，缺省时与 id 相同|
-|component|VueComponent|true|插件主面板，是一个 Vue 组件|
-|settings|Object|false|增加到设置面板的设置项|
+
+| 字段      | 类型         | 必填  | 备注                                 |
+| --------- | ------------ | ----- | ------------------------------------ |
+| id        | string       | true  | 不能与已安装的插件 id 相同           |
+| name      | string       | false | 插件名称，用于显示，缺省时与 id 相同 |
+| component | VueComponent | true  | 插件主面板，是一个 Vue 组件          |
+| settings  | Object       | false | 增加到设置面板的设置项               |
 
 > 参数配置中的 component 注入了一些 web-console 组件，可以直接使用。
 
