@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import "./polyfill";
 import { consoleHooks, filters, isFunction, isObject } from "@/utils";
-import { pluginManager } from "@/plugins";
+import { pluginManager, Plugin } from "@/plugins";
 import InfiniteScroll from "vue-infinite-scroll";
 import "./styles/_global.scss";
 
@@ -112,6 +112,8 @@ class WebConsole {
     }
   }
 }
+
+WebConsole.Plugin = Plugin;
 
 if (!window.WebConsole) {
   window.WebConsole = WebConsole;

@@ -1,81 +1,56 @@
-import { eventBus, EventBus, isFunction } from "@/utils";
-import { VFootBar } from "@/components";
-import pluginEvents from "./pluginEvents";
-
-let id = 0;
+/**
+ * 插件管理
+ */
+import { eventBus, EventBus, isString } from "@/utils";
+import Plugin from "./Plugin";
 
 class PluginManager extends EventBus {
   constructor(...args) {
     super(...args);
-
-    this._plugins = [
-      /**
-       *  {
-       *    name: string,
-       *    component: VueComponent,
-       *    settings: Object
-       *  }
-       */
-    ];
-    // this._isWebConsoleReady = false;
-    // 当前最新设置
+    /**
+     * 插件集合
+     * @type {Array<Plugin>}
+     */
+    this._plugins = [];
+    // 当前最新的设置
     this._settings = {};
+    // 宿主代理
+    this._hostProxy = null;
+  }
 
-    this._hostProxy = {
-      echo: () => console.log("echo in App.vue"),
-      hidePanel: () => eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE),
-      getSettings: () => this._settings
-    };
-
-    const pluginMgr = this;
-    const mixins = {
-      components: {
-        VFootBar
-      },
-      // created 周期函数触发时，Vue 已完成事件部署
-      created() {
-        const vm = this;
-        // 注册插件生命周期方法
-        // 当接收到特定事件时，自动触发相应的插件生命周期方法
-        Object.keys(pluginEvents)
-          .map(key => pluginEvents[key])
-          .forEach(event => {
-            pluginMgr.on(event, (...args) => {
-              const fn = vm[event];
-              if (isFunction(fn)) {
-                fn.call(vm, pluginMgr._hostProxy, ...args);
-              }
-            });
-          });
-      } // created
-    };
-    this._mixins = mixins;
+  get hostProxy() {
+    if (!this._hostProxy) {
+      this._hostProxy = {
+        echo: () => console.log("echo in App.vue"),
+        hidePanel: () => eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE),
+        getSettings: () => this._settings
+      };
+    }
+    return this._hostProxy;
   }
 
   /**
    * 注册插件
-   * @param {Object} plugin
-   * @param {Object} plugin.component 插件内容，是一个 Vue 组件
+   * @param {Plugin} plugin
    */
   addPlugin(plugin) {
-    const { name, component, settings } = plugin;
-    const pluginId = `WebConsolePlugin${id++}`;
+    if (!(plugin instanceof Plugin)) {
+      console.warn("Invalid plugin: plugin should inherit WebConsole.Plugin");
+      return;
+    }
 
-    // this.on(pluginEvents.WEB_CONSOLE_READY, () => {
-    //   this._isWebConsoleReady = true;
-    // });
+    if (isString(plugin.id) && !plugin.id) {
+      console.warn(`Empty plugin id: plugin id must not be empty and must be unique among all plugins`);
+      return;
+    }
 
-    const _plugin = {
-      id: pluginId,
-      name,
-      settings,
-      component: {
-        ...component,
-        name: component.name || pluginId,
-        mixins: [...(component.mixins || []), this._mixins]
-      }
-    };
-    this._plugins.push(_plugin);
+    if (this._plugins.indexOf(plugin.id) !== -1) {
+      console.warn(`Plugin conflict: plugin id "${plugin.id}" has existed`);
+      return;
+    }
+
+    plugin.__init__(this);
+    this._plugins.push(plugin);
   }
 
   getPlugins() {
