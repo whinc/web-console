@@ -61,6 +61,21 @@ Vue.config.productionTip = false;
 let _webConsole = null;
 
 class WebConsole {
+  // 注册插件
+  static use(pluginCreator, options) {
+    if (_webConsole) {
+      console.warn("Plugin must be registered before create WebConsole");
+      return;
+    }
+
+    if (!isFunction(pluginCreator)) {
+      console.warn("Invalid plugin:", pluginCreator);
+      return;
+    }
+    const plugin = pluginCreator.call(null, WebConsole, options);
+    pluginManager.addPlugin(plugin);
+  }
+
   constructor(options) {
     if (_webConsole) {
       console.warn("WebConsole has been initialized, return previous instance: %O", _webConsole);
@@ -69,41 +84,44 @@ class WebConsole {
 
     _webConsole = this;
     this._isLoaded = false;
-    this._defaultOptions = {
+    this._load(this._processOptions(options));
+  }
+
+  _processOptions(options) {
+    const defaultOptions = {
       panelVisible: false,
       activeTab: "console",
       entryStyle: "button"
     };
-    const plugins = options.plugins || [];
-    plugins.forEach(plugin => this.addPlugin(plugin));
-    this._load(options);
-  }
 
-  addPlugin(plugin) {
-    if (!isObject(plugin)) {
-      console.warn("plugin must be a object");
-      return;
+    const supportTab = ["console", "network", "element", "storage"];
+
+    let activeTab = options.activeTab;
+    if (supportTab.indexOf(activeTab) === -1 && !pluginManager.hasPlugin(activeTab)) {
+      activeTab = defaultOptions.activeTab;
     }
-    pluginManager.addPlugin(plugin);
+
+    return {
+      panelVisible: options.panelVisible || defaultOptions.panelVisible,
+      entryStyle: options.entryStyle || defaultOptions.entryStyle,
+      activeTab: activeTab
+    };
   }
 
   _load(options = {}) {
-    // console.log("web-console start");
     if (!this._isLoaded && (document.readyState === "interactive" || document.readyState === "complete")) {
       this._isLoaded = true;
       const root = document.createElement("div");
       (document.documentElement || document.body).appendChild(root);
 
-      // console.log("web console shoule output me!!!");
-      const defaultOptions = this._defaultOptions;
       const vm = new Vue({
         el: root,
         render: h =>
           h(App, {
             props: {
-              initPanelVisible: options.panelVisible || defaultOptions.panelVisible,
-              initActiveTab: options.activeTab || defaultOptions.activeTab,
-              initEntryStyle: options.entryStyle || defaultOptions.entryStyle
+              initPanelVisible: options.panelVisible,
+              initActiveTab: options.activeTab,
+              initEntryStyle: options.entryStyle
             }
           })
       });

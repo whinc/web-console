@@ -1,5 +1,5 @@
-window.$plugins = function(WebConsole) {
-  var plugin1 = new WebConsole.Plugin({
+function plugin1(WebConsole) {
+  return new WebConsole.Plugin({
     id: "plugin1",
     name: "插件1",
     component: function() {
@@ -161,8 +161,10 @@ window.$plugins = function(WebConsole) {
       }
     ]
   });
+}
 
-  var plugin2 = new WebConsole.Plugin({
+function plugin2(WebConsole) {
+  return new WebConsole.Plugin({
     id: "plugin2",
     name: "插件2",
     component: {
@@ -185,26 +187,7 @@ window.$plugins = function(WebConsole) {
         }
       ];
     }
-    // onWebConsoleReady: function(hostProxy) {
-    //   this.hostProxy = hostProxy;
-    //   console.log(this.toString(), "onWebConsoleReady");
-    // },
-    // onWebConsoleShow: function(hostProxy) {
-    //   console.log(this.toString(), "onWebConsoleShow");
-    // },
-    // onWebConsoleHide: function(hostProxy) {
-    //   console.log(this.toString(), "onWebConsoleHide");
-    // },
-    // onWebConsoleTabChanged: function(hostProxy, newVal, oldVal) {
-    //   console.log(this.toString(), "onWebConsoleTabChanged", newVal);
-    // },
-    // onWebConsoleSettingsLoaded: function(hostProxy, settings) {
-    //   console.log(this.toString(), "onWebConsoleSettingsLoaded", settings);
-    // },
-    // onWebConsoleSettingsChanged: function(hostProxy, settings) {
-    //   console.log(this.toString(), "onWebConsoleSettingsChanged", settings);
-    // },
   });
+}
 
-  return [plugin1, plugin2];
-};
+window.$plugins = [plugin1, plugin2];

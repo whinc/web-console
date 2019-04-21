@@ -65,6 +65,10 @@ class PluginManager extends EventBus {
     return this._settings;
   }
 
+  hasPlugin(pluginId) {
+    return this._plugins.findIndex(plugin => plugin.id === pluginId) !== -1;
+  }
+
   toString() {
     return JSON.stringify(this._plugins, null, 4);
   }
