@@ -45,14 +45,9 @@
         <NetworkPanel v-show="activeTab === 'network'" />
         <ApplicationPanel v-show="activeTab === 'application'" />
         <!-- 插件 -->
-        <component
-          v-for="plugin in plugins"
-          :key="plugin.id"
-          :id="plugin.id"
-          class="plugin-panel"
-          :is="plugin.component"
-          v-show="activeTab === plugin.id"
-        />
+        <div class="plugin-panel" v-for="plugin in plugins" :key="plugin.id" v-show="activeTab === plugin.id">
+          <component :id="plugin.id" :is="plugin.component" />
+        </div>
         <!-- 设置面板 -->
         <SettingsPanel v-model="isSettingPanelVisible" />
       </div>
@@ -172,10 +167,6 @@ export default {
     // 触发插件 onWebConsoleReady 事件
     // 设置加载是在 beforeMount 中完成的，当主面板 mounted 时，设置项已经可用并且主面板也已经渲染完成，可以安全的告诉插件一切就绪
     pluginManager.emit(pluginEvents.WEB_CONSOLE_READY);
-    // 如果主面板默认处于可见状态，则立即触发插件 onWebConsoleShow 周期方法
-    if (this.panelVisible) {
-      pluginManager.emit(pluginEvents.WEB_CONSOLE_SHOW);
-    }
   },
   methods: {
     showPanel() {

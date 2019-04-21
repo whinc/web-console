@@ -64,7 +64,7 @@ class WebConsole {
   // 注册插件
   static use(pluginCreator, options) {
     if (_webConsole) {
-      console.warn("Plugin must be registered before create WebConsole");
+      console.warn("Plugin must be registered before creating WebConsole");
       return;
     }
 
