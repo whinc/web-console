@@ -29,17 +29,17 @@
     <mt-popup position="bottom" v-model="panelVisible">
       <div class="panel" :style="{'padding': `0 ${scrollbarWidth / 2}px`}">
         <!-- Tabbar -->
-        <v-tab-bar v-model="activeTab">
-          <v-tab-bar-item id="element">Element</v-tab-bar-item>
-          <v-tab-bar-item id="console">Console</v-tab-bar-item>
-          <v-tab-bar-item id="network">Network</v-tab-bar-item>
-          <v-tab-bar-item id="application">Application</v-tab-bar-item>
+        <VTabBar v-model="activeTab">
+          <VTabBarItem id="element">Element</VTabBarItem>
+          <VTabBarItem id="console">Console</VTabBarItem>
+          <VTabBarItem id="network">Network</VTabBarItem>
+          <VTabBarItem id="application">Application</VTabBarItem>
           <!-- 插件 -->
-          <v-tab-bar-item v-for="plugin in plugins" :key="plugin.id" :id="plugin.id">{{plugin.name}}</v-tab-bar-item> 
+          <VTabBarItem v-for="plugin in plugins" :key="plugin.id" :id="plugin.id">{{plugin.name}}</VTabBarItem> 
           <template slot="icons">
             <VIcon name="setting" @click="onClickSetting" style="width: 2em; padding: 0.4em" />
           </template>
-        </v-tab-bar>
+        </VTabBar>
         <ElementPanel v-show="activeTab === 'element'" />
         <ConsolePanel v-show="activeTab === 'console'" />
         <NetworkPanel v-show="activeTab === 'network'" />
@@ -81,8 +81,8 @@ export default {
     SettingsPanel,
     VIcon,
     VFootBar,
-    [VTabBar.name]: VTabBar,
-    [VTabBarItem.name]: VTabBarItem,
+    VTabBar,
+    VTabBarItem,
     [Popup.name]: Popup
   },
   props: {
@@ -114,6 +114,10 @@ export default {
       this.$nextTick(() => {
         eventBus.emit(eventBus.POPUP_VISIBILITY_CHANGE, value);
       });
+
+      // 面板显示隐藏时，触发插件生命周期方法
+      pluginManager.emit(value ? pluginEvents.WEB_CONSOLE_SHOW : pluginEvents.WEB_CONSOLE_HIDE);
+
       value ? this.scaleManager.preventScale() : this.scaleManager.recoverScale();
     },
     footBarButtons() {
@@ -143,11 +147,11 @@ export default {
 
     // 监听请求隐藏主面板事件
     eventBus.on(eventBus.REQUEST_WEB_CONSOLE_HIDE, () => this.hidePanel());
-    // 监听设置加载完毕事件
+    // 监听设置加载完毕事件，触发插件生命周期方法
     eventBus.on(eventBus.SETTINGS_LOADED, settings =>
       pluginManager.emit(pluginEvents.WEB_CONSOLE_SETTINGS_LOADED, settings)
     );
-    // 监听设置变化事件
+    // 监听设置变化事件，触发插件生命周期方法
     eventBus.on(eventBus.SETTINGS_CHANGE, settings =>
       pluginManager.emit(pluginEvents.WEB_CONSOLE_SETTINGS_CHANGED, settings)
     );
@@ -175,16 +179,10 @@ export default {
   },
   methods: {
     showPanel() {
-      if (!this.panelVisible) {
-        this.panelVisible = true;
-        pluginManager.emit(pluginEvents.WEB_CONSOLE_SHOW);
-      }
+      this.panelVisible = true;
     },
     hidePanel() {
-      if (this.panelVisible) {
-        this.panelVisible = false;
-        pluginManager.emit(pluginEvents.WEB_CONSOLE_HIDE);
-      }
+      this.panelVisible = false;
     },
     onTouchStart(e) {
       this.isTouched = true;

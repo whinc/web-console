@@ -15,15 +15,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:lib": "vue-cli-service build --target lib --name web-console --dest dist src/main.js",
-    "build:app": "vue-cli-service build --target app --dest demo",
-    "depoly": "npm run build:app && npx gh-pages -d demo",
-    "semantic-release": "npm run lint && npm run build:lib && cross-env NPM_TOKEN=$NPM_TOKEN semantic-release",
+    "depoly:lib": "npm run lint && npm run build:lib && cross-env NPM_TOKEN=$NPM_TOKEN semantic-release",
+    "build:demo": "vue-cli-service build --target app --dest demo",
+    "depoly:demo": "npm run build:app && npx gh-pages -d demo",
+    "lint": "vue-cli-service lint src/**/*.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "report": "vue-cli-service build --report",
     "test:unit": "vue-cli-service test:unit",
     "test:api": "cd ./tests/api && nodemon index.js",
-    "e2e": "vue-cli-service e2e",
-    "lint": "vue-cli-service lint src/**/*.js"
+    "e2e": "vue-cli-service e2e"
   },
   "dependencies": {
     "cookie_js": "^1.2.2",

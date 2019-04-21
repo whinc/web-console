@@ -18,10 +18,10 @@ class PluginManager extends EventBus {
     this._hostProxy = null;
   }
 
+  // 宿主代理，提供一些操作 web-console 的方法
   get hostProxy() {
     if (!this._hostProxy) {
       this._hostProxy = {
-        echo: () => console.log("echo in App.vue"),
         hidePanel: () => eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE),
         getSettings: () => this._settings
       };
@@ -39,12 +39,12 @@ class PluginManager extends EventBus {
       return;
     }
 
-    if (isString(plugin.id) && !plugin.id) {
+    if (!plugin.id) {
       console.warn(`Empty plugin id: plugin id must not be empty and must be unique among all plugins`);
       return;
     }
 
-    if (this._plugins.indexOf(plugin.id) !== -1) {
+    if (this._plugins.find(v => v.id === plugin.id)) {
       console.warn(`Plugin conflict: plugin id "${plugin.id}" has existed`);
       return;
     }

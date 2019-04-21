@@ -62,12 +62,12 @@ export default class Plugin {
     //   });
   }
 
-  [pluginEvents.WEB_CONSOLE_READY]() {}
-  [pluginEvents.WEB_CONSOLE_SHOW]() {}
-  [pluginEvents.WEB_CONSOLE_HIDE]() {}
-  [pluginEvents.WEB_CONSOLE_TAB_CHANGED]() {}
-  [pluginEvents.WEB_CONSOLE_SETTINGS_LOADED]() {}
-  [pluginEvents.WEB_CONSOLE_SETTINGS_CHANGED]() {}
+  // [pluginEvents.WEB_CONSOLE_READY]() {}
+  // [pluginEvents.WEB_CONSOLE_SHOW]() {}
+  // [pluginEvents.WEB_CONSOLE_HIDE]() {}
+  // [pluginEvents.WEB_CONSOLE_TAB_CHANGED]() {}
+  // [pluginEvents.WEB_CONSOLE_SETTINGS_LOADED]() {}
+  // [pluginEvents.WEB_CONSOLE_SETTINGS_CHANGED]() {}
 
   toString() {
     return this.id + "(" + this.name + ")";
