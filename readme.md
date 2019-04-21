@@ -22,27 +22,30 @@ CDN 地址：<https://unpkg.com/@whinc/web-console>
 web-console 特性列表完成情况（可能会变动）：
 
 - Element 面板
-  - [x] 支持 DOM 树展示
-  - [x] 支持查看 DOM 节点的继承样式
-  - [x] 支持查看 DOM 节点的计算样式
-  - [x] 支持查看 DOM 节点的盒模型
+  - 支持 DOM 树展示
+  - 支持查看 DOM 节点的继承样式
+  - 支持查看 DOM 节点的计算样式
+  - 支持查看 DOM 节点的盒模型
 - Console 面板
-  - [x] 支持 console 对象的 log/warn/info/error/debug 方法
-  - [x] 支持 log 等日志方法的多参数输出
-  - [x] 支持 log 等日志方法的参数格式化输出，如`%s, %i, %d, %f, %d, %o, %O, %c`
-  - [x] 支持日志过滤
-  - [ ] 支持执行 JS 代码段
+  - 支持 console 对象的 log/warn/info/error/debug 方法
+  - 支持 log 等日志方法的多参数输出
+  - 支持 log 等日志方法的参数格式化输出，如`%s, %i, %d, %f, %d, %o, %O, %c`
+  - 支持日志过滤
 - Network 面板
-  - [x] 支持`XMLHttpRequest`请求和响应的展示
-  - [x] 支持`fetch`请求和响应的展示
-  - [x] 支持响应数据的预览
+  - 支持`XMLHttpRequest`请求和响应的展示
+  - 支持`fetch`请求和响应的展示
+  - 支持响应数据的预览
 - Application 面板
-  - [x] 支持 cookie、localStorage 和 sessionStorage 的增删改查
-  - [x] 支持 cookie、localStorage 和 sessionStorage 按关键字过滤
+  - 支持 cookie、localStorage 和 sessionStorage 的增删改查
+  - 支持 cookie、localStorage 和 sessionStorage 按关键字过滤
 - Settings 面板
-  - [x] 设置各面板默认行为
-  - [x] 关于信息
-- [x] 支持插件
+  - 设置各面板默认行为
+  - 关于信息
+- 插件
+  - 支持自定义插件
+  - 支持插件生命周期
+  - 支持插件偏好设置
+  - 支持使用内置组件
 
 ## 如何使用?
 
@@ -92,7 +95,7 @@ TODO
 
 ## 插件开发
 
-[插件开发](./docs/plugin.md)
+web-console 提供一些开箱即用的功能，如果这些无法满足你的需求，你还可以通过 web-console 提供的插件机制，添加第三方编写的插件来扩展功能，具体可以参考[插件开发](./docs/plugin.md)。
 
 ## 更新日志
 
