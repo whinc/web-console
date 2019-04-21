@@ -29,7 +29,7 @@ web-console 特性列表完成情况（可能会变动）：
 - Console 面板
   - 支持 console 对象的 log/warn/info/error/debug 方法
   - 支持 log 等日志方法的多参数输出
-  - 支持 log 等日志方法的参数格式化输出，如`%s, %i, %d, %f, %d, %o, %O, %c`
+  - 支持 log 等日志方法的参数格式化输出，已支持`%s, %i, %d, %f, %d, %o, %O, %c`
   - 支持日志过滤
 - Network 面板
   - 支持`XMLHttpRequest`请求和响应的展示
@@ -95,7 +95,12 @@ TODO
 
 ## 插件开发
 
-web-console 提供一些开箱即用的功能，如果这些无法满足你的需求，你还可以通过 web-console 提供的插件机制，添加第三方编写的插件来扩展功能，具体可以参考[插件开发](./docs/plugin.md)。
+web-console 提供一些开箱即用的功能，如果这些无法满足你的需求，你还可以通过 web-console 提供的插件机制，添加第三方编写的插件来扩展功能。
+
+可参考下面资源：
+
+- [插件开发文档](./docs/plugin.md)
+- [插件项目模板](https://github.com/whinc/web-console-plugin)
 
 ## 更新日志
 
