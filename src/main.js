@@ -1,8 +1,9 @@
 import Vue from "vue";
 import App from "./App.vue";
 import "./polyfill";
-import { consoleHooks, filters, isFunction, isObject } from "@/utils";
+import { consoleHooks, filters, isFunction } from "@/utils";
 import { pluginManager, Plugin } from "@/plugins";
+import { PanelType } from "@/constants";
 import InfiniteScroll from "vue-infinite-scroll";
 import "./styles/_global.scss";
 
@@ -94,7 +95,7 @@ class WebConsole {
       entryStyle: "button"
     };
 
-    const supportTab = ["console", "network", "element", "storage"];
+    const supportTab = Object.keys(PanelType).map(key => PanelType[key]);
 
     let activeTab = options.activeTab;
     if (supportTab.indexOf(activeTab) === -1 && !pluginManager.hasPlugin(activeTab)) {

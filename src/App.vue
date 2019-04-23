@@ -30,20 +30,19 @@
       <div class="panel" :style="{'padding': `0 ${scrollbarWidth / 2}px`}">
         <!-- Tabbar -->
         <VTabBar v-model="activeTab">
-          <VTabBarItem id="element">Element</VTabBarItem>
-          <VTabBarItem id="console">Console</VTabBarItem>
-          <VTabBarItem id="network">Network</VTabBarItem>
-          <VTabBarItem id="application">Application</VTabBarItem>
+          <!-- 内置面板 -->
+          <VTabBarItem v-for="id in PanelType" :id="id" :key="id">{{PanelType.text(id)}}</VTabBarItem>
           <!-- 插件 -->
           <VTabBarItem v-for="plugin in plugins" :key="plugin.id" :id="plugin.id">{{plugin.name}}</VTabBarItem> 
           <template slot="icons">
             <VIcon name="setting" @click="onClickSetting" style="width: 2em; padding: 0.4em" />
           </template>
         </VTabBar>
-        <ElementPanel v-show="activeTab === 'element'" />
-        <ConsolePanel v-show="activeTab === 'console'" />
-        <NetworkPanel v-show="activeTab === 'network'" />
-        <ApplicationPanel v-show="activeTab === 'application'" />
+        <!-- 内置面板 -->
+        <ElementPanel v-show="activeTab === PanelType.ELEMENT" />
+        <ConsolePanel v-show="activeTab === PanelType.CONSOLE" />
+        <NetworkPanel v-show="activeTab === PanelType.NETWORK" />
+        <ApplicationPanel v-show="activeTab === PanelType.APPLICATION" />
         <!-- 插件 -->
         <div class="plugin-panel" v-for="plugin in plugins" :key="plugin.id" v-show="activeTab === plugin.id">
           <component :id="plugin.id" :is="plugin.component" />
@@ -61,6 +60,7 @@ import { VTabBar, VTabBarItem, VIcon, VFootBar } from "@/components";
 import { ApplicationPanel, ConsolePanel, SettingsPanel, NetworkPanel, ElementPanel } from "@/panels";
 import { eventBus, Logger } from "@/utils";
 import { pluginManager, pluginEvents } from "@/plugins";
+import { PanelType } from "@/constants";
 
 const logger = new Logger("[App]");
 
@@ -99,6 +99,11 @@ export default {
       plugins: []
     };
   },
+  computed: {
+    PanelType() {
+      return PanelType;
+    }
+  },
   watch: {
     activeTab(newVal, oldVal) {
       // 触发 Tab 变化事件
@@ -114,22 +119,6 @@ export default {
       pluginManager.emit(value ? pluginEvents.WEB_CONSOLE_SHOW : pluginEvents.WEB_CONSOLE_HIDE);
 
       value ? this.scaleManager.preventScale() : this.scaleManager.recoverScale();
-    },
-    footBarButtons() {
-      return [
-        {
-          text: "Clear",
-          click: () => {
-            this.msgList = [];
-          }
-        },
-        {
-          text: "Hide",
-          click: () => {
-            eventBus.emit(eventBus.REQUEST_WEB_CONSOLE_HIDE);
-          }
-        }
-      ];
     }
   },
   beforeMount() {
