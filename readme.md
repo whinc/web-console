@@ -91,7 +91,14 @@ new WebConsole(config);
 
 ## API
 
-TODO
+`WebConsole`构造参数如下：
+| 字段 | 类型 | 必填 | 备注 |
+| --------- | ------------ | ----- | ------------------------------------ |
+| panelVisible | bool | false | 是否自动弹窗主面板 |
+| activeTab | string | 'console' | 默认激活的 Tab 面板，支持'element', 'console', 'network', 'application', 以及插件的 id |
+| entryStyle | string | 'button' | 入口样式，支持两种'button'和'icon' |
+
+> 后续补充更多的配置参数和 API 接口
 
 ## 插件开发
 
