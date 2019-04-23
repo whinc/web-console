@@ -187,6 +187,7 @@
         <mt-button type="primary" @click="$application.testWriteSessionStorage(1000)">测试 SessionStorage</mt-button>
         <h2>Other</h2>
         <mt-button type="primary" @click="performanceTest(50)">日志性能测试</mt-button>
+        <mt-button type="primary" @click="pluginTest">测试插件</mt-button>
       </div>
       <div v-else>
         <mt-button type="primary" @click="onClickLog('level_log')">普通日志(log)</mt-button>
@@ -237,6 +238,10 @@
           this.launchWebConsole();
         },
         methods: {
+          pluginTest () {
+            localStorage.setItem('plugin', 'enable')
+            location.reload()
+          },
           performanceTest (n) {
             if (n <= 0) return
             this.$console.testFormat()
@@ -255,7 +260,9 @@
 
               // 测试日志数量
               // new Array(11).fill(0).forEach((v, i) => console.log(i))
-              window.$plugins.forEach(plugin => WebConsole.use(plugin))
+              if (localStorage.getItem('plugin') === 'enable') {
+                window.$plugins.forEach(plugin => WebConsole.use(plugin))
+              }
 
               window.webConsole = new WebConsole({
                 activeTab: isDev ? 'network' : 'console',
