@@ -1,3 +1,9 @@
+## [0.7.2](https://github.com/whinc/web-console/compare/v0.7.1...v0.7.2) (2019-04-23)
+
+### Bug Fixes
+
+- **console:** 修复打印多个参数时,它们之间没有空白符分割的问题 ([2292733](https://github.com/whinc/web-console/commit/2292733))
+
 ## [0.7.1](https://github.com/whinc/web-console/compare/v0.7.0...v0.7.1) (2019-04-23)
 
 ### Bug Fixes
