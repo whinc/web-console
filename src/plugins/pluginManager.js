@@ -1,7 +1,7 @@
 /**
  * 插件管理
  */
-import { eventBus, EventBus, isString } from "@/utils";
+import { eventBus, EventBus } from "@/utils";
 import Plugin from "./Plugin";
 
 class PluginManager extends EventBus {
