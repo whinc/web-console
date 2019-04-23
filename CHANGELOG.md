@@ -1,3 +1,19 @@
+# [0.7.0](https://github.com/whinc/web-console/compare/v0.6.2...v0.7.0) (2019-04-23)
+
+### Bug Fixes
+
+- **plugin:** 修复 onWebConsoleShow 触发两次的问题;修复插件面板高度被改变的 bug ([bd88ddd](https://github.com/whinc/web-console/commit/bd88ddd))
+- **plugin:** 修复插件生命周期未触发问题和插件重复问题 ([7c89fd6](https://github.com/whinc/web-console/commit/7c89fd6))
+- 修复 lint 告警 ([82aedb5](https://github.com/whinc/web-console/commit/82aedb5))
+
+### Features
+
+- **plugin:** 初步支持插件的注册,展示,部分生命周期方法 ([513b530](https://github.com/whinc/web-console/commit/513b530))
+- **plugin:** 增加插件获取当前设置的方法;增加插件首次加载设置的周期方法 ([0f5d129](https://github.com/whinc/web-console/commit/0f5d129))
+- **plugin:** 增强插件支持 ([342a499](https://github.com/whinc/web-console/commit/342a499))
+- **plugin:** 新增几种内置组件暴露给插件使用 ([a17c840](https://github.com/whinc/web-console/commit/a17c840))
+- 更新在线 demo ([3275f42](https://github.com/whinc/web-console/commit/3275f42))
+
 ## [0.6.2](https://github.com/whinc/web-console/compare/v0.6.1...v0.6.2) (2019-03-26)
 
 ### Bug Fixes
