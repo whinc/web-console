@@ -1,3 +1,9 @@
+## [0.7.1](https://github.com/whinc/web-console/compare/v0.7.0...v0.7.1) (2019-04-23)
+
+### Bug Fixes
+
+- 修复 activeTab 失效问题 ([c785e38](https://github.com/whinc/web-console/commit/c785e38))
+
 # [0.7.0](https://github.com/whinc/web-console/compare/v0.6.2...v0.7.0) (2019-04-23)
 
 ### Bug Fixes
