@@ -9,7 +9,6 @@
           :showRootValueDetail="argInfo.showValueDetail"
           :key="index + '1'"
           :style="argInfo.style"
-          style="padding-right: 0.5em"
         />
       </span>
     </template>
@@ -20,7 +19,7 @@
 </template>
 
 <script>
-import { isString, isObject, isArray, Logger, isFunction } from "@/utils";
+import { isString, isObject, isArray, Logger, isFunction, flatMap } from "@/utils";
 import TextBlock from "./TextBlock";
 
 const logger = new Logger("[Message]");
@@ -135,8 +134,10 @@ function match(value, filter, deepth = Infinity) {
  *
  * console.log 方法接收的第一个参数如果是字符串，可以通过特殊占位符来格式化输出结果。
  * 例如下面例子，将格式串按占位符进行分割，每个部分都用一个占位符描述对象表示
- * format(['a%sc%se', '1', '2', '3'])
- * // 返回一个占位符描述对象组成的数组，value 表示对应的值，placeholder 表示对应的占位符，如果不是占位符该
+ * format(['a%sc%se', '1', '2', '3', '4'])
+ * // 返回一个占位符描述对象组成的数组，value 表示对应的值，placeholder 表示对应的占位符
+ * // 如果属于格式串但不是占位符，则 value 是自身；
+ * // 如果不属于格式串，则 value 是自身，同时前面插入一个空白符（作为显示时的分隔符)
  * [
  *  {value: 'a'},
  *  {value: '1', placeholder: '%s'},
@@ -144,6 +145,8 @@ function match(value, filter, deepth = Infinity) {
  *  {value: '2', placeholder: '%s'},
  *  {value: 'e'},
  *  {value: '3'},
+ *  {value: ' '},
+ *  {value: '4'},
  * ]
  *
  * 算法步骤：
@@ -168,7 +171,8 @@ function parseLogArgs(logArgs) {
   const [arg0, ...restArgs] = logArgs;
   // 第一个参数非字符串，或没有剩余参数，不需要继续处理
   if (!isString(arg0) || restArgs.length === 0) {
-    return logArgs.map(v => ({ value: v }));
+    // 参数之前添加空白符进行分割
+    return flatMap(logArgs, arg => [{ value: arg }, { value: " " }]);
   }
 
   const matcher = /%%|%s|%o|%O|%i|%d|%f|%c/;
@@ -176,7 +180,8 @@ function parseLogArgs(logArgs) {
   const result = matcher.exec(arg0);
   if (!result) {
     // 没有占位符，不处理
-    return logArgs.map(v => ({ value: v }));
+    // 参数之前添加空白符进行分割
+    return flatMap(logArgs, arg => [{ value: arg }, { value: " " }]);
   }
   const placeholder = result[0];
   const placeholderIndex = result.index; // 加上偏移量
