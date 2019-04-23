@@ -255,6 +255,9 @@ window.$console = (function() {
     // 测试占位符缺少对应的参数
     console.log('console.log("-%s%i%d%f%o%O%c-")');
     console.log("-%s%i%d%f%o%O%c-");
+    /* 测试占位符之间的空白符 */
+    // 期望输出 "a1b2c 3"
+    console.log("a%sb%sc", 1, 2, 3);
     // 测试参数多余占位符
     console.log('console.log("-%s-", 99, {a: "1"})');
     console.log("-%s-", 99, { a: 1 });
