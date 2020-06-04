@@ -114,6 +114,15 @@ web-console 提供一些开箱即用的功能，如果这些无法满足你的�
 
 [CHANGELOG](CHANGELOG.md)
 
+## 相似项目
+
+**Web**
+- [vConsole](https://github.com/Tencent/vConsole) A lightweight, extendable front-end developer tool for mobile web page.
+- [eruda](https://github.com/liriliri/eruda) Console for mobile browsers
+
+**Native**
+- [wt-console](https://github.com/WeBankFinTech/wt-console) A lightweight, extendable react-native developer and tester tool
+
 ## License
 
 MIT
