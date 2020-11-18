@@ -60,7 +60,7 @@
     "prettier": "1.14.2",
     "pretty-quick": "^1.10.0",
     "sass-loader": "^6.0.6",
-    "semantic-release": "^15.13.3",
+    "semantic-release": "^17.2.3",
     "semantic-release-cli": "^4.1.1",
     "vue-template-compiler": "^2.5.22"
   },
